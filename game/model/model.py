@@ -109,6 +109,9 @@ class Model:
         self.entities = []
         self.hero = None
 
+    def shape(self):
+        return len(self.labyrinth), len(self.labyrinth[0])
+
     def generate_labyrinth(self, base_side_length, min_labyrinth_size, factor=0.25, scale_h=1, scale_w=2):
         while labyrinth_len(self.labyrinth) < min_labyrinth_size:
             self.labyrinth = generate_labyrinth(base_side_length, factor)

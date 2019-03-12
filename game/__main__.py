@@ -1,11 +1,21 @@
+import logging
+import curses
+
 from game.model import Model
 from game.elements import Artifact, Character, Object
 from game.view import render
 from game.view import draw_scene
 from functools import partial
-import curses
 
-if __name__ == "__main__":
+
+def setup_logging():
+    logging.basicConfig(filename='progue.log', level=logging.DEBUG)
+
+
+def main():
+    setup_logging()
+    logging.info("Initialised")
+
     m = Model()
     m.generate_labyrinth(base_side_length=7, min_labyrinth_size=190)
     m.place_entities({Artifact.GOLD: 10,
@@ -16,3 +26,7 @@ if __name__ == "__main__":
                       Character.HERO: 1,
                       Object.EXIT: 1})
     curses.wrapper(partial(draw_scene, m))
+
+
+if __name__ == "__main__":
+    main()
