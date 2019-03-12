@@ -1,2 +1,2 @@
 from game.view.render import render
-from game.view.renderc import CursesView
+from game.view.curses_view import CursesView

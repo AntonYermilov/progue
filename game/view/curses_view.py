@@ -2,9 +2,16 @@ import curses
 import logging
 from functools import partial
 
-from game.controller import Controller
+from game.controller import Controller, Action
 from game.model import Model
 from game.view.elements import scheme
+
+KEY_BINDINGS = {
+    curses.KEY_UP: Action.MOVE_UP,
+    curses.KEY_DOWN: Action.MOVE_DOWN,
+    curses.KEY_RIGHT: Action.MOVE_RIGHT,
+    curses.KEY_LEFT: Action.MOVE_LEFT
+}
 
 
 class CursesView:
@@ -34,6 +41,9 @@ class CursesView:
         while key_pressed != ord('q'):
             screen_height, screen_width = screen.getmaxyx()
             screen.clear()
+
+            if key_pressed in KEY_BINDINGS:
+                self.controller.process_input(KEY_BINDINGS[key_pressed])
 
             map_origin_y = screen_height // 2 - map_y // 2
             map_origin_x = screen_width // 2 - map_x // 2
