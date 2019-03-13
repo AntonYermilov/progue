@@ -13,6 +13,9 @@ class Character(Entity, ABC):
         self.items = []
         self.items_limit = 10
 
+    def move(self, x, y):
+        self.position = (y, x)
+
 
 class Hero(Character):
     def __init__(self, position):

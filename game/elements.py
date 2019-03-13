@@ -1,9 +1,5 @@
 from enum import Enum
 
-from game.model.artifacts import Gold, HealingPotion, KnowledgeScroll, AmnesiaPotion, CursedScroll
-from game.model.character import Snake, Ghost, Hero
-from game.model.exit import Exit
-
 
 class MapBlock(Enum):
     FLOOR = 0

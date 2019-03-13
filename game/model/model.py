@@ -1,6 +1,7 @@
 import random
 
 from game.elements import MapBlock, Character
+from game.model.character import Hero
 from game.model.elements import to_class
 
 moves = [(0, 1), (0, -1), (1, 0), (-1, 0)]
@@ -108,6 +109,12 @@ class Model:
         self.labyrinth = []
         self.entities = []
         self.hero = None
+
+    def shape(self):
+        return len(self.labyrinth), len(self.labyrinth[0])
+
+    def get_hero(self) -> Hero:
+        return self.hero[1]
 
     def generate_labyrinth(self, base_side_length, min_labyrinth_size, factor=0.25, scale_h=1, scale_w=2):
         while labyrinth_len(self.labyrinth) < min_labyrinth_size:
