@@ -4,6 +4,9 @@ from game.model.entity import Entity
 
 
 class Character(Entity, ABC):
+    """
+    Base character class.
+    """
     def __init__(self, position):
         super().__init__(position)
         self.max_health = 5
@@ -14,6 +17,13 @@ class Character(Entity, ABC):
         self.items_limit = 10
 
     def move(self, x, y):
+        """
+        Moves character to given position on the map.
+        :param x:
+            X coordinate
+        :param y:
+            Y coordinate
+        """
         self.position = (y, x)
 
 
