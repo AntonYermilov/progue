@@ -39,7 +39,6 @@ class Controller:
         y, x = character.position
         target_point = Point(x=direction.x + x, y=direction.y + y)
 
-        print(self.model.shape())
         if target_point.x < self.model.shape()[1] and target_point.y < self.model.shape()[0]:
             if self.model.labyrinth[target_point.y][target_point.x] == MapBlock.FLOOR:
                 character.move(x=target_point.x, y=target_point.y)
