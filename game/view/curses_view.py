@@ -15,6 +15,11 @@ KEY_BINDINGS = {
 
 
 class CursesView:
+    """
+    View of MVC model.
+
+    Text interface based on Curses library.
+    """
 
     def __init__(self, model: Model):
         self.model = model
@@ -22,10 +27,21 @@ class CursesView:
         self.element_colors = {}
 
     def start(self, controller: Controller):
+        """
+        Start the drawing loop.
+
+        :param controller:
+            controller to work with
+        """
         self.controller = controller
         curses.wrapper(partial(self.draw_scene))
 
     def draw_scene(self, screen):
+        """
+        Drawing loop.
+        :param screen:
+            curses screen
+        """
         key_pressed = 0
 
         screen.clear()
@@ -61,11 +77,19 @@ class CursesView:
             key_pressed = screen.getch()
 
     def draw_element(self, window, y: int, x: int, element):
+        """
+        Draw an element in a given position.
+        """
         window.attron(curses.color_pair(self.element_colors[element]))
         window.addstr(y, x, scheme[element].symbol.encode('utf-8'))
         window.attroff(curses.color_pair(self.element_colors[element]))
 
     def draw_map(self, pad):
+        """
+        Draws game map.
+        :param pad:
+            curses pad to draw on
+        """
         for y, row in enumerate(self.model.labyrinth):
             for x, map_element in enumerate(row):
                 self.draw_element(pad, y, x, map_element)
@@ -75,9 +99,17 @@ class CursesView:
             self.draw_element(pad, y, x, entity)
 
     def draw_status_bar(self, screen):
+        """
+        Draws status bar.
+        :param screen:
+            curses screen
+        """
         pass
 
     def initialise_colors(self):
+        """
+        Initialises curses color scheme.
+        """
         curses.start_color()
 
         color_index = 1
