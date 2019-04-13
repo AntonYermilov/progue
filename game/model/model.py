@@ -121,6 +121,16 @@ class Model:
             self.labyrinth = generate_labyrinth(base_side_length, factor)
             self.labyrinth = scale_labyrinth(self.labyrinth, scale_h, scale_w)
 
+    def upload_labyrinth(self, layout):
+        def to_map_block(c):
+            if c == '#':
+                return MapBlock.WALL
+            elif c == '.':
+                return MapBlock.FLOOR
+            else:
+                raise ValueError(f'Incorrect labyrinth layout. Expected . or #, found: {c}')
+        self.labyrinth = [[to_map_block(c) for c in line] for line in layout]
+
     def place_entities(self, entities: dict):
         cells = floor_cells(self.labyrinth)
         random.shuffle(cells)
