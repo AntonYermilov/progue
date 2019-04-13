@@ -7,6 +7,7 @@ class Character(Entity, ABC):
     """
     Base character class.
     """
+
     def __init__(self, position):
         super().__init__(position)
         self.max_health = 5
@@ -28,19 +29,19 @@ class Character(Entity, ABC):
 
 
 class Hero(Character):
+    """
+    Hero is the character controlled by the player.
+    """
     def __init__(self, position):
         super().__init__(position)
         self.max_health = 7
         self.health = 7
 
 
-class Snake(Character):
-    def __init__(self, position):
-        super().__init__(position)
-        self.items_limit = 3
-
-
-class Ghost(Character):
+class Mob(Character):
+    """
+    Mob, the enemy to the player.
+    """
     def __init__(self, position):
         super().__init__(position)
         self.items_limit = 3
