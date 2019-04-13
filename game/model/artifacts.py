@@ -6,12 +6,24 @@ from game.model.entity import Entity
 
 
 class Artifact(Entity, ABC):
+    """
+    Artifact base class.
+    """
     @abstractmethod
     def apply(self, character: Character):
+        """
+        Use artifact on a target.
+        :param character: target to apply artifact effect to.
+        """
         pass
 
 
 class Gold(Artifact):
+    """
+    Gold artifact.
+
+    Increases amount of gold by amount.
+    """
     def __init__(self, position):
         super().__init__(position)
         self.amount = random.randint(1, 10)
@@ -21,6 +33,11 @@ class Gold(Artifact):
 
 
 class HealingPotion(Artifact):
+    """
+    Healing potion.
+
+    Increases amount of health.
+    """
     def __init__(self, position):
         super().__init__(position)
 
@@ -29,6 +46,11 @@ class HealingPotion(Artifact):
 
 
 class AmnesiaPotion(Artifact):
+    """
+    Amnesia potion.
+
+    Decreases character's XP by N points.
+    """
     def __init__(self, position):
         super().__init__(position)
 
@@ -37,6 +59,11 @@ class AmnesiaPotion(Artifact):
 
 
 class KnowledgeScroll(Artifact):
+    """
+    Knowledge scroll.
+
+    Increases character's XP by N points.
+    """
     def __init__(self, position):
         super().__init__(position)
 
@@ -45,6 +72,11 @@ class KnowledgeScroll(Artifact):
 
 
 class CursedScroll(Artifact):
+    """
+    Cursed scroll.
+
+    Decreases character's health.
+    """
     def __init__(self, position):
         super().__init__(position)
 
