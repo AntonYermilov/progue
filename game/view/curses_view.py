@@ -2,15 +2,17 @@ import curses
 import logging
 from functools import partial
 
-from game.controller import Controller, Action
+from game.controller import Controller, StatusManager
+from game.controller import UserInput
+from game.elements import Character
 from game.model import Model
 from game.view.elements import scheme
 
 KEY_BINDINGS = {
-    curses.KEY_UP: Action.MOVE_UP,
-    curses.KEY_DOWN: Action.MOVE_DOWN,
-    curses.KEY_RIGHT: Action.MOVE_RIGHT,
-    curses.KEY_LEFT: Action.MOVE_LEFT
+    curses.KEY_UP: UserInput.UP,
+    curses.KEY_DOWN: UserInput.DOWN,
+    curses.KEY_RIGHT: UserInput.RIGHT,
+    curses.KEY_LEFT: UserInput.LEFT
 }
 
 
@@ -97,6 +99,9 @@ class CursesView:
         for entity, instance in self.model.entities:
             y, x = instance.position
             self.draw_element(pad, y, x, entity)
+
+        y, x = self.model.get_hero().position
+        self.draw_element(pad, y, x, Character.HERO)
 
     def draw_status_bar(self, screen):
         """
