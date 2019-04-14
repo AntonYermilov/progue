@@ -104,6 +104,9 @@ def floor_cells(labyrinth):
 
 
 class Model:
+    """
+    Model of MVC architecture.
+    """
 
     def __init__(self):
         self.labyrinth = []
@@ -111,17 +114,37 @@ class Model:
         self.hero = None
 
     def shape(self):
+        """
+        Returns shape of the map (a pair).
+
+        :return:
+            shape of the map
+        """
         return len(self.labyrinth), len(self.labyrinth[0])
 
     def get_hero(self) -> Hero:
+        """
+        Returns hero.
+        :return:
+            hero
+        """
         return self.hero[1]
 
     def generate_labyrinth(self, base_side_length, min_labyrinth_size, factor=0.25, scale_h=1, scale_w=2):
+        """
+        Generates labyrinth based on params.
+        """
         while labyrinth_len(self.labyrinth) < min_labyrinth_size:
             self.labyrinth = generate_labyrinth(base_side_length, factor)
             self.labyrinth = scale_labyrinth(self.labyrinth, scale_h, scale_w)
 
     def upload_labyrinth(self, layout):
+        """
+        Uploads labyrinth from a text representation.
+
+        :param layout:
+            Text representation of the labyrinth
+        """
         def to_map_block(c):
             if c == '#':
                 return MapBlock.WALL
@@ -132,6 +155,11 @@ class Model:
         self.labyrinth = [[to_map_block(c) for c in line] for line in layout]
 
     def place_entities(self, entities: dict):
+        """
+        Places entities from given dict to the game map.
+        :param entities:
+            Dict entity_type -> count
+        """
         cells = floor_cells(self.labyrinth)
         random.shuffle(cells)
         i = 0
