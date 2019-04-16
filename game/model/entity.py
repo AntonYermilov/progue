@@ -1,4 +1,5 @@
 from abc import ABC
+from game.model.position import Position
 
 
 class Entity(ABC):
@@ -6,7 +7,7 @@ class Entity(ABC):
     Entity base class.
     """
 
-    def __init__(self, position):
+    def __init__(self, position: Position):
         """
         Initialises entity with given position in the world.
 

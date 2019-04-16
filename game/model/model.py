@@ -3,6 +3,7 @@ import random
 from game.elements import MapBlock, Character
 from game.model.character import Hero
 from game.model.elements import to_class
+from .position import Position, Direction
 
 moves = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
@@ -99,7 +100,7 @@ def floor_cells(labyrinth):
     for i, row in enumerate(labyrinth):
         for j, cell in enumerate(row):
             if cell is MapBlock.FLOOR:
-                cells.append((i, j))
+                cells.append(Position.as_position(i, j))
     return cells
 
 

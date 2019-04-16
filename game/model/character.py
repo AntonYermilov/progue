@@ -3,6 +3,7 @@ from typing import List, Tuple
 
 from game.elements import Artifact
 from game.model.entity import Entity
+from game.model.position import Position
 from dataclasses import dataclass
 
 
@@ -19,7 +20,7 @@ class Character(Entity, ABC):
     items: List[Artifact]
     items_limit: int
 
-    def __init__(self, position: Tuple[int, int], max_health=5, items_limit=10):
+    def __init__(self, position: Position, max_health=5, items_limit=10):
         super().__init__(position)
         self.max_health = max_health
         self.health = max_health
@@ -27,15 +28,13 @@ class Character(Entity, ABC):
         self.experience = 0
         self.items = []
 
-    def move(self, x, y):
+    def move(self, new_position: Position):
         """
         Moves character to given position on the map.
-        :param x:
-            X coordinate
-        :param y:
-            Y coordinate
+        :param new_position: Position
+            New position of the character
         """
-        self.position = (y, x)
+        self.position = new_position
 
 
 class Hero(Character):
@@ -43,7 +42,7 @@ class Hero(Character):
     Hero is the character controlled by the player.
     """
 
-    def __init__(self, position):
+    def __init__(self, position: Position):
         super().__init__(position, max_health=7)
 
 
@@ -52,5 +51,5 @@ class Mob(Character):
     Mob, the enemy to the player.
     """
 
-    def __init__(self, position):
+    def __init__(self, position: Position):
         super().__init__(position, items_limit=3)
