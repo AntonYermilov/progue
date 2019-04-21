@@ -1,26 +1,20 @@
 from abc import ABC
-from dataclasses import dataclass
-from typing import Tuple
+from game.model.position import Position
 
 
-@dataclass
 class Entity(ABC):
     """
     Entity base class.
     """
 
-    position: Tuple[int, int]
-    symbol: str
-
-    def __init__(self, position: Tuple[int, int], symbol='.'):
+    def __init__(self, position: Position, symbol: str = '.'):
         """
         Initialises entity with given position in the world.
 
-        :param position:
+        :param position: Position
             Position of the entity
+        :param symbol: str
+            Symbol that identifies entity
         """
         self.position = position
         self.symbol = symbol
-
-    def set_position(self, y, x):
-        self.position = (y, x)

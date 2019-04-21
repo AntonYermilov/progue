@@ -5,6 +5,8 @@ from game.elements import Artifact, Character, Object
 from game.model import Model
 from game.view import CursesView
 
+import numpy as np
+
 
 def setup_logging():
     logging.basicConfig(filename='progue.log', level=logging.DEBUG)
@@ -26,12 +28,12 @@ def setup_labyrinth(model):
                 'Insert a file name to load layout: ')
             try:
                 with open(filename, 'r') as f:
-                    layout = f.readlines()
-                    layout = [line.strip() for line in layout if not line.isspace()]
-                    if not all(all(c == '.' or c == '#' for c in line) for line in layout):
+                    layout = np.array([line.strip() for line in f.readlines() if not line.isspace()], dtype=np.str)
+                    correct = lambda c : c == '.' or c == '#'
+                    if not correct(layout).all():
                         print('Layout should only contain dots or sharp symbols')
                         continue
-                    if not all(len(l) == 30 for l in layout) or len(layout) != 15:
+                    if layout.shape != (15, 30):
                         print('Layout should be 15x30 rectangle')
                         continue
                     model.upload_labyrinth(layout)
@@ -39,7 +41,7 @@ def setup_labyrinth(model):
                 print('Can\'t read from file ', filename)
                 continue
         else:
-            model.generate_labyrinth(base_side_length=7, min_labyrinth_size=190)
+            model.generate_labyrinth(rows=7, columns=7, free_cells_ratio=0.4)
 
         break
 

@@ -4,7 +4,7 @@ from enum import Enum
 from game.controller.status_manager import StatusManager
 from game.controller.command import Command
 from game.elements import MapBlock
-from game.model import Character, Model
+from game.model import Character, Model, Position
 
 
 class MoveDirection(Enum):
@@ -48,7 +48,7 @@ class MoveCommand(Command):
             y += 1
 
         if self.is_correct_move_(y=y, x=x):
-            self.character.set_position(y=y, x=x)
+            self.character.move(Position.as_point(y=y, x=x))
         else:
             self.emit_message("Cannot move, obstacle ahead.")
 

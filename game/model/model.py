@@ -3,104 +3,10 @@ import random
 from game.elements import MapBlock, Character
 from game.model.character import Hero
 from game.model.elements import to_class
+from .map import Labyrinth, MapLoader, MapGenerator
+from .position import Position, Direction
+import numpy as np
 
-moves = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-
-
-def on_map(m, i, j):
-    n = len(m)
-    return 0 <= i < n and 0 <= j < n
-
-
-def is_visited(m, i, j):
-    return m[i][j] is not None
-
-
-def is_wall(labyrinth, i, j):
-    return labyrinth[i][j] == MapBlock.WALL
-
-
-def remove_isolated_cells(labyrinth):
-    for i, row in enumerate(labyrinth):
-        for j, cell in enumerate(row):
-            if is_wall(labyrinth, i, j) and \
-                    all(not is_wall(labyrinth, i + di, j + dj) for di, dj in moves if
-                        on_map(labyrinth, i + di, j + dj)):
-                labyrinth[i][j] = MapBlock.FLOOR
-    return labyrinth
-
-
-def generate_labyrinth(n, prob):
-    m = [[None] * n for _ in range(n)]
-
-    def dfs(i, j):
-        if not on_map(m, i, j) or \
-                is_visited(m, i, j) or \
-                all(is_visited(m, i + di, j + dj) for di, dj in moves if on_map(m, i + di, j + dj)):
-            return
-
-        m[i][j] = []
-
-        direction = random.choice(moves)
-        while direction:
-            new_i, new_j = i + direction[0], j + direction[1]
-            if on_map(m, new_i, new_j) and not is_visited(m, new_i, new_j):
-                m[i][j].append(direction)
-                dfs(new_i, new_j)
-                direction = None
-            else:
-                direction = random.choice(moves)
-
-        random.shuffle(moves)
-        for di, dj in moves:
-            if random.random() < prob:
-                if 0 <= i + di < n and 0 <= j + dj < n:
-                    m[i][j].append((di, dj))
-                    dfs(i + di, j + dj)
-
-    dfs(n // 2, n // 2)
-
-    size = 2 * n + 1
-    labyrinth = [[MapBlock.WALL] * size for _ in range(size)]
-    for i, row in enumerate(m):
-        for j, directions in enumerate(row):
-            if directions is not None:
-                for di, dj in directions:
-                    li, lj = 1 + 2 * i, 1 + 2 * j
-                    for k in range(3):
-                        labyrinth[li + di * k][lj] = MapBlock.FLOOR
-                    for k in range(3):
-                        labyrinth[li][lj + dj * k] = MapBlock.FLOOR
-
-    return remove_isolated_cells(labyrinth)
-
-
-def scale_labyrinth(m, cell_height, cell_width):
-    labyrinth = [[None] * len(m) * cell_width for _ in range(len(m) * cell_height)]
-    for i, row in enumerate(m):
-        for j, cell in enumerate(row):
-            li, lj = i * cell_height, j * cell_width
-            for di in range(cell_height):
-                for dj in range(cell_width):
-                    labyrinth[li + di][lj + dj] = m[i][j]
-    return labyrinth
-
-
-def labyrinth_len(labyrinth):
-    floor_cells = 0
-    for row in labyrinth:
-        for cell in row:
-            floor_cells += cell is MapBlock.FLOOR
-    return floor_cells
-
-
-def floor_cells(labyrinth):
-    cells = []
-    for i, row in enumerate(labyrinth):
-        for j, cell in enumerate(row):
-            if cell is MapBlock.FLOOR:
-                cells.append((i, j))
-    return cells
 
 
 class Model:
@@ -109,7 +15,7 @@ class Model:
     """
 
     def __init__(self):
-        self.labyrinth = []
+        self.labyrinth = None
         self.entities = []
         self.hero = None
 
@@ -120,7 +26,7 @@ class Model:
         :return:
             shape of the map
         """
-        return len(self.labyrinth), len(self.labyrinth[0])
+        return self.labyrinth.labyrinth.shape
 
     def get_hero(self) -> Hero:
         """
@@ -130,29 +36,21 @@ class Model:
         """
         return self.hero[1]
 
-    def generate_labyrinth(self, base_side_length, min_labyrinth_size, factor=0.25, scale_h=1, scale_w=2):
+    def generate_labyrinth(self, rows: int, columns: int, free_cells_ratio: float = 0.5, prob: float = 0.25,
+                 scale_rows: float = 1.0, scale_columns: float = 2.0):
         """
         Generates labyrinth based on params.
         """
-        while labyrinth_len(self.labyrinth) < min_labyrinth_size:
-            self.labyrinth = generate_labyrinth(base_side_length, factor)
-            self.labyrinth = scale_labyrinth(self.labyrinth, scale_h, scale_w)
+        self.labyrinth = MapGenerator().generate(rows, columns, free_cells_ratio, prob, scale_rows, scale_columns)
 
-    def upload_labyrinth(self, layout):
+    def upload_labyrinth(self, layout: np.ndarray):
         """
         Uploads labyrinth from a text representation.
 
         :param layout:
             Text representation of the labyrinth
         """
-        def to_map_block(c):
-            if c == '#':
-                return MapBlock.WALL
-            elif c == '.':
-                return MapBlock.FLOOR
-            else:
-                raise ValueError(f'Incorrect labyrinth layout. Expected . or #, found: {c}')
-        self.labyrinth = [[to_map_block(c) for c in line] for line in layout]
+        self.labyrinth = MapLoader.load_map(layout)
 
     def place_entities(self, entities: dict):
         """
@@ -160,7 +58,7 @@ class Model:
         :param entities:
             Dict entity_type -> count
         """
-        cells = floor_cells(self.labyrinth)
+        cells = [Position.as_position(row, column) for row, column in self.labyrinth.get_floor_cells()]
         random.shuffle(cells)
         i = 0
         for entity, count in entities.items():

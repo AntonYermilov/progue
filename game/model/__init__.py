@@ -1,2 +1,3 @@
-from game.model.model import Model
-from game.model.character import Character, Mob
+from .model import Model
+from .position import Position, Direction
+from .character import Character
