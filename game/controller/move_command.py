@@ -47,25 +47,19 @@ class MoveCommand(Command):
         if self.direction == MoveDirection.MOVE_DOWN:
             y += 1
 
-        if self.is_correct_move_(y=y, x=x):
-            self.character.move(Position.as_point(y=y, x=x))
+        new_position = Position.as_point(y=y, x=x)
+        if self.is_correct_move_(new_position):
+            self.character.move(new_position)
         else:
             self.emit_message("Cannot move, obstacle ahead.")
 
-    def is_correct_move_(self, y, x):
+    def is_correct_move_(self, position: Position):
         """
         Check if given move is correct in current world.
-        :param y:
-            Row index
-        :param x:
-            Column index
+        :param position:
+            New position of character
         :return:
             True if move is correct,
             False otherwise
         """
-
-        if x < self.model.shape()[1] and y < self.model.shape()[0]:
-            if self.model.labyrinth[y][x] == MapBlock.FLOOR:
-                return True
-
-        return False
+        return self.model.labyrinth[position.get_row(), position.get_col()] == MapBlock.FLOOR
