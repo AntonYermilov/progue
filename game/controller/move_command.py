@@ -62,4 +62,4 @@ class MoveCommand(Command):
             True if move is correct,
             False otherwise
         """
-        return self.model.labyrinth[position.get_row(), position.get_col]  == MapBlock.FLOOR
+        return self.model.labyrinth[position.get_row(), position.get_col()] == MapBlock.FLOOR
