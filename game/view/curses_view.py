@@ -51,8 +51,8 @@ class CursesView:
 
         self.initialise_colors()
 
-        map_y = self.model.shape()[0]
-        map_x = self.model.shape()[1]
+        map_y = self.model.get_labyrinth().rows
+        map_x = self.model.get_labyrinth().columns
         logging.debug(f"Map shape: y={map_y}, x={map_x}")
         map_pad = curses.newpad(map_y + 1, map_x + 1)  # pad should be +1 of it's working area
 

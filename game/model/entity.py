@@ -7,14 +7,11 @@ class Entity(ABC):
     Entity base class.
     """
 
-    def __init__(self, position: Position, symbol: str = '.'):
+    def __init__(self, position: Position):
         """
         Initialises entity with given position in the world.
 
         :param position: Position
             Position of the entity
-        :param symbol: str
-            Symbol that identifies entity
         """
         self.position = position
-        self.symbol = symbol
