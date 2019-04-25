@@ -28,7 +28,7 @@ class Labyrinth:
         self.is_wall[key] = self.labyrinth[key] == MapBlock.WALL
         self.is_floor[key] = self.labyrinth[key] == MapBlock.FLOOR
 
-    def get_floor_cells(self) -> np.ndarray:
+    def get_floor_cells(self) -> np.array:
         cells = np.array([[[i, j] for j in range(self.columns)] for i in range(self.rows)])
         return cells[self.is_floor]
 

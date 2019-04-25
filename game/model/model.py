@@ -1,14 +1,10 @@
 import numpy as np
 
-from game.elements import MapBlock, Character
-from game.model.character import Hero
 from game.model.elements import to_class
-from .map import Labyrinth, MapLoader, MapGenerator
-from .position import Position, Direction
-
 from .artifacts import Artifact
 from .character import Mob, Hero
-
+from .map import MapLoader, MapGenerator, Labyrinth
+from .position import Position
 
 
 class Model:
@@ -23,22 +19,19 @@ class Model:
         self.objects = []
         self.hero = None
 
-    def shape(self):
-        """
-        Returns shape of the map (a pair).
-
-        :return:
-            shape of the map
-        """
-        return self.labyrinth.labyrinth.shape
-
     def get_hero(self) -> Hero:
         """
         Returns hero.
-        :return:
-            hero
+        :return: hero
         """
         return self.hero[1]
+
+    def get_labyrinth(self) -> Labyrinth:
+        """
+        Returns labyrinth
+        :return: labyrinth
+        """
+        return self.labyrinth
 
     def generate_labyrinth(self, rows: int, columns: int, free_cells_ratio: float = 0.5, prob: float = 0.25,
                  scale_rows: float = 1.0, scale_columns: float = 2.0):
