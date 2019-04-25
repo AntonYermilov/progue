@@ -28,4 +28,6 @@ class StatusManager:
         :return:
             Current status message
         """
-        return self.message
+        msg = self.message
+        self.message = None
+        return msg
