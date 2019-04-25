@@ -96,7 +96,13 @@ class CursesView:
             for x, map_element in enumerate(row):
                 self.draw_element(pad, y, x, map_element)
 
-        for entity, instance in self.model.entities:
+        for entity, instance in self.model.artifacts:
+            y, x = instance.position
+            self.draw_element(pad, y, x, entity)
+        for entity, instance in self.model.mobs:
+            y, x = instance.position
+            self.draw_element(pad, y, x, entity)
+        for entity, instance in self.model.objects:
             y, x = instance.position
             self.draw_element(pad, y, x, entity)
 

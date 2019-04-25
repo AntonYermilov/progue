@@ -1,11 +1,13 @@
-import random
+import numpy as np
 
 from game.elements import MapBlock, Character
 from game.model.character import Hero
 from game.model.elements import to_class
 from .map import Labyrinth, MapLoader, MapGenerator
 from .position import Position, Direction
-import numpy as np
+
+from .artifacts import Artifact
+from .character import Mob, Hero
 
 
 
@@ -16,7 +18,9 @@ class Model:
 
     def __init__(self):
         self.labyrinth = None
-        self.entities = []
+        self.artifacts = []
+        self.mobs = []
+        self.objects = []
         self.hero = None
 
     def shape(self):
@@ -52,18 +56,28 @@ class Model:
         """
         self.labyrinth = MapLoader.load_map(layout)
 
-    def place_entities(self, entities: dict):
+    def place_entities(self, entities_desc: dict):
         """
         Places entities from given dict to the game map.
-        :param entities:
+        :param entities_desc:
             Dict entity_type -> count
         """
-        cells = [Position.as_position(row, column) for row, column in self.labyrinth.get_floor_cells()]
-        random.shuffle(cells)
+        cells = np.array([Position.as_position(row, column) for row, column in self.labyrinth.get_floor_cells()])
+        np.random.shuffle(cells)
+
         i = 0
-        for entity, count in entities.items():
+        for entity, count in entities_desc.items():
             for di in range(count):
-                self.entities.append((entity, to_class[entity](cells[i + di])))
-                if entity == Character.HERO:
-                    self.hero = self.entities[-1]
+                obj = to_class[entity](cells[i + di])
+
+                if isinstance(obj, Artifact):
+                    self.artifacts.append((entity, obj))
+                elif isinstance(obj, Mob):
+                    self.mobs.append((entity, obj))
+                elif isinstance(obj, Hero):
+                    self.hero = (entity, obj)
+                else:
+                    self.objects.append((entity, obj))
             i += count
+
+
