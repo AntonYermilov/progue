@@ -45,6 +45,8 @@ class CursesView:
         """
         key_pressed = 0
 
+        curses.curs_set(0)
+
         screen.clear()
         screen.refresh()
         screen.idcok(False)
@@ -63,8 +65,8 @@ class CursesView:
             if key_pressed in KEY_BINDINGS:
                 self.controller.process_input(KEY_BINDINGS[key_pressed])
 
-            map_origin_y = screen_height // 2 - map_y // 2
-            map_origin_x = screen_width // 2 - map_x // 2
+            map_origin_y = 0
+            map_origin_x = 0
 
             screen.refresh()
 
