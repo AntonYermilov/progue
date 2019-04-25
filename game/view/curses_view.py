@@ -32,22 +32,23 @@ class CursesView:
         """
         Start the drawing loop.
 
-        :param controller:
-            controller to work with
+        :param controller: controller to work with
         """
         self.controller = controller
         curses.wrapper(partial(self.draw_scene))
 
+
     def draw_scene(self, screen):
         """
         Drawing loop.
-        :param screen:
-            curses screen
+        :param screen: curses screen
         """
         key_pressed = 0
 
         screen.clear()
         screen.refresh()
+        screen.idcok(False)
+        screen.idlok(False)
 
         self.initialise_colors()
 
@@ -58,7 +59,6 @@ class CursesView:
 
         while key_pressed != ord('q'):
             screen_height, screen_width = screen.getmaxyx()
-            screen.clear()
 
             if key_pressed in KEY_BINDINGS:
                 self.controller.process_input(KEY_BINDINGS[key_pressed])
@@ -89,8 +89,7 @@ class CursesView:
     def draw_map(self, pad):
         """
         Draws game map.
-        :param pad:
-            curses pad to draw on
+        :param pad: curses pad to draw on
         """
         for y, row in enumerate(self.model.labyrinth):
             for x, map_element in enumerate(row):
@@ -112,8 +111,7 @@ class CursesView:
     def draw_status_bar(self, screen):
         """
         Draws status bar.
-        :param screen:
-            curses screen
+        :param screen: curses screen
         """
         pass
 
