@@ -12,7 +12,7 @@ class Labyrinth:
     is_wall: np.ndarray
     is_floor: np.ndarray
 
-    def __init__(self, rows: int, columns: int, fill: MapBlock):
+    def __init__(self, rows: int, columns: int, fill: MapBlock = MapBlock.WALL):
         self.rows = rows
         self.columns = columns
         self.labyrinth = np.zeros((rows, columns), dtype=np.object)
