@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
 from game.model.character import Character
-from game.model.model import Model
 from game.model.position import Position
 
 
 class Strategy(ABC):
-    def __init__(self, model: Model):
+    def __init__(self, model):
         self.model = model
 
     @abstractmethod

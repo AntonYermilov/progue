@@ -16,11 +16,12 @@ class AggressiveStrategy(Strategy):
         cell_with_hero = None
         for move in AggressiveStrategy.MOVES:
             new_position = character.position + move
-            if self.model.get_labyrinth().is_wall[new_position]:
+            if self.model.get_labyrinth().is_wall(new_position):
                 continue
 
             is_empty = True
             for mob in self.model.mobs:
+                mob = mob[1]
                 if mob.position == new_position:
                     is_empty = False
                     break

@@ -22,11 +22,12 @@ class CowardStrategy(Strategy):
         dist_to_hero = self._get_dist_to_hero(character.position)
         for move in CowardStrategy.MOVES:
             new_position = character.position + move
-            if self.model.get_labyrinth().is_wall[new_position]:
+            if self.model.get_labyrinth().is_wall(new_position):
                 continue
 
             is_empty = True
             for mob in self.model.mobs:
+                mob = mob[1]
                 if mob.position == new_position:
                     is_empty = False
                     break

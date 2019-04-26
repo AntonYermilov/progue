@@ -1,10 +1,10 @@
 from abc import ABC
-from typing import List, Tuple
+from dataclasses import dataclass
+from typing import List
 
 from game.elements import Artifact
 from game.model.entity import Entity
 from game.model.position import Position
-from dataclasses import dataclass
 
 
 @dataclass
@@ -35,21 +35,3 @@ class Character(Entity, ABC):
             New position of the character
         """
         self.position = new_position
-
-
-class Hero(Character):
-    """
-    Hero is the character controlled by the player.
-    """
-
-    def __init__(self, position: Position):
-        super().__init__(position, max_health=7)
-
-
-class Mob(Character):
-    """
-    Mob, the enemy to the player.
-    """
-
-    def __init__(self, position: Position):
-        super().__init__(position, items_limit=3)

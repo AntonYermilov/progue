@@ -50,6 +50,12 @@ class MoveCommand(Command):
         new_position = Position.as_point(y=y, x=x)
         if self.is_correct_move_(new_position):
             self.character.move(new_position)
+            for mob in self.model.mobs:
+                mob = mob[1]
+                new_mob_position = mob.get_move()
+                if new_mob_position == self.model.get_hero().position:
+                    continue
+                mob.move(new_mob_position)
         else:
             self.emit_message("Cannot move, obstacle ahead.")
 

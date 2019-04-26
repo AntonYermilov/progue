@@ -1,6 +1,7 @@
 from game.elements import Object, Artifact, Character
 from game.model.artifacts import Gold, CursedScroll, KnowledgeScroll, AmnesiaPotion, HealingPotion
-from game.model.character import Hero, Mob
+from game.model.mob import Mob
+from game.model.hero import Hero
 from game.model.exit import Exit
 
 to_class = {

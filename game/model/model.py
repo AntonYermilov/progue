@@ -2,9 +2,11 @@ import numpy as np
 
 from game.model.elements import to_class
 from .artifacts import Artifact
-from .character import Mob, Hero
+from .mob import Mob
+from .hero import Hero
 from .map import MapLoader, MapGenerator, Labyrinth
 from .position import Position
+from .strategy import strategies
 
 
 class Model:
@@ -61,7 +63,10 @@ class Model:
         i = 0
         for entity, count in entities_desc.items():
             for di in range(count):
-                obj = to_class[entity](cells[i + di])
+                if to_class[entity] == Mob:
+                    obj = to_class[entity](cells[i + di], np.random.choice(list(strategies.values()))(self))
+                else:
+                    obj = to_class[entity](cells[i + di])
 
                 if isinstance(obj, Artifact):
                     self.artifacts.append((entity, obj))
