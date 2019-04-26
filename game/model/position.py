@@ -20,6 +20,9 @@ class Position:
     def __iter__(self):
         return iter((self.row, self.col))
 
+    def __eq__(self, other):
+        return self.row == other.row and self.col == other.col
+
     def get_row(self) -> int:
         return self.row
 

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from game.elements import MapBlock
+from game.model.position import Position
 
 
 @dataclass
@@ -21,9 +22,13 @@ class Labyrinth:
         self.is_floor = self.labyrinth == MapBlock.FLOOR
 
     def __getitem__(self, key):
+        if isinstance(key, Position):
+            key = (key.get_row(), key.get_col())
         return self.labyrinth[key]
 
     def __setitem__(self, key, value):
+        if isinstance(key, Position):
+            key = (key.get_row(), key.get_col())
         self.labyrinth[key] = value
         self.is_wall[key] = self.labyrinth[key] == MapBlock.WALL
         self.is_floor[key] = self.labyrinth[key] == MapBlock.FLOOR
