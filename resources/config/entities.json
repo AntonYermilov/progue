@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "name": "hero",
+    "view": "@",
+    "foreground_color": "black",
+    "background_color": "red"
+  },
+  "mobs": {
+    "rat": {
+      "view": "r",
+      "foreground_color": "black",
+      "background_color": "white",
+      "strength": 0.3,
+      "health": 0.3,
+      "defense": 0.1,
+      "strategy": "aggressive"
+    },
+    "snake": {
+      "view": "s",
+      "foreground_color": "black",
+      "background_color": "white",
+      "strength": 0.5,
+      "health": 0.4,
+      "defense": 0.2,
+      "strategy": "aggressive"
+    },
+    "stone": {
+      "view": "o",
+      "foreground_color": "black",
+      "background_color": "white",
+      "strength": 0.0,
+      "health": 0.5,
+      "defense": 0.5,
+      "strategy": "passive"
+    },
+    "cockroach": {
+      "view": "¥",
+      "foreground_color": "black",
+      "background_color": "white",
+      "strength": 0.1,
+      "health": 0.1,
+      "defense": 0.1,
+      "strategy": "coward"
+    }
+  },
+  "map": {
+    "wall": {
+      "view": "#",
+      "foreground_color": "black",
+      "background_color": "white"
+    },
+    "floor": {
+      "view": ".",
+      "foreground_color": "black",
+      "background_color": "white"
+    }
+  }
+}

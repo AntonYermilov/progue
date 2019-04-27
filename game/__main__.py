@@ -1,7 +1,6 @@
 import logging
 
 from game.controller import Controller
-from game.elements import Artifact, Character, Object
 from game.model import Model
 from game.view import CursesView
 
@@ -52,14 +51,6 @@ def main():
 
     model = Model()
     setup_labyrinth(model)
-
-    model.place_entities({Artifact.GOLD: 10,
-                          Character.GHOST: 5,
-                          Character.SNAKE: 5,
-                          Artifact.HEALING_POTION: 5,
-                          Artifact.KNOWLEDGE_SCROLL: 5,
-                          Character.HERO: 1,
-                          Object.EXIT: 1})
 
     view = CursesView(model)
     game_controller = Controller(model)

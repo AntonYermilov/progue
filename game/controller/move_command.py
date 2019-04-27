@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 from enum import Enum
 
+from game import Position
 from game.controller.status_manager import StatusManager
 from game.controller.command import Command
-from game.elements import MapBlock
-from game.model import Character, Model, Position
+from game.model import Model
+from game.model.entity.character import Character
 
 
 class MoveDirection(Enum):
@@ -49,11 +50,15 @@ class MoveCommand(Command):
 
         new_position = Position.as_point(y=y, x=x)
         if self.is_correct_move_(new_position):
-            self.character.move(new_position)
+            cell_is_free = True
             for mob in self.model.mobs:
-                mob = mob[1]
+                cell_is_free &= mob.position != new_position
+            if cell_is_free:
+                self.character.move(new_position)
+
+            for mob in self.model.mobs:
                 new_mob_position = mob.get_move()
-                if new_mob_position == self.model.get_hero().position:
+                if new_mob_position == self.character.position:
                     continue
                 mob.move(new_mob_position)
         else:
@@ -68,4 +73,4 @@ class MoveCommand(Command):
             True if move is correct,
             False otherwise
         """
-        return self.model.labyrinth[position] == MapBlock.FLOOR
+        return self.model.labyrinth.is_floor(position)

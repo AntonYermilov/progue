@@ -1,5 +1,4 @@
-from .map import Labyrinth
-from game.elements import MapBlock
+from .map import Labyrinth, MapBlock
 import numpy as np
 
 

@@ -1,12 +1,9 @@
 import numpy as np
+from typing import Dict, Union
 
-from game.model.elements import to_class
-from .artifacts import Artifact
-from .mob import Mob
-from .hero import Hero
-from .map import MapLoader, MapGenerator, Labyrinth
-from .position import Position
-from .strategy import strategies
+from game import Position
+from game.model.entity.character import Hero, MobFactory
+from game.model.map import MapLoader, MapGenerator, Labyrinth
 
 
 class Model:
@@ -16,23 +13,15 @@ class Model:
 
     def __init__(self):
         self.labyrinth = None
-        self.artifacts = []
-        self.mobs = []
-        self.objects = []
         self.hero = None
+        self.mobs = []
+
+        self.mob_factory = MobFactory(self)
 
     def get_hero(self) -> Hero:
-        """
-        Returns hero.
-        :return: hero
-        """
-        return self.hero[1]
+        return self.hero
 
     def get_labyrinth(self) -> Labyrinth:
-        """
-        Returns labyrinth
-        :return: labyrinth
-        """
         return self.labyrinth
 
     def generate_labyrinth(self, rows: int, columns: int, free_cells_ratio: float = 0.5, prob: float = 0.25,
@@ -51,31 +40,27 @@ class Model:
         """
         self.labyrinth = MapLoader.load_map(layout)
 
-    def place_entities(self, entities_desc: dict):
-        """
-        Places entities from given dict to the game map.
-        :param entities_desc:
-            Dict entity_type -> count
-        """
+    def _get_free_cell(self) -> Union[Position, None]:
         cells = np.array([Position.as_position(row, column) for row, column in self.labyrinth.get_floor_cells()])
         np.random.shuffle(cells)
 
-        i = 0
-        for entity, count in entities_desc.items():
-            for di in range(count):
-                if to_class[entity] == Mob:
-                    obj = to_class[entity](cells[i + di], np.random.choice(list(strategies.values()))(self))
-                else:
-                    obj = to_class[entity](cells[i + di])
+        for cell in cells:
+            if self.hero is not None and self.hero.position == cell:
+                continue
+            is_free = True
+            for mob in self.mobs:
+                if mob.position == cell:
+                    is_free = False
+                    break
+            if is_free:
+                return cell
 
-                if isinstance(obj, Artifact):
-                    self.artifacts.append((entity, obj))
-                elif isinstance(obj, Mob):
-                    self.mobs.append((entity, obj))
-                elif isinstance(obj, Hero):
-                    self.hero = (entity, obj)
-                else:
-                    self.objects.append((entity, obj))
-            i += count
+        return None
 
+    def place_hero(self):
+        cell = self._get_free_cell()
+        self.hero = Hero(cell)
 
+    def place_mob(self, mob_name: str, mob_desc: Dict):
+        cell = self._get_free_cell()
+        self.mobs.append(self.mob_factory.generate_mob(cell, mob_name, mob_desc))

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from game.model.character import Character
-from game.model.position import Position
+from game import Position
+from game.model.entity.character.character import Character
 
 
 class Strategy(ABC):

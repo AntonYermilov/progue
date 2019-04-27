@@ -1,8 +1,19 @@
 from dataclasses import dataclass
 import numpy as np
+from enum import Enum
 
-from game.elements import MapBlock
-from game.model.position import Position
+from game import Position
+
+
+class MapBlock(Enum):
+    FLOOR = 0
+    WALL = 1
+
+    def is_wall(self):
+        return self == MapBlock.WALL
+
+    def is_floor(self):
+        return self == MapBlock.FLOOR
 
 
 @dataclass
@@ -38,15 +49,15 @@ class Labyrinth:
         return cells[self.floor]
 
     def is_wall(self, *args):
-        if isinstance(args[0], Position):
+        if len(args) == 1 and isinstance(args[0], Position):
             row, col = args[0].get_row(), args[0].get_col()
         else:
             row, col = args
         return self.wall[row, col]
 
     def is_floor(self, *args):
-        if isinstance(args, Position):
-            row, col = args.get_row(), args.get_col()
+        if len(args) == 1 and isinstance(args[0], Position):
+            row, col = args[0].get_row(), args[0].get_col()
         else:
             row, col = args
         return self.floor[row, col]

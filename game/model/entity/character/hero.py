@@ -1,5 +1,5 @@
 from .character import Character
-from .position import Position
+from game import Position
 
 
 class Hero(Character):
@@ -8,4 +8,4 @@ class Hero(Character):
     """
 
     def __init__(self, position: Position):
-        super().__init__(position, max_health=7)
+        super().__init__(position)

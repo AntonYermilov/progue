@@ -1,0 +1,7 @@
+{
+  "mobs": {
+    "min_mobs_count": 8,
+    "max_mobs_count": 12,
+    "gen_probability": 0.025
+  }
+}

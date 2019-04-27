@@ -1,6 +1,6 @@
+from game import Position
+from game.model.entity.character.character import Character
 from .strategy import Strategy
-from game.model.character import Character
-from game.model.position import Position
 
 
 class PassiveStrategy(Strategy):
