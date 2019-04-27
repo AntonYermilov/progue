@@ -1,8 +1,11 @@
+# DEPRECATED MODULE
+
+
 import random
 from abc import ABC, abstractmethod
 
-from game.model.character import Character
-from game.model.entity import Entity
+from game.model.entity.entity import Entity
+from game.model.entity.character.character import Character
 
 
 class Artifact(Entity, ABC):

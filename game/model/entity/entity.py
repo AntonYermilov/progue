@@ -1,5 +1,5 @@
 from abc import ABC
-from game.model.position import Position
+from game import Position
 
 
 class Entity(ABC):

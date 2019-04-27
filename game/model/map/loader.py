@@ -1,6 +1,5 @@
 import numpy as np
-from game.elements import MapBlock
-from .map import Labyrinth
+from .map import Labyrinth, MapBlock
 
 
 class MapLoader:

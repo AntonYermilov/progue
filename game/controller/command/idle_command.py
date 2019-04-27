@@ -7,4 +7,4 @@ class IdleCommand(Command):
     """
 
     def execute(self):
-        self.emit_message("I'll just stay here for now.")
+        pass

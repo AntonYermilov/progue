@@ -1,18 +1,30 @@
 import curses
 import logging
+from typing import Dict
 from functools import partial
 
 from game.controller import Controller, StatusManager
 from game.controller import UserInput
-from game.elements import Character
 from game.model import Model
-from game.view.elements import scheme
+
 
 KEY_BINDINGS = {
     curses.KEY_UP: UserInput.UP,
     curses.KEY_DOWN: UserInput.DOWN,
     curses.KEY_RIGHT: UserInput.RIGHT,
     curses.KEY_LEFT: UserInput.LEFT
+}
+
+
+COLOR_MAP = {
+    'black': curses.COLOR_BLACK,
+    'white': curses.COLOR_WHITE,
+    'red': curses.COLOR_RED,
+    'blue': curses.COLOR_BLUE,
+    'cyan': curses.COLOR_CYAN,
+    'green': curses.COLOR_GREEN,
+    'magenta': curses.COLOR_MAGENTA,
+    'yellow': curses.COLOR_YELLOW
 }
 
 
@@ -26,7 +38,7 @@ class CursesView:
     def __init__(self, model: Model):
         self.model = model
         self.controller = None
-        self.element_colors = {}
+        self.colors = {}
 
     def start(self, controller: Controller):
         """
@@ -51,8 +63,6 @@ class CursesView:
         screen.refresh()
         screen.idcok(False)
         screen.idlok(False)
-
-        self.initialise_colors()
 
         map_y = self.model.get_labyrinth().rows
         map_x = self.model.get_labyrinth().columns
@@ -80,35 +90,45 @@ class CursesView:
             screen.refresh()
             key_pressed = screen.getch()
 
-    def draw_element(self, window, y: int, x: int, element):
+    def get_color(self, element_desc: Dict):
+        foreground = element_desc['foreground_color']
+        background = element_desc['background_color']
+        color = (foreground, background)
+
+        if color not in self.colors:
+            i = len(self.colors) + 1
+            self.colors[color] = i
+            curses.start_color()
+            curses.init_pair(i, COLOR_MAP[background], COLOR_MAP[foreground])
+
+        return curses.color_pair(self.colors[color])
+
+
+    def draw_element(self, window, y: int, x: int, element_desc: Dict):
         """
         Draw an element in a given position.
         """
-        window.attron(curses.color_pair(self.element_colors[element]))
-        window.addstr(y, x, scheme[element].symbol.encode('utf-8'))
-        window.attroff(curses.color_pair(self.element_colors[element]))
+        window.attron(self.get_color(element_desc))
+        window.addstr(y, x, element_desc['view'].encode('utf-8'))
+        window.attroff(self.get_color(element_desc))
 
     def draw_map(self, pad):
         """
         Draws game map.
         :param pad: curses pad to draw on
         """
-        for y, row in enumerate(self.model.labyrinth):
-            for x, map_element in enumerate(row):
-                self.draw_element(pad, y, x, map_element)
+        labyrinth = self.model.get_labyrinth()
+        for row in range(labyrinth.rows):
+            for col in range(labyrinth.columns):
+                cell_desc = self.controller.entities_desc['map']['wall' if labyrinth.is_wall(row, col) else 'floor']
+                self.draw_element(pad, row, col, cell_desc)
 
-        for entity, instance in self.model.artifacts:
-            y, x = instance.position
-            self.draw_element(pad, y, x, entity)
-        for entity, instance in self.model.mobs:
-            y, x = instance.position
-            self.draw_element(pad, y, x, entity)
-        for entity, instance in self.model.objects:
-            y, x = instance.position
-            self.draw_element(pad, y, x, entity)
+        for mob in self.model.mobs:
+            y, x = mob.position
+            self.draw_element(pad, y, x, self.controller.entities_desc['mobs'][mob.name])
 
         y, x = self.model.get_hero().position
-        self.draw_element(pad, y, x, Character.HERO)
+        self.draw_element(pad, y, x, self.controller.entities_desc['hero'])
 
     def draw_status_bar(self, screen):
         """
@@ -116,16 +136,3 @@ class CursesView:
         :param screen: curses screen
         """
         pass
-
-    def initialise_colors(self):
-        """
-        Initialises curses color scheme.
-        """
-        curses.start_color()
-
-        color_index = 1
-
-        for element, visual in scheme.items():
-            self.element_colors[element] = color_index
-            curses.init_pair(color_index, visual.color.primary, visual.color.secondary)
-            color_index += 1

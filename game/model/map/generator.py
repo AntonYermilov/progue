@@ -1,5 +1,4 @@
-from .map import Labyrinth
-from game.elements import MapBlock
+from .map import Labyrinth, MapBlock
 import numpy as np
 
 
@@ -20,9 +19,9 @@ class MapGenerator:
     def _remove_isolated_cells(labyrinth: Labyrinth) -> Labyrinth:
         for i in range(1, labyrinth.rows - 1):
             for j in range(1, labyrinth.columns - 1):
-                is_isolated = labyrinth.is_wall[i, j]
+                is_isolated = labyrinth.wall[i, j]
                 for di, dj in MapGenerator.MOVES:
-                    is_isolated &= labyrinth.is_floor[i + di, j + dj]
+                    is_isolated &= labyrinth.floor[i + di, j + dj]
                 if is_isolated:
                     labyrinth[i, j] = MapBlock.FLOOR
         return labyrinth
@@ -93,6 +92,6 @@ class MapGenerator:
     def generate(self, rows: int, columns: int, free_cells_ratio: float = 0.5, prob: float = 0.25,
                  scale_rows: float = 1.0, scale_columns: float = 2.0) -> Labyrinth:
         labyrinth = Labyrinth(rows, columns, MapBlock.WALL)
-        while labyrinth.is_floor.sum() < free_cells_ratio * labyrinth.rows * labyrinth.columns:
+        while labyrinth.floor.sum() < free_cells_ratio * labyrinth.rows * labyrinth.columns:
             labyrinth = self._generate(rows, columns, prob)
         return self._scale(labyrinth, scale_rows, scale_columns)
