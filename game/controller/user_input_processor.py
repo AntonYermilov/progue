@@ -1,9 +1,11 @@
 from enum import Enum
 
+from game.controller.command import IdleCommand
+from game.controller.command import MoveCommand
+
+from game import Position
+from game.controller.command import Command, AttackCommand
 from game.controller.status_manager import StatusManager
-from game.controller.command import Command
-from game.controller.idle_command import IdleCommand
-from game.controller.move_command import MoveCommand, MoveDirection
 from game.model import Model
 
 
@@ -25,7 +27,7 @@ class UserInput(Enum):
 
 class UserInputProcessor:
     """
-    User input processing: creating corresponding commands.
+    User input processing: creating corresponding command.
     """
 
     def __init__(self, model: Model, status_manager: StatusManager):
@@ -42,35 +44,47 @@ class UserInputProcessor:
             Command by input
         """
 
-        if user_input == UserInput.UP:
-            return self.process_up_()
-        if user_input == UserInput.DOWN:
-            return self.process_down_()
+        if user_input == UserInput.UP or user_input == UserInput.DOWN or user_input == UserInput.LEFT or user_input == UserInput.RIGHT:
+            return self.process_move_(user_input)
+
+    def process_move_(self, user_input: UserInput):
+        hero = self.model.get_hero()
+        y, x = hero.position
+
         if user_input == UserInput.LEFT:
-            return self.process_left_()
+            x -= 1
         if user_input == UserInput.RIGHT:
-            return self.process_right_()
+            x += 1
+        if user_input == UserInput.UP:
+            y -= 1
+        if user_input == UserInput.DOWN:
+            y += 1
 
-    def process_up_(self) -> Command:
-        if self.state == PlayerState.MOVING:
-            return MoveCommand(self.status_manager, self.model, self.model.get_hero(), MoveDirection.MOVE_UP)
+        new_position = Position.as_point(y=y, x=x)
 
-        return IdleCommand(status_manager=self.status_manager)
+        target = self.get_mob_in_position_(new_position)
+        if target is None:
+            if self.is_correct_move_(new_position):
+                return MoveCommand(self.model.get_hero(), new_position)
+        else:
+            return AttackCommand(attacker=hero, target=target, model=self.model)
 
-    def process_down_(self) -> Command:
-        if self.state == PlayerState.MOVING:
-            return MoveCommand(self.status_manager, self.model, self.model.get_hero(), MoveDirection.MOVE_DOWN)
+        return IdleCommand()
 
-        return IdleCommand(status_manager=self.status_manager)
+    def get_mob_in_position_(self, position: Position):
+        for mob in self.model.mobs:
+            if mob.position == position:
+                return mob
 
-    def process_left_(self) -> Command:
-        if self.state == PlayerState.MOVING:
-            return MoveCommand(self.status_manager, self.model, self.model.get_hero(), MoveDirection.MOVE_LEFT)
+        return None
 
-        return IdleCommand(status_manager=self.status_manager)
-
-    def process_right_(self) -> Command:
-        if self.state == PlayerState.MOVING:
-            return MoveCommand(self.status_manager, self.model, self.model.get_hero(), MoveDirection.MOVE_RIGHT)
-
-        return IdleCommand(status_manager=self.status_manager)
+    def is_correct_move_(self, position: Position):
+        """
+        Check if given move is correct in current world.
+        :param position:
+            New position of character
+        :return:
+            True if move is correct,
+            False otherwise
+        """
+        return self.model.labyrinth.is_floor(position)

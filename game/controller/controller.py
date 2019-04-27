@@ -59,7 +59,8 @@ class Controller:
 
         # TODO and this shit too
         self.model.place_hero()
-        mobs_number = np.random.randint(self.game_config['mobs']['min_mobs_count'], self.game_config['mobs']['max_mobs_count'] + 1)
+        mobs_number = np.random.randint(self.game_config['mobs']['min_mobs_count'],
+                                        self.game_config['mobs']['max_mobs_count'] + 1)
         mob_names = list(self.entities_desc['mobs'].keys())
         for i in range(mobs_number):
             mob_name = np.random.choice(mob_names)
@@ -71,5 +72,10 @@ class Controller:
         """
         Processes user input.
         """
-        command = self.input_processor.process_input(user_input)
-        command.execute()
+        hero_command = self.input_processor.process_input(user_input)
+
+        hero_command.execute()
+
+        for mob in self.model.mobs:
+            mob_command = mob.on_new_turn()
+            mob_command.execute()
