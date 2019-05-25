@@ -3,6 +3,7 @@ from typing import Dict, Union
 
 from game import Position
 from game.model.entity.character import Hero, MobFactory
+from game.model.entity.item.item import ItemFactory, Item
 from game.model.map import MapLoader, MapGenerator, Labyrinth
 
 
@@ -15,8 +16,11 @@ class Model:
         self.labyrinth = None
         self.hero = None
         self.mobs = []
+        self.items = []
+        self.current_item = None
 
         self.mob_factory = MobFactory(self)
+        self.item_factory = ItemFactory(self)
 
     def get_hero(self) -> Hero:
         return self.hero
@@ -61,6 +65,17 @@ class Model:
         cell = self._get_free_cell()
         self.hero = Hero(cell)
 
-    def place_mob(self, mob_name: str, mob_desc: Dict):
+    def place_new_mob(self, mob_name: str, mob_desc: Dict):
         cell = self._get_free_cell()
         self.mobs.append(self.mob_factory.generate_mob(cell, mob_name, mob_desc))
+
+    def place_new_item(self, item_name: str, item_desc: Dict):
+        cell = self._get_free_cell()
+        self.items.append(self.item_factory.generate_item(cell, item_name, item_desc))
+
+    def place_item(self, item: Item, position: Position):
+        item.position = position
+        self.items.append(item)
+
+    def remove_item(self, item: Item):
+        self.items.remove(item)

@@ -3,5 +3,9 @@
     "min_mobs_count": 8,
     "max_mobs_count": 12,
     "gen_probability": 0.025
+  },
+  "items": {
+    "min_items_count": 6,
+    "max_items_count": 10
   }
 }

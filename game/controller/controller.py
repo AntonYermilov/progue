@@ -9,18 +9,6 @@ from game.model import Model
 from game import Position
 
 
-# TODO Refactor to Command pattern
-class Action(Enum):
-    """
-    User action type
-    """
-    UNKNOWN = 0
-    MOVE_UP = 1
-    MOVE_DOWN = 2
-    MOVE_LEFT = 3
-    MOVE_RIGHT = 4
-
-
 Direction = Position
 
 
@@ -64,7 +52,14 @@ class Controller:
         mob_names = list(self.entities_desc['mobs'].keys())
         for i in range(mobs_number):
             mob_name = np.random.choice(mob_names)
-            self.model.place_mob(mob_name, self.entities_desc['mobs'][mob_name])
+            self.model.place_new_mob(mob_name, self.entities_desc['mobs'][mob_name])
+
+        items_number = np.random.randint(self.game_config['items']['min_items_count'],
+                                        self.game_config['items']['max_items_count'] + 1)
+        item_names = list(self.entities_desc['items'].keys())
+        for i in range(items_number):
+            item_name = np.random.choice(item_names)
+            self.model.place_new_item(item_name, self.entities_desc['items'][item_name])
 
         view.start(controller=self)
 

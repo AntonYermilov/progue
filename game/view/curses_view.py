@@ -1,30 +1,25 @@
 import curses
 import logging
-from typing import Dict
 from functools import partial
+from typing import Dict
 
-from game.controller import Controller, StatusManager
-from game.controller import UserInput
+from game.controller import Controller
 from game.model import Model
-
-
-KEY_BINDINGS = {
-    curses.KEY_UP: UserInput.UP,
-    curses.KEY_DOWN: UserInput.DOWN,
-    curses.KEY_RIGHT: UserInput.RIGHT,
-    curses.KEY_LEFT: UserInput.LEFT
-}
-
+from game.view.bindings import KEY_BINDINGS, LEGEND
 
 COLOR_MAP = {
     'black': curses.COLOR_BLACK,
     'white': curses.COLOR_WHITE,
+    'grey': 110,
     'red': curses.COLOR_RED,
     'blue': curses.COLOR_BLUE,
     'cyan': curses.COLOR_CYAN,
     'green': curses.COLOR_GREEN,
     'magenta': curses.COLOR_MAGENTA,
-    'yellow': curses.COLOR_YELLOW
+    'yellow': curses.COLOR_YELLOW,
+    'orange': 166,
+    'marine': 30,
+    'parchment': 222,
 }
 
 
@@ -43,12 +38,11 @@ class CursesView:
     def start(self, controller: Controller):
         """
         Start the drawing loop.
-
+1
         :param controller: controller to work with
         """
         self.controller = controller
         curses.wrapper(partial(self.draw_scene))
-
 
     def draw_scene(self, screen):
         """
@@ -69,6 +63,12 @@ class CursesView:
         logging.debug(f"Map shape: y={map_y}, x={map_x}")
         map_pad = curses.newpad(map_y + 1, map_x + 1)  # pad should be +1 of it's working area
 
+        legend_y, legend_x = self.get_text_dimensions(LEGEND)
+        legend_pad = curses.newpad(legend_y + 1, legend_x + 1)
+
+        inventory_y, inventory_x = self.model.hero.limit + 5, 25
+        inventory_pad = curses.newpad(inventory_y, inventory_x)
+
         while key_pressed != ord('q'):
             screen_height, screen_width = screen.getmaxyx()
 
@@ -85,10 +85,26 @@ class CursesView:
                             map_origin_y, map_origin_x,
                             min(map_origin_y + map_y, screen_height - 1), min(map_origin_x + map_x, screen_width - 1))
 
-            self.draw_status_bar(screen)
+            self.draw_legend(legend_pad)
+            legend_pad.refresh(0, 0,
+                               map_y + 1, 0,
+                               min(map_y + 1 + legend_y, screen_height - 1),
+                               min(legend_x, screen_width - 1))
+
+            inventory_desc = self.get_inventory_list()
+            self.draw_inventory(inventory_pad, inventory_desc)
+            inventory_pad.refresh(0, 0,
+                                  0, map_x + 1,
+                                  min(inventory_y + 1, screen_height - 1),
+                                  min(map_x + inventory_x + 1, screen_width - 1))
 
             screen.refresh()
             key_pressed = screen.getch()
+
+    def get_inventory_list(self):
+        return 'Inventory (15 items max):\n' + '\n'.join(
+            [str(i) + '. ' + item.name + (' *' if item == self.model.current_item else '') for i, item in
+             enumerate(self.model.hero.inventory)])
 
     def get_color(self, element_desc: Dict):
         foreground = element_desc['foreground_color']
@@ -102,7 +118,6 @@ class CursesView:
             curses.init_pair(i, COLOR_MAP[background], COLOR_MAP[foreground])
 
         return curses.color_pair(self.colors[color])
-
 
     def draw_element(self, window, y: int, x: int, element_desc: Dict):
         """
@@ -123,6 +138,10 @@ class CursesView:
                 cell_desc = self.controller.entities_desc['map']['wall' if labyrinth.is_wall(row, col) else 'floor']
                 self.draw_element(pad, row, col, cell_desc)
 
+        for item in self.model.items:
+            y, x = item.position
+            self.draw_element(pad, y, x, self.controller.entities_desc['items'][item.name])
+
         for mob in self.model.mobs:
             y, x = mob.position
             self.draw_element(pad, y, x, self.controller.entities_desc['mobs'][mob.name])
@@ -130,9 +149,20 @@ class CursesView:
         y, x = self.model.get_hero().position
         self.draw_element(pad, y, x, self.controller.entities_desc['hero'])
 
-    def draw_status_bar(self, screen):
+    @staticmethod
+    def draw_legend(pad):
         """
-        Draws status bar.
+        Draws map legend.
         :param screen: curses screen
         """
-        pass
+        pad.addstr(0, 0, LEGEND)
+
+    @staticmethod
+    def get_text_dimensions(text):
+        rows = text.split('\n')
+        return len(LEGEND.split('\n')), max(len(row) for row in rows)
+
+    @staticmethod
+    def draw_inventory(pad, inventory_desc):
+        pad.clear()
+        pad.addstr(0, 0, inventory_desc)

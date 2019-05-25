@@ -5,6 +5,10 @@ from game.controller.command import MoveCommand
 
 from game import Position
 from game.controller.command import Command, AttackCommand
+from game.controller.command.drop_item_command import DropItemCommand
+from game.controller.command.pick_command import PickCommand
+from game.controller.command.toggle_inventory_command import ToggleInventoryCommand
+from game.controller.command.use_item_command import UseItemCommand
 from game.controller.status_manager import StatusManager
 from game.model import Model
 
@@ -23,6 +27,10 @@ class UserInput(Enum):
     DOWN = 2
     LEFT = 3
     RIGHT = 4
+    PICK_ITEM = 5
+    DROP_ITEM = 6
+    USE_ITEM = 7
+    TOGGLE_INVENTORY = 8
 
 
 class UserInputProcessor:
@@ -44,8 +52,25 @@ class UserInputProcessor:
             Command by input
         """
 
-        if user_input == UserInput.UP or user_input == UserInput.DOWN or user_input == UserInput.LEFT or user_input == UserInput.RIGHT:
+        if self.model.current_item and \
+                (user_input == UserInput.UP
+                 or user_input == UserInput.DOWN
+                 or user_input == UserInput.LEFT
+                 or user_input == UserInput.RIGHT):
+            return self.process_inventory_shift_(user_input)
+        if user_input == UserInput.UP \
+                or user_input == UserInput.DOWN \
+                or user_input == UserInput.LEFT \
+                or user_input == UserInput.RIGHT:
             return self.process_move_(user_input)
+        if self.model.current_item and user_input == UserInput.DROP_ITEM:
+            return DropItemCommand(self.model)
+        if self.model.current_item and user_input == UserInput.USE_ITEM:
+            return UseItemCommand(self.model)
+        if user_input == UserInput.TOGGLE_INVENTORY:
+            return ToggleInventoryCommand(self.model)
+
+        return IdleCommand()
 
     def process_move_(self, user_input: UserInput):
         hero = self.model.get_hero()
@@ -63,11 +88,14 @@ class UserInputProcessor:
         new_position = Position.as_point(y=y, x=x)
 
         target = self.get_mob_in_position_(new_position)
-        if target is None:
+        artifact = self.get_artifact_in_position_(new_position)
+        if target:
+            return AttackCommand(attacker=hero, target=target, model=self.model)
+        elif artifact:
+            return PickCommand(picker=hero, target=artifact, model=self.model, new_position=new_position)
+        else:
             if self.is_correct_move_(new_position):
                 return MoveCommand(self.model.get_hero(), new_position)
-        else:
-            return AttackCommand(attacker=hero, target=target, model=self.model)
 
         return IdleCommand()
 
@@ -75,6 +103,13 @@ class UserInputProcessor:
         for mob in self.model.mobs:
             if mob.position == position:
                 return mob
+
+        return None
+
+    def get_artifact_in_position_(self, position: Position):
+        for artifact in self.model.items:
+            if artifact.position == position:
+                return artifact
 
         return None
 
@@ -88,3 +123,13 @@ class UserInputProcessor:
             False otherwise
         """
         return self.model.labyrinth.is_floor(position)
+
+    def process_inventory_shift_(self, user_input):
+        hero = self.model.hero
+        current_item = self.model.current_item
+        if user_input == UserInput.UP:
+            self.model.current_item = hero.get_prev_item_if_any(current_item)
+        if user_input == UserInput.DOWN:
+            self.model.current_item = hero.get_next_item_if_any(current_item)
+
+        return IdleCommand()

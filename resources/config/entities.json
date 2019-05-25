@@ -9,7 +9,7 @@
     "rat": {
       "view": "r",
       "foreground_color": "black",
-      "background_color": "white",
+      "background_color": "grey",
       "strength": 0.3,
       "health": 0.3,
       "defense": 0.1,
@@ -18,7 +18,7 @@
     "snake": {
       "view": "s",
       "foreground_color": "black",
-      "background_color": "white",
+      "background_color": "green",
       "strength": 0.5,
       "health": 0.4,
       "defense": 0.2,
@@ -27,7 +27,7 @@
     "stone": {
       "view": "o",
       "foreground_color": "black",
-      "background_color": "white",
+      "background_color": "marine",
       "strength": 0.0,
       "health": 0.5,
       "defense": 0.5,
@@ -36,11 +36,45 @@
     "cockroach": {
       "view": "¥",
       "foreground_color": "black",
-      "background_color": "white",
+      "background_color": "orange",
       "strength": 0.1,
       "health": 0.1,
       "defense": 0.1,
       "strategy": "coward"
+    }
+  },
+  "items": {
+    "healing_potion": {
+      "view": "j",
+      "foreground_color": "black",
+      "background_color": "cyan",
+      "upd": {
+        "health": 5
+      }
+    },
+    "amnesia_potion": {
+      "view": "j",
+      "foreground_color": "black",
+      "background_color": "cyan",
+      "upd": {
+        "experience": -5
+      }
+    },
+    "experience_scroll": {
+      "view": "{",
+      "foreground_color": "black",
+      "background_color": "parchment",
+      "upd": {
+        "experience": 5
+      }
+    },
+    "cursed_scroll": {
+      "view": "{",
+      "foreground_color": "black",
+      "background_color": "parchment",
+      "upd": {
+        "health": -5
+      }
     }
   },
   "map": {
@@ -50,7 +84,7 @@
       "background_color": "white"
     },
     "floor": {
-      "view": ".",
+      "view": " ",
       "foreground_color": "black",
       "background_color": "white"
     }

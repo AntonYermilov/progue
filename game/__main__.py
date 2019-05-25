@@ -15,8 +15,13 @@ def setup_labyrinth(model):
     while True:
         map_loading_mode = input('Type:\n'
                                  '\t0 - to generate new level automatically\n'
-                                 '\t1 - to upload a custom layout\n')
-        if map_loading_mode != '0' and map_loading_mode != '1':
+                                 '\t1 - to upload a custom layout\n'
+                                 '\tq - to quit\n')
+
+        if map_loading_mode == 'q':
+            exit(0)
+
+        if map_loading_mode not in ['0', '1']:
             continue
 
         map_loading_mode = int(map_loading_mode)
@@ -28,7 +33,7 @@ def setup_labyrinth(model):
             try:
                 with open(filename, 'r') as f:
                     layout = np.array([line.strip() for line in f.readlines() if not line.isspace()], dtype=np.str)
-                    correct = lambda c : c == '.' or c == '#'
+                    correct = lambda c: c == '.' or c == '#'
                     if not correct(layout).all():
                         print('Layout should only contain dots or sharp symbols')
                         continue
@@ -40,7 +45,7 @@ def setup_labyrinth(model):
                 print('Can\'t read from file ', filename)
                 continue
         else:
-            model.generate_labyrinth(rows=7, columns=7, free_cells_ratio=0.4)
+            model.generate_labyrinth(rows=19, columns=19, free_cells_ratio=0.3)
 
         break
 
