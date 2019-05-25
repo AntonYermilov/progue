@@ -9,6 +9,18 @@ from game.model import Model
 from game import Position
 
 
+# TODO Refactor to Command pattern
+class Action(Enum):
+    """
+    User action type
+    """
+    UNKNOWN = 0
+    MOVE_UP = 1
+    MOVE_DOWN = 2
+    MOVE_LEFT = 3
+    MOVE_RIGHT = 4
+
+
 Direction = Position
 
 
