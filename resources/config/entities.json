@@ -49,7 +49,7 @@
       "foreground_color": "black",
       "background_color": "cyan",
       "upd": {
-        "health": 5
+        "health": 20
       }
     },
     "amnesia_potion": {
@@ -73,7 +73,7 @@
       "foreground_color": "black",
       "background_color": "parchment",
       "upd": {
-        "health": -5
+        "health": -10
       }
     }
   },

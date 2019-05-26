@@ -71,7 +71,7 @@ class Controller:
         item_names = list(self.entities_desc['items'].keys())
         for i in range(items_number):
             item_name = np.random.choice(item_names)
-            self.model.place_new_item(item_name, self.entities_desc['items'][item_name])
+            self.model.place_new_item(item_name, self.entities_desc['items'][item_name]['upd'])
 
         view.start(controller=self)
 

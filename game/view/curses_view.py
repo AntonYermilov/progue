@@ -66,10 +66,15 @@ class CursesView:
         legend_y, legend_x = self.get_text_dimensions(LEGEND)
         legend_pad = curses.newpad(legend_y + 1, legend_x + 1)
 
+        stats_y, stats_x = 3, 25
+        stats_pad = curses.newpad(stats_y, stats_x)
+
         inventory_y, inventory_x = self.model.hero.limit + 5, 25
         inventory_pad = curses.newpad(inventory_y, inventory_x)
 
         while key_pressed != ord('q'):
+            screen.refresh()
+
             screen_height, screen_width = screen.getmaxyx()
 
             if key_pressed in KEY_BINDINGS:
@@ -91,12 +96,18 @@ class CursesView:
                                min(map_y + 1 + legend_y, screen_height - 1),
                                min(legend_x, screen_width - 1))
 
+            self.draw_stats(stats_pad, self.model.get_hero().stats)
+            stats_pad.refresh(0, 0,
+                              0, map_x + 1,
+                              min(stats_y, screen_height - 1),
+                              min(map_x + 1 + stats_x, screen_width - 1))
+
             inventory_desc = self.get_inventory_list()
             self.draw_inventory(inventory_pad, inventory_desc)
             inventory_pad.refresh(0, 0,
-                                  0, map_x + 1,
-                                  min(inventory_y + 1, screen_height - 1),
-                                  min(map_x + inventory_x + 1, screen_width - 1))
+                                  stats_y, map_x + 1,
+                                  min(stats_y + inventory_y, screen_height - 1),
+                                  min(map_x + 1 + inventory_x, screen_width - 1))
 
             screen.refresh()
             key_pressed = screen.getch()
@@ -166,3 +177,9 @@ class CursesView:
     def draw_inventory(pad, inventory_desc):
         pad.clear()
         pad.addstr(0, 0, inventory_desc)
+
+    @staticmethod
+    def draw_stats(pad, stats):
+        pad.clear()
+        health = f'Health: {int(100 * stats.health /stats.max_health)}%'
+        pad.addstr(1, 0, health)
