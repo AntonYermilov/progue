@@ -1,3 +1,5 @@
+from typing import Union
+
 import numpy as np
 
 from game import Position, Direction
@@ -7,61 +9,61 @@ from .strategy import Strategy
 
 
 class AggressiveStrategy(Strategy):
-    def on_new_turn(self, character: Character) -> Command:
-        empty_cells = []
-        cell_with_hero = None
-        for move in AggressiveStrategy.MOVES:
-            new_position = character.position + move
-            if self.model.get_labyrinth().is_wall(new_position):
-                continue
-
-            is_empty = True
-            for mob in self.model.mobs:
-                if mob.position == new_position:
-                    is_empty = False
-                    break
-
-            if self.model.get_hero().position == new_position:
-                cell_with_hero = new_position
-                is_empty = False
-
-            if is_empty:
-                empty_cells.append(new_position)
-
-        if cell_with_hero is not None:
-            return AttackCommand(character, self.model.get_hero(), self.model)
-
-        if len(empty_cells) != 0:
-            return MoveCommand(character, np.random.choice(empty_cells))
-        else:
-            return IdleCommand()
-
     MOVES = [Direction.as_position(-1, 0),
              Direction.as_position(1, 0),
              Direction.as_position(0, 1),
              Direction.as_position(0, -1)]
 
-    def make_move(self, character: Character) -> Position:
-        empty_cells = []
-        cell_with_hero = None
-        for move in AggressiveStrategy.MOVES:
+    def get_move_to_hero(self, character: Character) -> Union[Position, None]:
+        hero_position = self.model.get_hero().position
+        if any(character.position + move == hero_position for move in AggressiveStrategy.MOVES):
+            return hero_position
+
+        delta = self.model.hero.position - character.position
+        dist_row, dist_col = delta.get_row(), delta.get_col()
+
+        first_move = None
+        while dist_row != 0 or dist_col != 0:
+            dir_row = Direction.as_position(0 if dist_row == 0 else dist_row // abs(dist_row), 0)
+            dir_col = Direction.as_position(0, 0 if dist_col == 0 else dist_col // abs(dist_col))
+            if dist_row != 0 and dist_col != 0:
+                move = np.random.choice([dir_row, dir_col])
+            else:
+                move = dir_row if dist_row != 0 else dir_col
+
             new_position = character.position + move
-            if self.model.get_labyrinth().is_wall(new_position):
+            if first_move is None:
+                first_move = new_position
+
+            if self.model.labyrinth.is_wall(new_position):
+                return None
+
+            dist_row -= move.row
+            dist_col -= move.col
+
+        if any(mob.position == first_move for mob in self.model.mobs):
+            return None
+        return first_move
+
+    def get_random_move(self, character: Character) -> Union[Position, None]:
+        empty_cells = []
+        for move in AggressiveStrategy.MOVES:
+            position = character.position + move
+            if self.model.get_labyrinth().is_wall(position):
                 continue
+            if any(mob.position == position for mob in self.model.mobs):
+                continue
+            empty_cells.append(position)
+        return np.random.choice(empty_cells) if len(empty_cells) > 0 else None
 
-            is_empty = True
-            for mob in self.model.mobs:
-                if mob.position == new_position:
-                    is_empty = False
-                    break
+    def on_new_turn(self, character: Character) -> Command:
+        new_position = self.get_move_to_hero(character)
+        if new_position is None:
+            new_position = self.get_random_move(character)
 
-            if self.model.get_hero().position == new_position:
-                cell_with_hero = new_position
-                is_empty = False
+        if new_position is None:
+            return IdleCommand()
+        if new_position == self.model.get_hero().position:
+            return AttackCommand(character, self.model.get_hero(), self.model)
+        return MoveCommand(character, new_position)
 
-            if is_empty:
-                empty_cells.append(new_position)
-
-        if cell_with_hero is not None:
-            return cell_with_hero
-        return np.random.choice(empty_cells) if len(empty_cells) != 0 else character.position

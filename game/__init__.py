@@ -17,6 +17,9 @@ class Position:
     def __add__(self, other):
         return Position(self.row + other.row, self.col + other.col)
 
+    def __sub__(self, other):
+        return Position(self.row - other.row, self.col - other.col)
+
     def __iter__(self):
         return iter((self.row, self.col))
 
