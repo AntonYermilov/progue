@@ -14,7 +14,40 @@ class AggressiveStrategy(Strategy):
              Direction.as_position(0, 1),
              Direction.as_position(0, -1)]
 
-    def get_move_to_hero(self, character: Character) -> Union[Position, None]:
+    MOVES_TO_STORE = 10
+
+    MOVE_MAX_WEIGHT = 2.5
+    MOVE_MID_WEIGHT = 1.7
+    MOVE_MIN_WEIGHT = 1
+
+    MOVE_WEIGHTS = np.array([
+        [MOVE_MAX_WEIGHT, MOVE_MIN_WEIGHT, MOVE_MID_WEIGHT, MOVE_MID_WEIGHT],
+        [MOVE_MIN_WEIGHT, MOVE_MAX_WEIGHT, MOVE_MID_WEIGHT, MOVE_MID_WEIGHT],
+        [MOVE_MID_WEIGHT, MOVE_MID_WEIGHT, MOVE_MAX_WEIGHT, MOVE_MIN_WEIGHT],
+        [MOVE_MID_WEIGHT, MOVE_MID_WEIGHT, MOVE_MIN_WEIGHT, MOVE_MAX_WEIGHT],
+    ])
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.last_moves = []
+        self.total_move_weights = np.ones(len(self.MOVES))
+
+    def _update_move_weights(self):
+        self.total_move_weights = np.ones(len(self.MOVES))
+        for i, move in enumerate(self.last_moves):
+            self.total_move_weights += self.MOVE_WEIGHTS[self.MOVES.index(move)]**(i+1)
+
+    def _add_move(self, move: Direction):
+        self.last_moves.append(move)
+        if len(self.last_moves) > self.MOVES_TO_STORE:
+            self.last_moves = self.last_moves[-self.MOVES_TO_STORE:]
+        self._update_move_weights()
+
+    def _get_move_weight(self, move: Direction):
+        return self.total_move_weights[self.MOVES.index(move)]
+
+    def _get_move_to_hero(self, character: Character) -> Union[Position, None]:
         hero_position = self.model.get_hero().position
         if any(character.position + move == hero_position for move in AggressiveStrategy.MOVES):
             return hero_position
@@ -45,25 +78,33 @@ class AggressiveStrategy(Strategy):
             return None
         return first_move
 
-    def get_random_move(self, character: Character) -> Union[Position, None]:
-        empty_cells = []
+    def _get_random_move(self, character: Character) -> Union[Position, None]:
+        available_moves = []
         for move in AggressiveStrategy.MOVES:
             position = character.position + move
             if self.model.get_labyrinth().is_wall(position):
                 continue
             if any(mob.position == position for mob in self.model.mobs):
                 continue
-            empty_cells.append(position)
-        return np.random.choice(empty_cells) if len(empty_cells) > 0 else None
+            available_moves.append(move)
+
+        if len(available_moves) > 0:
+            probabilities = np.array([self._get_move_weight(move) for move in available_moves])
+            probabilities /= sum(probabilities)
+            new_position = character.position + np.random.choice(available_moves, p=probabilities)
+            return new_position
+        return None
 
     def on_new_turn(self, character: Character) -> Command:
-        new_position = self.get_move_to_hero(character)
+        new_position = self._get_move_to_hero(character)
         if new_position is None:
-            new_position = self.get_random_move(character)
+            new_position = self._get_random_move(character)
 
         if new_position is None:
             return IdleCommand()
         if new_position == self.model.get_hero().position:
             return AttackCommand(character, self.model.get_hero(), self.model)
+
+        self._add_move(new_position - character.position)
         return MoveCommand(character, new_position)
 

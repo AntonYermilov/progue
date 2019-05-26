@@ -17,9 +17,6 @@ class Mob(Character):
         self.name = name
         self.strategy = strategy
 
-    def get_move(self) -> Position:
-        return self.strategy.make_move(self)
-
     def on_new_turn(self) -> Command:
         return self.strategy.on_new_turn(self)
 
