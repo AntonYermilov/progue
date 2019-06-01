@@ -80,8 +80,8 @@ class Controller:
         """
         Processes user input.
         """
-        hero_command = self.input_processor.process_input(user_input)
 
+        hero_command = self.input_processor.process_input(user_input)
         hero_command.execute()
 
         for mob in self.model.mobs:

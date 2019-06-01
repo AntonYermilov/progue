@@ -54,13 +54,14 @@ def main():
     setup_logging()
     logging.info('Initialised')
 
-    model = Model()
-    setup_labyrinth(model)
+    while True:
+        model = Model()
+        setup_labyrinth(model)
 
-    view = CursesView(model)
-    game_controller = Controller(model)
+        view = CursesView(model)
+        game_controller = Controller(model)
 
-    game_controller.start_game(view)
+        game_controller.start_game(view)
 
 
 if __name__ == "__main__":

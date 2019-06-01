@@ -2,10 +2,11 @@ import curses
 import logging
 from functools import partial
 from typing import Dict
+import time
 
 from game.controller import Controller
 from game.model import Model
-from game.view.bindings import KEY_BINDINGS, LEGEND
+from game.view.bindings import KEY_BINDINGS, LEGEND, GAME_OVER
 
 COLOR_MAP = {
     'black': curses.COLOR_BLACK,
@@ -42,7 +43,18 @@ class CursesView:
         :param controller: controller to work with
         """
         self.controller = controller
-        curses.wrapper(partial(self.draw_scene))
+        curses.wrapper(partial(self.game_init))
+
+    @staticmethod
+    def active_sleep(timer):
+        cur_time = time.time()
+        while time.time() - cur_time < timer:
+            continue
+
+    def game_init(self, screen):
+        #while True:
+        if self.draw_scene(screen) == ord('q'):
+            exit(0)
 
     def draw_scene(self, screen):
         """
@@ -77,13 +89,25 @@ class CursesView:
 
             screen_height, screen_width = screen.getmaxyx()
 
-            if key_pressed in KEY_BINDINGS:
-                self.controller.process_input(KEY_BINDINGS[key_pressed])
-
             map_origin_y = 0
             map_origin_x = 0
 
-            screen.refresh()
+            if key_pressed in KEY_BINDINGS:
+                self.controller.process_input(KEY_BINDINGS[key_pressed])
+                if not self.model.get_hero().is_alive():
+                    screen.clear()
+                    screen.refresh()
+                    gameover_y, gameover_x = self.get_text_dimensions(GAME_OVER)
+                    self.draw_gameover(map_pad)
+                    map_pad.refresh(0, 0,
+                                    0, 0,
+                                    min(gameover_y + 1, screen_height - 1),
+                                    min(gameover_x + 1, screen_width - 1))
+                    screen.refresh()
+                    key_pressed = screen.getch()
+                    while key_pressed != ord('q') and key_pressed != ord('r'):
+                        key_pressed = screen.getch()
+                    return key_pressed
 
             self.draw_map(map_pad)
             map_pad.refresh(0, 0,
@@ -167,6 +191,10 @@ class CursesView:
         :param screen: curses screen
         """
         pad.addstr(0, 0, LEGEND)
+
+    @staticmethod
+    def draw_gameover(pad):
+        pad.addstr(0, 0, GAME_OVER)
 
     @staticmethod
     def get_text_dimensions(text):

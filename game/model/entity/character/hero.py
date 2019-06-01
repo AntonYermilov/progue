@@ -74,3 +74,6 @@ class Hero(Character, InventoryKeeper):
     def get_next_item_if_any(self, item: Item):
         idx = self.inventory.index(item)
         return self.inventory[idx + 1] if idx + 1 < len(self.inventory) else item
+
+    def is_alive(self) -> bool:
+        return self.stats.health > 0
