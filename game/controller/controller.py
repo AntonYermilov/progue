@@ -58,7 +58,8 @@ class Controller:
         """
 
         # TODO and this shit too
-        self.model.place_hero()
+        self.model.place_hero(self.game_config['hero'])
+
         mobs_number = np.random.randint(self.game_config['mobs']['min_mobs_count'],
                                         self.game_config['mobs']['max_mobs_count'] + 1)
         mob_names = list(self.entities_desc['mobs'].keys())

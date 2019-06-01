@@ -49,7 +49,7 @@
       "foreground_color": "black",
       "background_color": "cyan",
       "upd": {
-        "health": 20
+        "health": 0.4
       }
     },
     "amnesia_potion": {
@@ -57,7 +57,7 @@
       "foreground_color": "black",
       "background_color": "cyan",
       "upd": {
-        "experience": -5
+        "experience": -0.2
       }
     },
     "experience_scroll": {
@@ -65,7 +65,7 @@
       "foreground_color": "black",
       "background_color": "parchment",
       "upd": {
-        "experience": 5
+        "experience": 0.4
       }
     },
     "cursed_scroll": {
@@ -73,7 +73,7 @@
       "foreground_color": "black",
       "background_color": "parchment",
       "upd": {
-        "health": -10
+        "health": -0.2
       }
     }
   },

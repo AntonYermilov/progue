@@ -9,7 +9,7 @@ class Damageable(ABC):
     """
 
     @abstractmethod
-    def deal_damage(self, damage: Damage):
+    def accept_damage(self, damage: Damage):
         """
         Deal damage to this Damageable.
         :param damage: damage

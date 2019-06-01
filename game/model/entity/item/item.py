@@ -14,10 +14,11 @@ class Item(Entity, ABC):
         self.description = description
 
     def apply(self, target: Character):
-        target.stats.experience += self.description.get('experience', 0)
+        # new_experience = target.stats.experience + target.stats.max_experience * self.description.get('experience', 0)
+        # target.stats.experience = new_experience
 
-        new_health = target.stats.health + self.description.get('health', 0)
-        target.stats.health = max(0, min(target.stats.max_health, new_health))
+        new_health = target.stats.health + target.stats.max_health * self.description.get('health', 0)
+        target.stats.health = int(max(0, min(target.stats.max_health, new_health)))
 
 
 class ItemFactory:

@@ -7,5 +7,23 @@
   "items": {
     "min_items_count": 6,
     "max_items_count": 10
+  },
+  "hero": {
+    "level": 1,
+    "initial_stats": {
+      "max_health": 50,
+      "health": 50,
+      "max_experience": 100,
+      "experience": 0,
+      "max_strength": 5,
+      "inventory_size": 10,
+      "confuse_ratio": 0.1,
+      "confuse_turns": 5
+    },
+    "on_new_level": {
+      "max_health_increase_value": 10,
+      "max_strength_increase_value": 1,
+      "max_experience_increase_ratio": 1.1
+    }
   }
 }

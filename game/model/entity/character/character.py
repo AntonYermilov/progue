@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 from game import Position
@@ -8,10 +8,10 @@ from game.model.entity.damage import Damageable, Damage, DamageType
 
 @dataclass
 class CharacterStats:
+    level: int
     attack_damage: int
     max_health: int
     health: int
-    experience: int
 
 
 @dataclass
@@ -31,17 +31,22 @@ class Character(Entity, Damageable, ABC):
         """
         self.position = new_position
 
-    def attack_damage_for_target(self, target: Damageable) -> Damage:
+    @abstractmethod
+    def deal_damage(self, target: Damageable) -> Damage:
         """
         Get attack damage for given target.
         :param target: target
         :return: damage
         """
-        return Damage(damage_type=DamageType.PHYSICAL, damage_amount=self.stats.attack_damage)
+        pass
 
-    def deal_damage(self, damage: Damage):
-        if damage.damage_type is DamageType.PHYSICAL:
-            self.stats.health -= damage.damage_amount
+    @abstractmethod
+    def accept_damage(self, damage: Damage):
+        """
+        Receive specified damage
+        :param damage: incoming damage
+        """
+        pass
 
     def is_destroyed(self) -> bool:
         return self.stats.health <= 0

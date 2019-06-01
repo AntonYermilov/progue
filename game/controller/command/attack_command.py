@@ -9,8 +9,8 @@ class AttackCommand(Command):
         self.model = model
 
     def execute(self):
-        damage = self.attacker.attack_damage_for_target(self.target)
-        self.target.deal_damage(damage)
+        damage = self.attacker.deal_damage(self.target)
+        self.target.accept_damage(damage)
 
         if self.target.is_destroyed():
             self.target.on_destroy(self.model)

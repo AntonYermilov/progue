@@ -61,9 +61,9 @@ class Model:
 
         return None
 
-    def place_hero(self):
+    def place_hero(self, hero_desc: Dict):
         cell = self._get_free_cell()
-        self.hero = Hero(cell)
+        self.hero = Hero(cell, hero_desc)
 
     def place_new_mob(self, mob_name: str, mob_desc: Dict):
         cell = self._get_free_cell()
