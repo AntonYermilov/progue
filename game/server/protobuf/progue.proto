@@ -1,0 +1,45 @@
+syntax = 'proto3';
+package progue;
+
+service ProgueServer {
+    rpc GetState (StateRequest) returns (State) {}
+    rpc MakeTurn (Action) returns (MakeTurnResponse) {}
+}
+
+message StateRequest {}
+
+message MakeTurnResponse {}
+
+message State {
+    int32 some_id = 1;
+}
+
+message Action {
+    enum ActionType {
+        MOVE = 0;
+        INVENTORY = 1;
+    }
+
+    message MoveAction {
+        int32 row = 1;
+        int32 col = 2;
+    }
+
+    message InventoryAction {
+        enum InventoryActionType {
+            USE = 0;
+            DROP = 1;
+            PICK = 2;
+        }
+
+        int32 item_id = 1;
+        InventoryActionType action_type = 2;
+    }
+
+    ActionType action_type = 1;
+
+    oneof action {
+        MoveAction  move_action = 2;
+        InventoryAction inventory_action = 3;
+    }
+}
