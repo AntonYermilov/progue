@@ -2,14 +2,14 @@
   "hero": {
     "name": "hero",
     "view": "@",
-    "foreground_color": "black",
-    "background_color": "red"
+    "foreground_color": "#ff0000",
+    "background_color": "#555555"
   },
   "mobs": {
     "rat": {
       "view": "r",
-      "foreground_color": "black",
-      "background_color": "grey",
+      "foreground_color": "#808080",
+      "background_color": "#555555",
       "strength": 0.3,
       "health": 0.3,
       "defense": 0.1,
@@ -17,8 +17,8 @@
     },
     "snake": {
       "view": "s",
-      "foreground_color": "black",
-      "background_color": "green",
+      "foreground_color": "#008000",
+      "background_color": "#555555",
       "strength": 0.5,
       "health": 0.4,
       "defense": 0.2,
@@ -26,8 +26,8 @@
     },
     "stone": {
       "view": "o",
-      "foreground_color": "black",
-      "background_color": "marine",
+      "foreground_color": "#008787",
+      "background_color": "#555555",
       "strength": 0.0,
       "health": 0.5,
       "defense": 0.5,
@@ -35,8 +35,8 @@
     },
     "cockroach": {
       "view": "¥",
-      "foreground_color": "black",
-      "background_color": "orange",
+      "foreground_color": "#ffa500",
+      "background_color": "#555555",
       "strength": 0.1,
       "health": 0.1,
       "defense": 0.1,
@@ -46,32 +46,32 @@
   "items": {
     "healing_potion": {
       "view": "j",
-      "foreground_color": "black",
-      "background_color": "cyan",
+      "foreground_color": "#00d700",
+      "background_color": "#555555",
       "upd": {
         "health": 0.4
       }
     },
     "amnesia_potion": {
       "view": "j",
-      "foreground_color": "black",
-      "background_color": "cyan",
+      "foreground_color": "#00d700",
+      "background_color": "#555555",
       "upd": {
         "experience": -0.2
       }
     },
     "experience_scroll": {
       "view": "{",
-      "foreground_color": "black",
-      "background_color": "parchment",
+      "foreground_color": "#ffd787",
+      "background_color": "#555555",
       "upd": {
         "experience": 0.4
       }
     },
     "cursed_scroll": {
       "view": "{",
-      "foreground_color": "black",
-      "background_color": "parchment",
+      "foreground_color": "#ffd787",
+      "background_color": "#555555",
       "upd": {
         "health": -0.2
       }
@@ -80,13 +80,13 @@
   "map": {
     "wall": {
       "view": "#",
-      "foreground_color": "black",
-      "background_color": "white"
+      "foreground_color": "#ffffff",
+      "background_color": "#555555"
     },
     "floor": {
       "view": " ",
-      "foreground_color": "black",
-      "background_color": "white"
+      "foreground_color": "#ffffff",
+      "background_color": "#555555"
     }
   }
 }
