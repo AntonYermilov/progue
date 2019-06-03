@@ -1,27 +1,36 @@
-from bearlibterminal import terminal
-from typing import Dict
+from typing import Dict, List, Tuple
 
-from game import Position
+from bearlibterminal import terminal
+
 from game.client.model.model import Model
+from game.client.view.pad.legend import LegendPad
+from game.client.view.pad.map import MapPad
+from game.client.view.pad.pad import Pad
 
 
 class View:
     def __init__(self, model: Model, entities_desc: Dict, *args, **kwargs):
         self.model = model
         self.entities_desc = entities_desc
+        self.pads: List[Pad] = None
         pass
 
-    def _terminal_dimensions(self) -> (int, int):
-        """
-        Determines terminal dimensions depending on game config
-        :return: x-dim size, y-dim size
-        """
-        return 78, 39  # TODO
+    @staticmethod
+    def _generate_config(width: int, height: int):
+        return f'window: title=\'progue\', size={width}x{height};' \
+               f'font: resources/fonts/Menlo-Regular.ttf, size=10, spacing=0x0;'
+
+    def _create_pads(self):
+        map = MapPad(self, 0, 0, self.model.labyrinth.columns, self.model.labyrinth.rows)
+        legend = LegendPad(self, 0, map.y1, map.x1, map.y1 + 1)
+        self.pads = [map, legend]
 
     def initialize(self):
         terminal.open()
-        w, h = self._terminal_dimensions()
-        terminal.set(f'window: title=\'progue\', size={w}x{h};')
+        self._create_pads()
+        width = max(pad.x1 for pad in self.pads)
+        height = max(pad.y1 for pad in self.pads)
+        terminal.set(self._generate_config(width, height))
 
     @staticmethod
     def _set_tk_color(color: int, bkcolor: int):
@@ -92,43 +101,9 @@ class View:
         View._set_color(color, bkcolor)
         View._put_text(int(x), int(y), s)
 
-    def _refresh_map(self):
-        labyrinth = self.model.labyrinth
-        for row in range(labyrinth.rows):
-            for col in range(labyrinth.columns):
-                position = Position.as_position(row, col)
-                cell_desc = self.entities_desc['map']['wall' if labyrinth.is_wall(position) else 'floor']
-                view, color, bkcolor = cell_desc['view'], cell_desc['foreground_color'], cell_desc['background_color']
-                self._put_colored_symbol(x=position.get_x(), y=position.get_y(), c=view, color=color, bkcolor=bkcolor)
-
-    def _refresh_items(self):
-        items = self.model.items
-        for item in items:
-            x, y = item.position.get_x(), item.position.get_y()
-            item_desc = self.entities_desc['items'][item.name]
-            view, color, bkcolor = item_desc['view'], item_desc['foreground_color'], item_desc['background_color']
-            self._put_colored_symbol(x=x, y=y, c=view, color=color, bkcolor=bkcolor)
-
-    def _refresh_enemies(self):
-        enemies = self.model.mobs
-        for enemy in enemies:
-            x, y = enemy.position.get_x(), enemy.position.get_y()
-            enemy_desc = self.entities_desc['mobs'][enemy.name]
-            view, color, bkcolor = enemy_desc['view'], enemy_desc['foreground_color'], enemy_desc['background_color']
-            self._put_colored_symbol(x=x, y=y, c=view, color=color, bkcolor=bkcolor)
-
-    def _refresh_hero(self):
-        hero = self.model.hero
-        x, y = hero.position.get_x(), hero.position.get_y()
-        hero_desc = self.entities_desc['hero']
-        view, color, bkcolor = hero_desc['view'], hero_desc['foreground_color'], hero_desc['background_color']
-        self._put_colored_symbol(x=x, y=y, c=view, color=color, bkcolor=bkcolor)
-
     def refresh(self):
-        self._refresh_map()
-        self._refresh_items()
-        self._refresh_enemies()
-        self._refresh_hero()
+        for pad in self.pads:
+            pad.refresh()
         terminal.refresh()
 
     @staticmethod
