@@ -59,8 +59,10 @@ class StatsPad(Pad):
 
     def _refresh_hero_stats(self, width: int):
         x, y = self.x0, self.y0 + self.NAME_ROW
+        color = self.view.entities_desc['hero']['foreground_color']
+        bkcolor = self.view.entities_desc['hero']['background_color']
         desc = f': You (level {self.view.model.hero.stats.level})'
-        self.view._put_colored_symbol(x=x, y=y, c='@', color=self.HIGHLIGHTED_TEXT_COLOR, bkcolor=self.BACKGROUND_COLOR)
+        self.view._put_colored_symbol(x=x, y=y, c='@', color=color, bkcolor=bkcolor)
         self.view._put_colored_text(x=x+1, y=y, s=desc, color=self.TEXT_COLOR, bkcolor=self.BACKGROUND_COLOR)
 
         self._refresh_character_health(self.view.model.hero, self.x0, self.y0 + self.HEALTH_ROW, width)
