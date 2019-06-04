@@ -2,8 +2,9 @@ import logging
 
 import numpy as np
 
+# TODO FIX CIRCULAR DEPENDENCY
+import game.client.controller.controller as cli
 from game.client.controller.network import Network
-from game.model import Model
 
 
 def setup_logging():
@@ -54,12 +55,8 @@ def main():
     logging.info('Initialised')
 
     while True:
-        model = Model()
-        setup_labyrinth(model)
-
-        # TODO
-        # cli_controller = cli.Controller(Network(self))
-        # cli_controller.start_game()
+        cli_controller = cli.Controller(Network())
+        cli_controller.start_game()
 
 
 if __name__ == "__main__":
