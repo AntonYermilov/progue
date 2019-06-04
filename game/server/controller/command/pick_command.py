@@ -1,13 +1,10 @@
 from game import Position
 from game.server.controller.command import Command
-from game.model import Model
-from game.model.entity.character import Hero
-from game.model.entity.item.item import Item
 
 
 class PickCommand(Command):
 
-    def __init__(self, picker: Hero, target: Item, model: Model, new_position: Position):
+    def __init__(self, picker, target, model, new_position: Position):
         self.picker = picker
         self.target = target
         self.model = model

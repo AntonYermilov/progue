@@ -1,9 +1,8 @@
 from game.server.controller.command import Command
-from game.model import Model
 
 
 class DropItemCommand(Command):
-    def __init__(self, model: Model, player_id: str, item_id: int):
+    def __init__(self, model, player_id: str, item_id: int):
         self.model = model
         self.item_id = item_id
         self.player_id = player_id

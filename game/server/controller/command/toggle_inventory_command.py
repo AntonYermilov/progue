@@ -1,10 +1,9 @@
 from game.server.controller.command import Command
-from game.model import Model
 
 
 class ToggleInventoryCommand(Command):
 
-    def __init__(self, model: Model):
+    def __init__(self, model):
         self.model = model
 
     def execute(self):
