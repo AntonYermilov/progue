@@ -13,9 +13,15 @@ class CowardStrategy(Strategy):
              Direction.as_position(0, -1)]
 
     def _get_dist_to_hero(self, position) -> int:
-        hero_position = self.model.get_hero().position
-        return abs(position.get_row() - hero_position.get_row()) + \
-               abs(position.get_col() - hero_position.get_col())
+        min_dist = float('inf')
+        for hero in self.model.players.values:
+            delta = hero.position - position
+            dist_row_, dist_col_ = delta.get_row(), delta.get_col()
+            dist = abs(dist_row_) + abs(dist_col_)
+            if dist < min_dist:
+                min_dist = dist
+
+        return min_dist
 
     def on_new_turn(self, character: Character) -> Command:
         empty_cells = []
@@ -32,8 +38,10 @@ class CowardStrategy(Strategy):
                     is_empty = False
                     break
 
-            if self.model.get_hero().position == new_position:
-                is_empty = False
+            for hero in self.model.players.values:
+                if hero.position == new_position:
+                    is_empty = False
+                    break
 
             new_dist_to_hero = self._get_dist_to_hero(new_position)
             if is_empty and new_dist_to_hero > dist_to_hero:

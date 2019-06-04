@@ -47,7 +47,8 @@ class ConfusedStrategy(Strategy):
         new_position = self._get_random_move(character)
         if new_position is None:
             return IdleCommand()
-        if new_position == self.model.get_hero().position:
-            return AttackCommand(character, self.model.get_hero(), self.model)
-        return MoveCommand(character, new_position)
 
+        for hero in self.model.players.values:
+            if new_position == hero.position:
+                return AttackCommand(character, hero, self.model)
+        return MoveCommand(character, new_position)

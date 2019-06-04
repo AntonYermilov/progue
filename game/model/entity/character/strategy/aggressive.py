@@ -27,7 +27,6 @@ class AggressiveStrategy(Strategy):
         [MOVE_MID_WEIGHT, MOVE_MID_WEIGHT, MOVE_MIN_WEIGHT, MOVE_MAX_WEIGHT],
     ])
 
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.last_moves = []
@@ -36,7 +35,7 @@ class AggressiveStrategy(Strategy):
     def _update_move_weights(self):
         self.total_move_weights = np.ones(len(self.MOVES))
         for i, move in enumerate(self.last_moves):
-            self.total_move_weights += self.MOVE_WEIGHTS[self.MOVES.index(move)]**(i+1)
+            self.total_move_weights += self.MOVE_WEIGHTS[self.MOVES.index(move)] ** (i + 1)
 
     def _add_move(self, move: Direction):
         self.last_moves.append(move)
@@ -48,12 +47,20 @@ class AggressiveStrategy(Strategy):
         return self.total_move_weights[self.MOVES.index(move)]
 
     def _get_move_to_hero(self, character: Character) -> Union[Position, None]:
-        hero_position = self.model.get_hero().position
-        if any(character.position + move == hero_position for move in AggressiveStrategy.MOVES):
-            return hero_position
+        for hero in self.model.players.values:
+            hero_position = hero.position
+            if any(character.position + move == hero_position for move in AggressiveStrategy.MOVES):
+                return hero_position
 
-        delta = self.model.hero.position - character.position
-        dist_row, dist_col = delta.get_row(), delta.get_col()
+        min_dist = float('inf')
+        dist_row, dist_col = 0, 0
+        for hero in self.model.players.values:
+            delta = hero.position - character.position
+            dist_row_, dist_col_ = delta.get_row(), delta.get_col()
+            dist = abs(dist_row_) + abs(dist_col_)
+            if dist < min_dist:
+                dist_row, dist_col = dist_row_, dist_col_
+                min_dist = dist
 
         first_move = None
         while dist_row != 0 or dist_col != 0:
@@ -102,9 +109,10 @@ class AggressiveStrategy(Strategy):
 
         if new_position is None:
             return IdleCommand()
-        if new_position == self.model.get_hero().position:
-            return AttackCommand(character, self.model.get_hero(), self.model)
+
+        for hero in self.model.players.values:
+            if new_position == hero.position:
+                return AttackCommand(character, hero, self.model)
 
         self._add_move(new_position - character.position)
         return MoveCommand(character, new_position)
-
