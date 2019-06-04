@@ -1,5 +1,4 @@
-from game import Position
-from game.controller.command import Command, MoveCommand, IdleCommand
+from game.server.controller.command import Command, IdleCommand
 from game.model.entity.character.character import Character
 from .strategy import Strategy
 

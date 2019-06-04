@@ -5,11 +5,11 @@ from game.server.controller.command import MoveCommand
 
 from game import Position
 from game.server.controller.command import Command, AttackCommand
-from game.server.controller.command.drop_item_command import DropItemCommand
-from game.server.controller.command.pick_command import PickCommand
-from game.server.controller.command.toggle_inventory_command import ToggleInventoryCommand
-from game.server.controller.command.use_item_command import UseItemCommand
-from game.server.controller.status_manager import StatusManager
+from game.server.controller.command import DropItemCommand
+from game.server.controller.command import PickCommand
+from game.server.controller.command import ToggleInventoryCommand
+from game.server.controller.command import UseItemCommand
+from game.server.controller import StatusManager
 from game.model import Model
 
 

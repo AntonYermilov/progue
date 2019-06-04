@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from game.controller.command import Command
+from game.server.controller.command import Command
 from game.model.entity.character.character import Character
 
 

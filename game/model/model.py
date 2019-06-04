@@ -18,18 +18,22 @@ class Model:
         self.mobs = []
         self.items = []
         self.current_item = None
+        self.players = dict()
 
         self.mob_factory = MobFactory(self)
         self.item_factory = ItemFactory(self)
 
-    def get_hero(self) -> Hero:
-        return self.hero
+    def get_hero(self, player_id):
+        if player_id in self.players:
+            return self.players[player_id]
+        else:
+            return None
 
     def get_labyrinth(self) -> Labyrinth:
         return self.labyrinth
 
     def generate_labyrinth(self, rows: int, columns: int, free_cells_ratio: float = 0.5, prob: float = 0.25,
-                 scale_rows: float = 1.0, scale_columns: float = 2.0):
+                           scale_rows: float = 1.0, scale_columns: float = 2.0):
         """
         Generates labyrinth based on params.
         """
@@ -49,9 +53,12 @@ class Model:
         np.random.shuffle(cells)
 
         for cell in cells:
-            if self.hero is not None and self.hero.position == cell:
-                continue
             is_free = True
+            for hero in self.players.values():
+                if hero.position == cell:
+                    is_free = False
+                    break
+
             for mob in self.mobs:
                 if mob.position == cell:
                     is_free = False
@@ -61,9 +68,9 @@ class Model:
 
         return None
 
-    def place_hero(self, hero_desc: Dict):
+    def place_hero(self, player_id, hero_desc: Dict):
         cell = self._get_free_cell()
-        self.hero = Hero(cell, hero_desc)
+        self.players[player_id] = Hero(cell, hero_desc)
 
     def place_new_mob(self, mob_name: str, mob_desc: Dict):
         cell = self._get_free_cell()

@@ -5,7 +5,7 @@ import grpc
 
 from .game import Game
 from .generated import progue_pb2_grpc, progue_pb2
-from game.server.controller.action import *
+from game.client.model.action import *
 
 
 class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
@@ -22,7 +22,8 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
 
     def MakeTurn(self, request, context):
         if request.action.action_type is ActionType.MOVE_ACTION:
-            action_desc = MoveAction(row=request.action.move_action.row, col=request.action.move_action.col)
+            action_desc = MoveAction(row=request.action.move_action.row,
+                                     column=request.action.move_action.col)
         elif request.action_type is ActionType.INVENTORY_ACTION:
             action_desc = InventoryAction(item_id=request.action.inventory_action.item_id,
                                           action=request.action.inventory_action.action_type)

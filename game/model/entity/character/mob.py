@@ -1,7 +1,7 @@
 from typing import Dict
 
 from game import Position
-from game.controller.command import Command
+from game.server.controller.command import Command
 from game.model.entity.character.character import Character, CharacterStats
 from game.model.entity.character.strategy import strategies
 from game.model.entity.character.strategy.confused import ConfusedStrategy

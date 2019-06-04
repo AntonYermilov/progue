@@ -1,7 +1,7 @@
 import numpy as np
 
-from game import Position, Direction
-from game.controller.command import Command, MoveCommand, IdleCommand
+from game import Direction
+from game.server.controller.command import Command, MoveCommand, IdleCommand
 from game.model.entity.character.character import Character
 from .strategy import Strategy
 

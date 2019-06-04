@@ -3,20 +3,14 @@ from game.model import Model
 
 
 class DropItemCommand(Command):
-
-    def __init__(self, model: Model):
+    def __init__(self, model: Model, player_id: str, item_id: int):
         self.model = model
+        self.item_id = item_id
+        self.player_id = player_id
 
     def execute(self):
-        hero = self.model.hero
-        item = self.model.current_item
-        if item:
-            idx = hero.inventory.index(item)
-            if len(hero.inventory) == 1:
-                self.model.current_item = None
-            elif idx == len(hero.inventory) - 1:
-                self.model.current_item = hero.inventory[idx - 1]
-            else:
-                self.model.current_item = hero.inventory[idx + 1]
+        hero = self.model.players[self.player_id]
+        if self.item_id is not None and 0 <= self.item_id < len(hero.inventory):
+            item = hero.inventory[self.item_id]
             hero.remove_item(item)
             self.model.place_item(item, hero.position)

@@ -3,7 +3,7 @@ from typing import Union
 import numpy as np
 
 from game import Position, Direction
-from game.controller.command import Command, AttackCommand, MoveCommand, IdleCommand
+from game.server.controller.command import Command, AttackCommand, MoveCommand, IdleCommand
 from game.model.entity.character import Character
 from .strategy import Strategy
 
