@@ -3,12 +3,46 @@ package progue;
 
 service ProgueServer {
     rpc GetState (StateRequest) returns (State) {}
-    rpc MakeTurn (Action) returns (MakeTurnResponse) {}
+    rpc MakeTurn (MakeTurnRequest) returns (MakeTurnResponse) {}
+    rpc ListGames (ListGamesRequest) returns (ListGamesResponse) {}
+    rpc ConnectToGame (GameId) returns (ConnectToGameResponse) {}
+    rpc CreateGame (GameId) returns (CreateGameResponse) {}
 }
 
-message StateRequest {}
+message ListGamesRequest {}
+
+message ConnectToGameResponse {
+    successfully_connected = 1
+    Player player = 2;
+}
+
+message StateRequest {
+    GameId game_id = 1;
+}
+
+message MakeTurnRequest {
+    Action action = 1;
+    Player player = 2;
+}
 
 message MakeTurnResponse {}
+
+message GameId {
+    string id = 1;
+}
+
+message Player {
+    string id = 1;
+}
+
+message ListGamesResponse {
+    repeated GameId game_ids = 1;
+}
+
+message CreateGameResponse {
+    bool successfully_created = 1;
+    Player player = 2;
+}
 
 message State {
     int32 some_id = 1;
