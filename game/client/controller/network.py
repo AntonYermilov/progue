@@ -10,11 +10,11 @@ class Network:
     Dummy network
     """
 
-    def __init__(self):
+    def __init__(self, addr='127.0.0.1:1488'):
         self.stub = None
         self.game_id = None
         self.player_id = None
-        self.addr = '127.0.0.1:1488'
+        self.addr = addr
 
     def connect(self, *args, **kwargs):
         pass
@@ -42,8 +42,8 @@ class Network:
             if response.successfully_created:
                 self.player_id = response.player.id
                 self.game_id = game_id
-            else:
-                raise RuntimeError()
+                return True
+        return False
 
     def get_state(self):
         request = progue_pb2.StateRequest(game_id=progue_pb2.GameId(id=self.game_id),

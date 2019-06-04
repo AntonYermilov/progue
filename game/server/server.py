@@ -90,6 +90,8 @@ def start_server():
     print(f'Serving on {result}')
     try:
         while True:
-            time.sleep(10000)
+            time.sleep(20000)
     except KeyboardInterrupt:
+        print('Keyboard interrupt, shutting server down.')
+    finally:
         server.stop(0)
