@@ -18,6 +18,7 @@ message ConnectToGameResponse {
 
 message StateRequest {
     GameId game_id = 1;
+    Player player = 2;
 }
 
 message MakeTurnRequest {
@@ -46,7 +47,7 @@ message CreateGameResponse {
 }
 
 message State {
-    int32 some_id = 1;
+    bytes state = 1;
 }
 
 message Action {

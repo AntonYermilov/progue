@@ -5,6 +5,7 @@ import numpy as np
 # TODO FIX CIRCULAR DEPENDENCY
 import game.client.controller.controller as cli
 from game.client.controller.network import Network
+from game.server import start_server
 
 
 def setup_logging():
@@ -53,6 +54,8 @@ def setup_labyrinth(model):
 def main():
     setup_logging()
     logging.info('Initialised')
+
+    start_server()
 
     while True:
         cli_controller = cli.Controller(Network())

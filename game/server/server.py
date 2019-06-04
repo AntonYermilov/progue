@@ -4,6 +4,7 @@ from concurrent import futures
 import grpc
 
 from game.client.model.action import *
+from game.util import serialize_object
 from .generated import progue_pb2_grpc, progue_pb2
 
 
@@ -15,9 +16,11 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
         self.lock = threading.RLock()
 
     def GetState(self, request, context):
-        # TODO
         with self.lock:
-            return progue_pb2.State()
+            game = self.games[request.game_id.id]
+
+        state = game.get_state(request.player.id)
+        return progue_pb2.State(state=serialize_object(state))
 
     def MakeTurn(self, request, context):
         if request.action.action_type is ActionType.MOVE_ACTION:
@@ -68,8 +71,10 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
             if game_id not in self.games:
 
                 self.games[game_id] = Game()
-                return progue_pb2.CreateGameResponse(successfully_created=True,
-                                                     player=progue_pb2.Player(id='player1'))
+                player = progue_pb2.Player(id='player1')
+                response = progue_pb2.CreateGameResponse(successfully_created=True,
+                                                         player=player)
+                return response
             else:
                 return progue_pb2.CreateGameResponse(successfully_created=False)
 

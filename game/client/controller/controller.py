@@ -27,6 +27,7 @@ class Controller:
     def start_game(self):
         self.view.initialize()
         self.network.connect()
+        self.network.create_game('game1')  # TODO REFACTOR
         while True:
             state = self.network.get_state()
             self.model.update(state)

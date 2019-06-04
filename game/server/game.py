@@ -2,8 +2,10 @@ import threading
 from dataclasses import dataclass
 
 from game.client.model.action import Action
+from game.client.model.inventory import Inventory
+from game.client.model.state import State
 from game.model import Model
-from game.server.controller import Controller
+from game.server.controller.controller import Controller
 
 
 @dataclass
@@ -25,6 +27,17 @@ class Game:
         model.generate_labyrinth(rows=19, columns=19, free_cells_ratio=0.3)
 
         self.controller = Controller(model)
+
+    def get_state(self, player_id):
+        with self.lock:
+            hero = self.controller.model.players[player_id]
+            state = State(my_turn=self.players[self.current_player].id == player_id,
+                          hero=hero,
+                          mobs=self.controller.model.mobs,
+                          items=self.controller.model.items,
+                          inventory=Inventory(capacity=hero.limit, items=hero.inventory),
+                          labyrinth=self.controller.model.labyrinth)
+            return state
 
     def on_connect(self):
         with self.lock:
