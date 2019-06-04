@@ -6,6 +6,7 @@ from typing import Union
 class ActionType(Enum):
     MOVE_ACTION: int = 0
     INVENTORY_ACTION: int = 1
+    QUIT_ACTION: int = 2
 
 
 @dataclass
@@ -29,4 +30,4 @@ class InventoryAction:
 @dataclass
 class Action:
     type: ActionType
-    desc: Union[MoveAction, InventoryAction]
+    desc: Union[MoveAction, InventoryAction, None]

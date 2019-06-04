@@ -3,9 +3,11 @@ from typing import Dict, List, Tuple
 from bearlibterminal import terminal
 
 from game.client.model.model import Model
+from game.client.view.pad.inventory import InventoryPad
 from game.client.view.pad.legend import LegendPad
 from game.client.view.pad.map import MapPad
 from game.client.view.pad.pad import Pad
+from game.client.view.user_command import UserCommand
 
 
 class View:
@@ -21,9 +23,11 @@ class View:
                f'font: resources/fonts/Menlo-Regular.ttf, size=10, spacing=0x0;'
 
     def _create_pads(self):
-        map = MapPad(self, 0, 0, self.model.labyrinth.columns, self.model.labyrinth.rows)
-        legend = LegendPad(self, 0, map.y1, map.x1, map.y1 + 1)
-        self.pads = [map, legend]
+        # map = MapPad(self, 0, 0, self.model.labyrinth.columns, self.model.labyrinth.rows) TODO
+        map = MapPad(self, 0, 0, 78, 39)
+        legend = LegendPad(self, map.x0, map.y1, map.x1, map.y1 + 2)
+        inventory = InventoryPad(self, map.x1 - 25, map.y0, map.x1, map.y1)
+        self.pads = [map, legend, inventory]
 
     def initialize(self):
         terminal.open()
@@ -31,6 +35,14 @@ class View:
         width = max(pad.x1 for pad in self.pads)
         height = max(pad.y1 for pad in self.pads)
         terminal.set(self._generate_config(width, height))
+
+    @staticmethod
+    def _set_layer(layer: int):
+        """
+        Sets current layer.
+        The argument is an index from 0 to 255 where 0 is the lowest (default) layer.
+        """
+        terminal.layer(layer)
 
     @staticmethod
     def _set_tk_color(color: int, bkcolor: int):
@@ -107,8 +119,14 @@ class View:
         terminal.refresh()
 
     @staticmethod
-    def get_user_command():
-        return terminal.read()
+    def get_user_command() -> UserCommand:
+        # TODO improve for online game, i.e. make async call in case it is not our turn
+        cmd = terminal.read()
+        try:
+            cmd = UserCommand(cmd)
+        except ValueError:
+            cmd = UserCommand.UNKNOWN
+        return cmd
 
     @staticmethod
     def delay(sec: float):
