@@ -3,9 +3,8 @@ from concurrent import futures
 
 import grpc
 
-from .game import Game
-from .generated import progue_pb2_grpc, progue_pb2
 from game.client.model.action import *
+from .generated import progue_pb2_grpc, progue_pb2
 
 
 class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
@@ -63,9 +62,11 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
                 return progue_pb2.ConnectToGameResponse(successfully_connected=False)
 
     def CreateGame(self, request, context):
+        from .game import Game
         game_id = request.id
         with self.lock:
             if game_id not in self.games:
+
                 self.games[game_id] = Game()
                 return progue_pb2.CreateGameResponse(successfully_created=True,
                                                      player=progue_pb2.Player(id='player1'))
