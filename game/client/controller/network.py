@@ -10,7 +10,7 @@ class Network:
     Dummy network
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         self.stub = None
         self.game_id = None
         self.player_id = None
@@ -20,15 +20,28 @@ class Network:
         pass
 
     def list_games(self):
-        pass
-
-    def create_game(self, name: str):
-        with grpc.insecure_channel('127.0.0.1:1488') as channel:
+        with grpc.insecure_channel(self.addr) as channel:
             stub = progue_pb2_grpc.ProgueServerStub(channel)
-            response = stub.CreateGame(progue_pb2.GameId(id=name))
+            response = stub.ListGames(progue_pb2.ListGamesRequest())
+            return list(map(lambda x: x.id, response.game_ids))
+
+    def connect_to_game(self, game_id: str):
+        with grpc.insecure_channel(self.addr) as channel:
+            stub = progue_pb2_grpc.ProgueServerStub(channel)
+            response = stub.ConnectToGame(progue_pb2.GameId(id=game_id))
+            if response.successfully_connected:
+                self.player_id = response.player.id
+                self.game_id = game_id
+                return True
+        return False
+
+    def create_game(self, game_id: str):
+        with grpc.insecure_channel(self.addr) as channel:
+            stub = progue_pb2_grpc.ProgueServerStub(channel)
+            response = stub.CreateGame(progue_pb2.GameId(id=game_id))
             if response.successfully_created:
                 self.player_id = response.player.id
-                self.game_id = name
+                self.game_id = game_id
             else:
                 raise RuntimeError()
 
