@@ -1,7 +1,17 @@
 from dataclasses import dataclass
+from typing import List
+
+from game.client.model.inventory import Inventory
+from game.model.entity.character import Hero, Mob
+from game.model.entity.item.item import Item
+from game.model.map import Labyrinth
 
 
 @dataclass
 class State:
     my_turn: bool
-    pass
+    hero: Hero
+    mobs: List[Mob]
+    items: List[Item]
+    inventory: Inventory # TODO change to <int (inventory_capacity, optional), List[Item]>
+    labyrinth: Labyrinth = None # TODO change to np.ndarray

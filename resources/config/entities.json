@@ -45,33 +45,41 @@
   },
   "items": {
     "healing_potion": {
+      "type": "potion",
       "view": "j",
       "foreground_color": "#00d700",
       "background_color": "#131313",
+      "desc": "Healing Potion",
       "upd": {
         "health": 0.4
       }
     },
     "amnesia_potion": {
+      "type": "potion",
       "view": "j",
       "foreground_color": "#00d700",
       "background_color": "#131313",
+      "desc": "Amnesia Potion",
       "upd": {
         "experience": -0.2
       }
     },
     "experience_scroll": {
+      "type": "scroll",
       "view": "{",
       "foreground_color": "#ffd787",
       "background_color": "#131313",
+      "desc": "Experience Scroll",
       "upd": {
         "experience": 0.4
       }
     },
     "cursed_scroll": {
+      "type": "scroll",
       "view": "{",
       "foreground_color": "#ffd787",
       "background_color": "#131313",
+      "desc": "Cursed Scroll",
       "upd": {
         "health": -0.2
       }
