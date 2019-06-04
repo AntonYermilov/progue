@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 
 from game import Position
 from .pad import Pad
@@ -12,6 +12,7 @@ class MapPad(Pad):
         self.distance = None
         self.visited = set()
         self.first_refresh = True
+        self.visible_enemies = []
 
     @staticmethod
     def _shade_hex_color(color: str):
@@ -62,10 +63,12 @@ class MapPad(Pad):
 
     def _refresh_enemies(self):
         enemies = self.view.model.mobs
+        self.visible_enemies = []
         for enemy in enemies:
             x, y = self.x0 + enemy.position.get_x(), self.y0 + enemy.position.get_y()
             if self.distance[enemy.position.row, enemy.position.col] > self.SHADE_DISTANCE:
                 continue
+            self.visible_enemies.append(enemy)
             enemy_desc = self.view.entities_desc['mobs'][enemy.name]
             c, color, bkcolor = enemy_desc['view'], enemy_desc['foreground_color'], enemy_desc['background_color']
             self.view._put_colored_symbol(x=x, y=y, c=c, color=color, bkcolor=bkcolor)
@@ -91,3 +94,6 @@ class MapPad(Pad):
         self._refresh_hero()
 
         self.first_refresh = False
+
+    def get_visible_enemies(self) -> List:
+        return self.visible_enemies
