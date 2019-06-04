@@ -2,10 +2,8 @@ import logging
 
 import numpy as np
 
-import game.client.controller.controller as cli
 from game.client.controller.network import Network
 from game.model import Model
-from game.view import CursesView
 
 
 def setup_logging():
@@ -59,10 +57,9 @@ def main():
         model = Model()
         setup_labyrinth(model)
 
-        view = CursesView(model)
-
-        cli_controller = cli.Controller(Network(self))
-        cli_controller.start_game()
+        # TODO
+        # cli_controller = cli.Controller(Network(self))
+        # cli_controller.start_game()
 
 
 if __name__ == "__main__":

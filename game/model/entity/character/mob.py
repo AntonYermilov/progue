@@ -1,7 +1,6 @@
 from typing import Dict
 
 from game import Position
-from game.server.controller.command import Command
 from game.model.entity.character.character import Character, CharacterStats
 from game.model.entity.character.strategy import strategies
 from game.model.entity.character.strategy.confused import ConfusedStrategy
@@ -33,7 +32,7 @@ class Mob(Character):
         if damage.confuse_turns > 0:
             self.strategy = ConfusedStrategy(damage.confuse_turns, self)
 
-    def on_new_turn(self) -> Command:
+    def on_new_turn(self):
         return self.strategy.on_new_turn(self)
 
     def on_destroy(self, model):
