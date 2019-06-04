@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from enum import Enum
+from enum import IntEnum
 from typing import Union
 
 
-class ActionType(Enum):
+class ActionType(IntEnum):
     MOVE_ACTION: int = 0
     INVENTORY_ACTION: int = 1
     QUIT_ACTION: int = 2
@@ -15,7 +15,7 @@ class MoveAction:
     column: int
 
 
-class ItemAction(Enum):
+class ItemAction(IntEnum):
     USE: int = 0
     DROP: int = 1
     PICK: int = 2

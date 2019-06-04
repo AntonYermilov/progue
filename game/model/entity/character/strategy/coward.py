@@ -14,7 +14,7 @@ class CowardStrategy(Strategy):
 
     def _get_dist_to_hero(self, position) -> int:
         min_dist = float('inf')
-        for hero in self.model.players.values:
+        for hero in self.model.players.values():
             delta = hero.position - position
             dist_row_, dist_col_ = delta.get_row(), delta.get_col()
             dist = abs(dist_row_) + abs(dist_col_)
@@ -38,7 +38,7 @@ class CowardStrategy(Strategy):
                     is_empty = False
                     break
 
-            for hero in self.model.players.values:
+            for hero in self.model.players.values():
                 if hero.position == new_position:
                     is_empty = False
                     break

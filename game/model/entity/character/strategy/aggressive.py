@@ -47,14 +47,14 @@ class AggressiveStrategy(Strategy):
         return self.total_move_weights[self.MOVES.index(move)]
 
     def _get_move_to_hero(self, character: Character) -> Union[Position, None]:
-        for hero in self.model.players.values:
+        for hero in self.model.players.values():
             hero_position = hero.position
             if any(character.position + move == hero_position for move in AggressiveStrategy.MOVES):
                 return hero_position
 
         min_dist = float('inf')
         dist_row, dist_col = 0, 0
-        for hero in self.model.players.values:
+        for hero in self.model.players.values():
             delta = hero.position - character.position
             dist_row_, dist_col_ = delta.get_row(), delta.get_col()
             dist = abs(dist_row_) + abs(dist_col_)
@@ -110,7 +110,7 @@ class AggressiveStrategy(Strategy):
         if new_position is None:
             return IdleCommand()
 
-        for hero in self.model.players.values:
+        for hero in self.model.players.values():
             if new_position == hero.position:
                 return AttackCommand(character, hero, self.model)
 

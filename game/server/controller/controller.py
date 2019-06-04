@@ -89,7 +89,7 @@ class Controller:
             mob_command.execute()
 
     def _update_commands_with_inventory_action(self, player_id, commands, item_id, item_action):
-        character = self.model.hero
+        character = self.get_player(player_id)
         if item_action == ItemAction.DROP:
             hero_command = DropItemCommand(self.model, player_id, item_id)
             commands.append(hero_command)
@@ -99,7 +99,7 @@ class Controller:
         self._update_commands_with_move_action(player_id, commands, character.position)
 
     def _update_commands_with_move_action(self, player_id, commands, position):
-        character = self.model.players[player_id]
+        character = self.get_player(player_id)
         enemy, item = None, None
         for _mob in self.model.mobs:
             if _mob.position == position:
@@ -120,3 +120,6 @@ class Controller:
 
     def add_player(self, player_id):
         self.model.place_hero(player_id, self.game_config['hero'])
+
+    def get_player(self, player_id):
+        return self.model.players[player_id]

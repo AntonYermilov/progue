@@ -28,7 +28,7 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
             action_type = ActionType.MOVE_ACTION
             action_desc = MoveAction(row=request.action.move_action.row,
                                      column=request.action.move_action.col)
-        elif request.action_type is 1:
+        elif request.action.action_type is 1:
             action_type = ActionType.INVENTORY_ACTION
             action_desc = InventoryAction(item_id=request.action.inventory_action.item_id,
                                           action=request.action.inventory_action.action_type)
