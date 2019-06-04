@@ -9,7 +9,7 @@ class LegendPad(Pad):
 
     INVENTORY_TEXT = '  Inventory  '
     NEXT_TEXT = '  Next (↓)'
-    PREV_TEXT = '  PREV (↑)'
+    PREV_TEXT = '  Prev (↑)'
     USE_TEXT = '   Use   '
     DROP_TEXT = '  Drop  '
     QUIT_TEXT = '  Quit  '
