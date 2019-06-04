@@ -1,4 +1,6 @@
 import logging
+import sys
+import time
 
 import numpy as np
 
@@ -55,11 +57,14 @@ def main():
     setup_logging()
     logging.info('Initialised')
 
-    start_server()
-
-    while True:
-        cli_controller = cli.Controller(Network())
-        cli_controller.start_game()
+    if len(sys.argv) > 1 and sys.argv[1] == '--server':
+        start_server()
+        time.sleep(10000)
+    else:
+        # start_server()
+        while True:
+            cli_controller = cli.Controller(Network())
+            cli_controller.start_game()
 
 
 if __name__ == "__main__":

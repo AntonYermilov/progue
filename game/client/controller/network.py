@@ -11,13 +11,13 @@ class Network:
     """
 
     def __init__(self, *args, **kwargs):
-        self.controller = None
         self.stub = None
         self.game_id = None
         self.player_id = None
 
     def connect(self, *args, **kwargs):
-        channel = grpc.insecure_channel('localhost:51051')
+        channel = grpc.insecure_channel('localhost:50051')
+        grpc.channel_ready_future(channel).result()
         self.stub = progue_pb2_grpc.ProgueServerStub(channel)
 
     def list_games(self):
