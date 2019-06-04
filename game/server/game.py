@@ -56,7 +56,6 @@ class Game:
     def on_action_(self, player, action: Action):
         with self.lock:
             self.controller.on_action(player.id, action)
-            self.on_turn_end_()
 
     def on_turn_end_(self):
         with self.lock:
