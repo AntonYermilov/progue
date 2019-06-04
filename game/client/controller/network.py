@@ -14,52 +14,52 @@ class Network:
         self.stub = None
         self.game_id = None
         self.player_id = None
+        self.addr = '127.0.0.1:1488'
 
     def connect(self, *args, **kwargs):
-        channel = grpc.insecure_channel('localhost:50051')
-        grpc.channel_ready_future(channel).result()
-        self.stub = progue_pb2_grpc.ProgueServerStub(channel)
+        pass
 
     def list_games(self):
         pass
 
     def create_game(self, name: str):
-        response = self.stub.CreateGame(progue_pb2.GameId(id=name))
-        if response.successfully_created:
-            self.player_id = response.player.id
-        else:
-            raise RuntimeError()
+        with grpc.insecure_channel('127.0.0.1:1488') as channel:
+            stub = progue_pb2_grpc.ProgueServerStub(channel)
+            response = stub.CreateGame(progue_pb2.GameId(id=name))
+            if response.successfully_created:
+                self.player_id = response.player.id
+                self.game_id = name
+            else:
+                raise RuntimeError()
 
-    def get_state(self, *args, **kwargs):
-        # hero = self.controller.model.hero
-        # state = State(my_turn=True,
-        #           hero=self.controller.model.hero,
-        #               mobs=self.controller.model.mobs,
-        #               items=self.controller.model.items,
-        #               inventory=Inventory(capacity=hero.limit, items=hero.inventory),
-        #               labyrinth=self.controller.model.labyrinth)
-
+    def get_state(self):
         request = progue_pb2.StateRequest(game_id=progue_pb2.GameId(id=self.game_id),
-                                           player=progue_pb2.Player(id=self.player_id))
-        response = self.stub.GetState(request)
+                                          player=progue_pb2.Player(id=self.player_id))
+        with grpc.insecure_channel(self.addr) as channel:
+            stub = progue_pb2_grpc.ProgueServerStub(channel)
+            response = stub.GetState(request)
         state = deserialize_object(response.state)
 
         return state
 
-    def send_action(self, action: Action, *args, **kwargs):
+    def send_action(self, action: Action):
         progue_pb2.MakeTurnRequest()
         game_id = progue_pb2.GameId(id=self.game_id)
         player = progue_pb2.Player(id=self.player_id)
         if action.type is ActionType.MOVE_ACTION:
             action_type = 0
             action_ = progue_pb2.Action.MoveAction(row=action.desc.row, col=action.desc.column)
+            action_msg = progue_pb2.Action(action_type=action_type, move_action=action_)
         elif action.type is ActionType.INVENTORY_ACTION:
             action_type = 1
             action_ = progue_pb2.Action.InventoryAction(item_id=action.desc.item_id, action_type=action.desc.action)
+            action_msg = progue_pb2.Action(action_type=action_type, inventory_action=action_)
         elif action.type is ActionType.QUIT_ACTION:
             return
         else:
             return
-        action_msg = progue_pb2.Action(action_type=action_type, action=action_)
+
         make_turn_msg = progue_pb2.MakeTurnRequest(game_id=game_id, player=player, action=action_msg)
-        self.stub.MakeTurn(make_turn_msg)
+        with grpc.insecure_channel(self.addr) as channel:
+            stub = progue_pb2_grpc.ProgueServerStub(channel)
+            stub.MakeTurn(make_turn_msg)

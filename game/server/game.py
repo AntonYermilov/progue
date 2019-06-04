@@ -18,8 +18,8 @@ class Game:
     Game class - game management based on async events.
     """
 
-    def __init__(self):
-        self.players = [Player(id='player1')]
+    def __init__(self, player_id='player1'):
+        self.players = [Player(id=player_id)]
         self.current_player = 0
         self.lock = threading.RLock()
 
@@ -27,6 +27,7 @@ class Game:
         model.generate_labyrinth(rows=19, columns=19, free_cells_ratio=0.3)
 
         self.controller = Controller(model)
+        self.controller.start_game(player_id)
 
     def get_state(self, player_id):
         with self.lock:

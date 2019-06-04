@@ -1,4 +1,5 @@
 import threading
+import time
 from concurrent import futures
 
 import grpc
@@ -23,17 +24,19 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
         return progue_pb2.State(state=serialize_object(state))
 
     def MakeTurn(self, request, context):
-        if request.action.action_type is ActionType.MOVE_ACTION:
+        if request.action.action_type is 0:
+            action_type = ActionType.MOVE_ACTION
             action_desc = MoveAction(row=request.action.move_action.row,
                                      column=request.action.move_action.col)
-        elif request.action_type is ActionType.INVENTORY_ACTION:
+        elif request.action_type is 1:
+            action_type = ActionType.INVENTORY_ACTION
             action_desc = InventoryAction(item_id=request.action.inventory_action.item_id,
                                           action=request.action.inventory_action.action_type)
         else:
             print('Error: unknown action type')
             return None
 
-        action = Action(type=request.action.action_type, desc=action_desc)
+        action = Action(type=action_type, desc=action_desc)
         player_id = request.player.id
 
         with self.lock:
@@ -80,8 +83,13 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
 
 
 def start_server():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=50))
-    server_object = ProgueServer()
-    progue_pb2_grpc.add_ProgueServerServicer_to_server(server_object, server)
-    server.add_insecure_port('[::]:50051')
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10), options=(('grpc.so_reuseport', 0),))
+    progue_pb2_grpc.add_ProgueServerServicer_to_server(ProgueServer(), server)
+    result = server.add_insecure_port('0.0.0.0:1488')
     server.start()
+    print(f'Serving on {result}')
+    try:
+        while True:
+            time.sleep(10000)
+    except KeyboardInterrupt:
+        server.stop(0)

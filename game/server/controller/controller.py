@@ -48,6 +48,9 @@ class Controller:
         self.place_mobs()
         self.place_items()
 
+    def add_player(self, player_id):
+        self.model.place_hero(player_id, self.game_config['hero'])
+
     def place_items(self):
         items_number = np.random.randint(self.game_config['items']['min_items_count'],
                                          self.game_config['items']['max_items_count'] + 1)

@@ -59,7 +59,6 @@ def main():
 
     if len(sys.argv) > 1 and sys.argv[1] == '--server':
         start_server()
-        time.sleep(10000)
     else:
         # start_server()
         while True:
