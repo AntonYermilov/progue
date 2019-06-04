@@ -23,11 +23,25 @@ class Game:
             self.players.append(player)
             return player.id
 
-    def on_make_turn(self, player, action):
+    def on_make_turn(self, player_id, action):
         with self.lock:
-            if self.players[self.current_player].id == player.id:
-                self.on_action(player, action)
+            if self.players[self.current_player].id == player_id:
+                self.on_action_(self.players[self.current_player], action)
+                self.on_turn_end_()
 
-    def on_action(self, player, action):
+    def on_action_(self, player, action):
+        # TODO command
+        with self.lock:
+            pass
+
+    def on_turn_end_(self):
+        with self.lock:
+            self.current_player += 1
+            if self.current_player == len(self.players):
+                self.current_player = 0
+                self.on_mobs_turn_()
+
+    def on_mobs_turn_(self):
         # TODO
-        pass
+        with self.lock:
+            pass

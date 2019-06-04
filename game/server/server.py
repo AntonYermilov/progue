@@ -5,6 +5,7 @@ import grpc
 
 from .game import Game
 from .generated import progue_pb2_grpc, progue_pb2
+from game.server.controller.action import *
 
 
 class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
@@ -20,9 +21,25 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
             return progue_pb2.State()
 
     def MakeTurn(self, request, context):
-        # TODO
-        if request.action_type == 1:
-            pass
+        if request.action.action_type is ActionType.MOVE_ACTION:
+            action_desc = MoveAction(row=request.action.move_action.row, col=request.action.move_action.col)
+        elif request.action_type is ActionType.INVENTORY_ACTION:
+            action_desc = InventoryAction(item_id=request.action.inventory_action.item_id,
+                                          action=request.action.inventory_action.action_type)
+        else:
+            print('Error: unknown action type')
+            return None
+
+        action = Action(type=request.action.action_type, desc=action_desc)
+        player_id = request.player.id
+
+        with self.lock:
+            game = self.games[request.game_id.id]
+
+        if game is None:
+            return None
+
+        game.on_make_turn(player_id, action)
 
         return progue_pb2.MakeTurnResponse()
 
@@ -39,7 +56,8 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
             if game_id in self.games:
                 game = self.games[game_id]
                 player_id = game.on_connect()
-                return progue_pb2.ConnectToGameResponse(successfully_connected=True, player=progue_pb2.Player(id=player_id))
+                return progue_pb2.ConnectToGameResponse(successfully_connected=True,
+                                                        player=progue_pb2.Player(id=player_id))
             else:
                 return progue_pb2.ConnectToGameResponse(successfully_connected=False)
 
@@ -48,7 +66,8 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
         with self.lock:
             if game_id not in self.games:
                 self.games[game_id] = Game()
-                return progue_pb2.CreateGameResponse(successfully_created=True, player=progue_pb2.Player(id='player1'))
+                return progue_pb2.CreateGameResponse(successfully_created=True,
+                                                     player=progue_pb2.Player(id='player1'))
             else:
                 return progue_pb2.CreateGameResponse(successfully_created=False)
 

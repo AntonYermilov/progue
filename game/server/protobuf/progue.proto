@@ -12,7 +12,7 @@ service ProgueServer {
 message ListGamesRequest {}
 
 message ConnectToGameResponse {
-    successfully_connected = 1
+    bool successfully_connected = 1;
     Player player = 2;
 }
 
@@ -21,8 +21,9 @@ message StateRequest {
 }
 
 message MakeTurnRequest {
-    Action action = 1;
+    GameId game_id = 1;
     Player player = 2;
+    Action action = 3;
 }
 
 message MakeTurnResponse {}
