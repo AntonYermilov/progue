@@ -4,9 +4,11 @@ from functools import partial
 from typing import Dict
 import time
 
+from game.client.view.view import View
 from game.controller import Controller
 from game.model import Model
 from game.view.bindings import KEY_BINDINGS, LEGEND, GAME_OVER
+from bearlibterminal import terminal
 
 COLOR_MAP = {
     'black': curses.COLOR_BLACK,
@@ -39,11 +41,12 @@ class CursesView:
     def start(self, controller: Controller):
         """
         Start the drawing loop.
-1
+
         :param controller: controller to work with
         """
         self.controller = controller
-        curses.wrapper(partial(self.game_init))
+        # curses.wrapper(partial(self.game_init))
+        self.game_init()
 
     @staticmethod
     def active_sleep(timer):
@@ -51,90 +54,97 @@ class CursesView:
         while time.time() - cur_time < timer:
             continue
 
-    def game_init(self, screen):
-        #while True:
-        if self.draw_scene(screen) == ord('q'):
-            exit(0)
-
-    def draw_scene(self, screen):
-        """
-        Drawing loop.
-        :param screen: curses screen
-        """
+    def game_init(self):
+        view = View(self.model, self.controller.entities_desc)
+        view.initialize()
         key_pressed = 0
-
-        curses.curs_set(0)
-
-        screen.clear()
-        screen.refresh()
-        screen.idcok(False)
-        screen.idlok(False)
-
-        map_y = self.model.get_labyrinth().rows
-        map_x = self.model.get_labyrinth().columns
-        logging.debug(f"Map shape: y={map_y}, x={map_x}")
-        map_pad = curses.newpad(map_y + 1, map_x + 1)  # pad should be +1 of it's working area
-
-        legend_y, legend_x = self.get_text_dimensions(LEGEND)
-        legend_pad = curses.newpad(legend_y + 1, legend_x + 1)
-
-        stats_y, stats_x = 3, 25
-        stats_pad = curses.newpad(stats_y, stats_x)
-
-        inventory_y, inventory_x = self.model.hero.limit + 5, 25
-        inventory_pad = curses.newpad(inventory_y, inventory_x)
-
-        while key_pressed != ord('q'):
-            screen.refresh()
-
-            screen_height, screen_width = screen.getmaxyx()
-
-            map_origin_y = 0
-            map_origin_x = 0
-
+        while key_pressed != terminal.TK_Q:
             if key_pressed in KEY_BINDINGS:
                 self.controller.process_input(KEY_BINDINGS[key_pressed])
-                if not self.model.get_hero().is_alive():
-                    screen.clear()
-                    screen.refresh()
-                    gameover_y, gameover_x = self.get_text_dimensions(GAME_OVER)
-                    self.draw_gameover(map_pad)
-                    map_pad.refresh(0, 0,
-                                    0, 0,
-                                    min(gameover_y + 1, screen_height - 1),
-                                    min(gameover_x + 1, screen_width - 1))
-                    screen.refresh()
-                    key_pressed = screen.getch()
-                    while key_pressed != ord('q') and key_pressed != ord('r'):
-                        key_pressed = screen.getch()
-                    return key_pressed
+            view.refresh()
+            key_pressed = view.get_user_command()
+        view.destroy()
 
-            self.draw_map(map_pad)
-            map_pad.refresh(0, 0,
-                            map_origin_y, map_origin_x,
-                            min(map_origin_y + map_y, screen_height - 1), min(map_origin_x + map_x, screen_width - 1))
-
-            self.draw_legend(legend_pad)
-            legend_pad.refresh(0, 0,
-                               map_y + 1, 0,
-                               min(map_y + 1 + legend_y, screen_height - 1),
-                               min(legend_x, screen_width - 1))
-
-            self.draw_stats(stats_pad, self.model.get_hero().stats)
-            stats_pad.refresh(0, 0,
-                              0, map_x + 1,
-                              min(stats_y, screen_height - 1),
-                              min(map_x + 1 + stats_x, screen_width - 1))
-
-            inventory_desc = self.get_inventory_list()
-            self.draw_inventory(inventory_pad, inventory_desc)
-            inventory_pad.refresh(0, 0,
-                                  stats_y, map_x + 1,
-                                  min(stats_y + inventory_y, screen_height - 1),
-                                  min(map_x + 1 + inventory_x, screen_width - 1))
-
-            screen.refresh()
-            key_pressed = screen.getch()
+    # def game_init(self, screen):
+    #     #while True:
+    #     if self.draw_scene(screen) == ord('q'):
+    #         exit(0)
+    #
+    # def draw_scene(self, screen):
+        # key_pressed = 0
+        #
+        # curses.curs_set(0)
+        #
+        # screen.clear()
+        # screen.refresh()
+        # screen.idcok(False)
+        # screen.idlok(False)
+        #
+        # map_y = self.model.get_labyrinth().rows
+        # map_x = self.model.get_labyrinth().columns
+        # logging.debug(f"Map shape: y={map_y}, x={map_x}")
+        # map_pad = curses.newpad(map_y + 1, map_x + 1)  # pad should be +1 of it's working area
+        #
+        # legend_y, legend_x = self.get_text_dimensions(LEGEND)
+        # legend_pad = curses.newpad(legend_y + 1, legend_x + 1)
+        #
+        # stats_y, stats_x = 3, 25
+        # stats_pad = curses.newpad(stats_y, stats_x)
+        #
+        # inventory_y, inventory_x = self.model.hero.limit + 5, 25
+        # inventory_pad = curses.newpad(inventory_y, inventory_x)
+        #
+        # while key_pressed != ord('q'):
+        #     screen.refresh()
+        #
+        #     screen_height, screen_width = screen.getmaxyx()
+        #
+        #     map_origin_y = 0
+        #     map_origin_x = 0
+        #
+        #     if key_pressed in KEY_BINDINGS:
+        #         self.controller.process_input(KEY_BINDINGS[key_pressed])
+        #         if not self.model.get_hero().is_alive():
+        #             screen.clear()
+        #             screen.refresh()
+        #             gameover_y, gameover_x = self.get_text_dimensions(GAME_OVER)
+        #             self.draw_gameover(map_pad)
+        #             map_pad.refresh(0, 0,
+        #                             0, 0,
+        #                             min(gameover_y + 1, screen_height - 1),
+        #                             min(gameover_x + 1, screen_width - 1))
+        #             screen.refresh()
+        #             key_pressed = screen.getch()
+        #             while key_pressed != ord('q') and key_pressed != ord('r'):
+        #                 key_pressed = screen.getch()
+        #             return key_pressed
+        #
+        #     self.draw_map(map_pad)
+        #     map_pad.refresh(0, 0,
+        #                     map_origin_y, map_origin_x,
+        #                     min(map_origin_y + map_y, screen_height - 1), min(map_origin_x + map_x, screen_width - 1))
+        #
+        #     self.draw_legend(legend_pad)
+        #     legend_pad.refresh(0, 0,
+        #                        map_y + 1, 0,
+        #                        min(map_y + 1 + legend_y, screen_height - 1),
+        #                        min(legend_x, screen_width - 1))
+        #
+        #     self.draw_stats(stats_pad, self.model.get_hero().stats)
+        #     stats_pad.refresh(0, 0,
+        #                       0, map_x + 1,
+        #                       min(stats_y, screen_height - 1),
+        #                       min(map_x + 1 + stats_x, screen_width - 1))
+        #
+        #     inventory_desc = self.get_inventory_list()
+        #     self.draw_inventory(inventory_pad, inventory_desc)
+        #     inventory_pad.refresh(0, 0,
+        #                           stats_y, map_x + 1,
+        #                           min(stats_y + inventory_y, screen_height - 1),
+        #                           min(map_x + 1 + inventory_x, screen_width - 1))
+        #
+        #     screen.refresh()
+        #     key_pressed = screen.getch()
 
     def get_inventory_list(self):
         return 'Inventory (15 items max):\n' + '\n'.join(
@@ -209,5 +219,5 @@ class CursesView:
     @staticmethod
     def draw_stats(pad, stats):
         pad.clear()
-        health = f'Health: {int(100 * stats.health /stats.max_health)}%'
+        health = f'Health: {int(100 * stats.health / stats.max_health)}%'
         pad.addstr(1, 0, health)

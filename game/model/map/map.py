@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import numpy as np
 from enum import Enum
 
-from game import Position
+from game import Position, Direction
 
 
 class MapBlock(Enum):
@@ -23,6 +23,7 @@ class Labyrinth:
     labyrinth: np.ndarray
     wall: np.ndarray
     floor: np.ndarray
+    void: np.ndarray
 
     def __init__(self, rows: int, columns: int, fill: MapBlock = MapBlock.WALL):
         self.rows = rows
@@ -31,6 +32,17 @@ class Labyrinth:
         self.labyrinth[:,:] = fill
         self.wall = self.labyrinth == MapBlock.WALL
         self.floor = self.labyrinth == MapBlock.FLOOR
+        self.void = None
+
+    def initialize_void_cells(self):
+        self.void = np.zeros((self.rows, self.columns), dtype=np.bool)
+        for i in range(self.rows):
+            for j in range(self.columns):
+                for di in [-1, 0, 1]:
+                    for dj in [-1, 0, 1]:
+                        if 0 <= i + di < self.rows and 0 <= j + dj < self.columns:
+                            self.void[i, j] |= self.labyrinth[i + di, j + dj] == MapBlock.FLOOR
+        self.void = np.invert(self.void)
 
     def __getitem__(self, key):
         if isinstance(key, Position):
@@ -62,9 +74,35 @@ class Labyrinth:
             row, col = args
         return self.floor[row, col]
 
-    # Temporary function to test refactored code
-    def visualize(self):
-        cur = self.labyrinth.copy()
-        cur[cur == MapBlock.FLOOR] = '.'
-        cur[cur == MapBlock.WALL] = '#'
-        return cur
+    def is_void(self, *args):
+        if len(args) == 1 and isinstance(args[0], Position):
+            row, col = args[0].get_row(), args[0].get_col()
+        else:
+            row, col = args
+        return self.void[row, col]
+
+    def get_distances(self, position: Position, max_dist: int) -> np.ndarray:
+        queue = []
+        head, tail = 0, 0
+        dist = np.zeros((self.rows, self.columns), dtype=np.int32)
+        dist[:,:] = 1 << 30
+
+        dist[position.row, position.col] = 0
+        queue.append((position.row, position.col))
+        tail += 1
+
+        while head < tail:
+            (i, j) = queue[head]
+            head += 1
+
+            for di, dj in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                if dist[i, j] + 1 < dist[i + di, j + dj]:
+                    dist[i + di, j + dj] = dist[i, j] + (1 if di == 0 else 2)
+                    if self.floor[i + di, j + dj] and dist[i + di, j + dj] < max_dist:
+                        queue.append((i + di, j + dj))
+                        tail += 1
+            for di, dj in [(-1, -1), (1, -1), (-1, 1), (1, 1)]:
+                if self.wall[i + di, j + dj] and dist[i, j] + 1 < dist[i + di, j + dj]:
+                    dist[i + di, j + dj] = dist[i, j] + (1 if di == 0 else 2)
+
+        return dist
