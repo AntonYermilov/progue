@@ -12,4 +12,5 @@ class UserCommand(Enum):
     USE = terminal.TK_U
     QUIT = terminal.TK_Q
     MENU = terminal.TK_M
+    ENTER = terminal.TK_ENTER
     UNKNOWN = None

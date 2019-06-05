@@ -61,9 +61,8 @@ def main():
         start_server()
     else:
         # start_server()
-        while True:
-            cli_controller = cli.Controller(Network())
-            cli_controller.start_game()
+        cli_controller = cli.Controller()
+        cli_controller.start_game()
 
 
 if __name__ == "__main__":

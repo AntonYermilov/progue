@@ -2,21 +2,24 @@ from typing import Dict, List, Tuple
 
 from bearlibterminal import terminal
 
+from game.client.controller.menu import Menu
 from game.client.model.model import Model
 from game.client.view.pad.inventory import InventoryPad
 from game.client.view.pad.legend import LegendPad
 from game.client.view.pad.map import MapPad
+from game.client.view.pad.menu import MenuPad
 from game.client.view.pad.pad import Pad
 from game.client.view.pad.stats import StatsPad
 from game.client.view.user_command import UserCommand
 
 
 class View:
-    def __init__(self, model: Model, entities_desc: Dict, *args, **kwargs):
+    def __init__(self, controller, model: Model, entities_desc: Dict, *args, **kwargs):
+        self.controller = controller
         self.model = model
         self.entities_desc = entities_desc
-        self.pads: List[Pad] = None
-        pass
+        self.game_pads: List[Pad] = None
+        self.menu_pad = None
 
     @staticmethod
     def _generate_config(width: int, height: int):
@@ -29,13 +32,14 @@ class View:
         map = MapPad(self, 21, 2, 99, 41)
         legend = LegendPad(self, 0, 41, 104, 43)
         inventory = InventoryPad(self, 79, 0, 104, 41)
-        self.pads = [stats, map, legend, inventory]
+        self.game_pads = [stats, map, legend, inventory]
+        self.menu_pad = MenuPad(self, 37, 18, 67, 24)
 
     def initialize(self):
         terminal.open()
         self._create_pads()
-        width = max(pad.x1 for pad in self.pads)
-        height = max(pad.y1 for pad in self.pads)
+        width = max(pad.x1 for pad in self.game_pads)
+        height = max(pad.y1 for pad in self.game_pads)
         terminal.set(self._generate_config(width, height))
 
     @staticmethod
@@ -115,13 +119,21 @@ class View:
         View._set_color(color, bkcolor)
         View._put_text(int(x), int(y), s)
 
-    def refresh(self):
+    def refresh_main_menu(self):
+        void = self.entities_desc['map']['void']['background_color']
+        self._set_color(void, void)
+        terminal.clear()
+
+        self.menu_pad.refresh()
+        terminal.refresh()
+
+    def refresh_game(self):
         void = self.entities_desc['map']['void']['background_color']
         self._set_color(void, void)
         terminal.clear()
 
         map_pad, stats_pad = None, None
-        for pad in self.pads:
+        for pad in self.game_pads:
             pad.refresh()
             if isinstance(pad, MapPad):
                 map_pad = pad
