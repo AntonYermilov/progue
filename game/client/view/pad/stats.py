@@ -75,9 +75,14 @@ class StatsPad(Pad):
     def refresh_enemies(self, visible_enemies: List):
         width = self.x1 - self.x0 - 1
         for i, enemy in enumerate(visible_enemies):
-            view = self.view.entities_desc['mobs'][enemy.name]['view']
-            color = self.view.entities_desc['mobs'][enemy.name]['foreground_color']
-            bkcolor = self.view.entities_desc['mobs'][enemy.name]['background_color']
+            if enemy.name not in self.view.entities_desc['mobs']:
+                enemy_desc = self.view.entities_desc['hero'].copy()
+                enemy_desc['foreground_color'] = '#0000ff'
+            else:
+                enemy_desc = self.view.entities_desc['mobs'][enemy.name]
+            view = enemy_desc['view']
+            color = enemy_desc['foreground_color']
+            bkcolor = enemy_desc['background_color']
             desc = f': {enemy.name}'
             x, y = self.x0, self.y0 + self.MOB_ROW + i * 3
             self.view._put_colored_symbol(x=x, y=y, c=view, color=color, bkcolor=bkcolor)

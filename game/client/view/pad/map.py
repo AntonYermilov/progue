@@ -1,6 +1,7 @@
 from typing import Tuple, List
 
 from game import Position
+from game.model.entity.character import Hero
 from .pad import Pad
 
 
@@ -69,7 +70,11 @@ class MapPad(Pad):
             if self.distance[enemy.position.row, enemy.position.col] > self.SHADE_DISTANCE:
                 continue
             self.visible_enemies.append(enemy)
-            enemy_desc = self.view.entities_desc['mobs'][enemy.name]
+            if enemy.name not in self.view.entities_desc['mobs']:
+                enemy_desc = self.view.entities_desc['hero'].copy()
+                enemy_desc['foreground_color'] = '#0000ff'
+            else:
+                enemy_desc = self.view.entities_desc['mobs'][enemy.name]
             c, color, bkcolor = enemy_desc['view'], enemy_desc['foreground_color'], enemy_desc['background_color']
             self.view._put_colored_symbol(x=x, y=y, c=c, color=color, bkcolor=bkcolor)
 

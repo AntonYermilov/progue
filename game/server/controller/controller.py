@@ -44,12 +44,14 @@ class Controller:
             Player id
         """
 
-        self.model.place_hero(player_id, self.game_config['hero'])
+        self.add_player(player_id)
         self.place_mobs()
         self.place_items()
 
     def add_player(self, player_id):
         self.model.place_hero(player_id, self.game_config['hero'])
+        self.get_player(player_id).set_name(player_id)
+        print('Connected: ', self.get_player(player_id))
 
     def place_items(self):
         items_number = np.random.randint(self.game_config['items']['min_items_count'],

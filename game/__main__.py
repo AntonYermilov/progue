@@ -1,12 +1,9 @@
 import logging
 import sys
-import time
 
 import numpy as np
 
-# TODO FIX CIRCULAR DEPENDENCY
 import game.client.controller.controller as cli
-from game.client.controller.network import Network
 from game.server import start_server
 
 
@@ -60,7 +57,6 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1] == '--server':
         start_server()
     else:
-        # start_server()
         cli_controller = cli.Controller()
         cli_controller.start_game()
 
