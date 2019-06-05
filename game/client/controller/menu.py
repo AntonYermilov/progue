@@ -72,7 +72,7 @@ class Menu:
 
     def _start_singleplayer(self):
         self.server = subprocess.Popen(["python3", "-m", "game", "--server"])
-        time.sleep(1)
+        time.sleep(2)
 
         self.network.connect()
         self.network.create_game('game1')  # TODO REFACTOR
