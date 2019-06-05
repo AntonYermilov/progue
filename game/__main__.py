@@ -5,6 +5,7 @@ import numpy as np
 
 import game.client.controller.controller as cli
 from game.server import start_server
+from game.test import run_tests
 
 
 def setup_logging():
@@ -54,8 +55,11 @@ def main():
     setup_logging()
     logging.info('Initialised')
 
-    if len(sys.argv) > 1 and sys.argv[1] == '--server':
-        start_server()
+    if len(sys.argv) > 1:
+        if sys.argv[1] == '--server':
+            start_server()
+        elif sys.argv[1] == '--test':
+            run_tests()
     else:
         cli_controller = cli.Controller()
         cli_controller.start_game()
