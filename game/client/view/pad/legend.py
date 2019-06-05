@@ -7,9 +7,9 @@ class LegendPad(Pad):
     BACKGROUND_COLOR = '#26004d'
     # BACKGROUND_COLOR = '#000000'
 
-    INVENTORY_TEXT = '  Inventory  '
-    NEXT_TEXT = '  Next (↓)'
-    PREV_TEXT = '  Prev (↑)'
+    INVENTORY_TEXT = '   Inventory   '
+    NEXT_TEXT = '  Next (↓)  '
+    PREV_TEXT = '  Prev (↑)  '
     USE_TEXT = '   Use   '
     DROP_TEXT = '  Drop  '
     QUIT_TEXT = '  Quit  '
@@ -21,7 +21,7 @@ class LegendPad(Pad):
         for btn_text in LegendPad.ORDER:
             if btn_text == text:
                 break
-            shift += len(btn_text) + 2
+            shift += len(btn_text) + 4
         return shift
 
     def _refresh_background(self):

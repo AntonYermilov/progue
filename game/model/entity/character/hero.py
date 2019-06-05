@@ -40,6 +40,10 @@ class Hero(Character, InventoryKeeper):
                           confuse_turns=description['initial_stats']['confuse_turns'])
         Character.__init__(self, position=position, stats=stats)
         InventoryKeeper.__init__(self, limit=description['initial_stats']['inventory_size'])
+        self.name = ''
+
+    def set_name(self, name):
+        self.name = name
 
     def deal_damage(self, target: Damageable) -> Damage:
         confuse_turns = 0

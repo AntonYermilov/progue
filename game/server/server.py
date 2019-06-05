@@ -15,6 +15,7 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
         super().__init__()
         self.games = dict()
         self.lock = threading.RLock()
+        self.received = False
 
     def GetState(self, request, context):
         with self.lock:
@@ -24,6 +25,8 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
         return progue_pb2.State(state=serialize_object(state))
 
     def MakeTurn(self, request, context):
+        self.received = True
+
         if request.action.action_type is 0:
             action_type = ActionType.MOVE_ACTION
             action_desc = MoveAction(row=request.action.move_action.row,
@@ -45,7 +48,10 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
         if game is None:
             return None
 
-        game.on_make_turn(player_id, action)
+        try:
+            game.on_make_turn(player_id, action)
+        except Exception as e:
+            print(e)
 
         return progue_pb2.MakeTurnResponse()
 

@@ -32,9 +32,13 @@ class Game:
     def get_state(self, player_id):
         with self.lock:
             hero = self.controller.model.players[player_id]
+            players = []
+            for p in self.players:
+                 if p.id != player_id:
+                    players.append(self.controller.get_player(p.id))
             state = State(my_turn=self.players[self.current_player].id == player_id,
                           hero=hero,
-                          mobs=self.controller.model.mobs,
+                          mobs=self.controller.model.mobs + players,
                           items=self.controller.model.items,
                           inventory=Inventory(capacity=hero.limit, items=hero.inventory),
                           labyrinth=self.controller.model.labyrinth)

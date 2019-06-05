@@ -3,11 +3,11 @@ from pathlib import Path
 from typing import Union
 
 from game import Position
+from game.client.controller.menu import Menu
 from game.client.model.action import Action, ActionType, MoveAction, InventoryAction, ItemAction
 from game.client.model.model import Model
 from game.client.view.user_command import UserCommand
 from game.client.view.view import View
-from game.client.controller.network import Network
 
 
 class Controller:
@@ -15,33 +15,41 @@ class Controller:
     GAME_CONFIG_PATH = Path('resources', 'config', 'game_config.json')
     ENTITIES_CONFIG_PATH = Path('resources', 'config', 'entities.json')
 
-    def __init__(self, network: Network, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         with self.GAME_CONFIG_PATH.open('r') as src:
             self.game_config = json.load(src)
         with self.ENTITIES_CONFIG_PATH.open('r') as src:
             self.entities_desc = json.load(src)
-        self.network = network
         self.model = Model()
-        self.view = View(self.model, self.entities_desc)
+        self.menu = None
+        self.view = View(self, self.model, self.entities_desc)
 
     def start_game(self):
         self.view.initialize()
-        self.network.connect()
-        self.network.create_game('game1')  # TODO REFACTOR
-        while True:
-            state = self.network.get_state()
-            self.model.update(state)
-            self.view.refresh()
-            if state.my_turn:
-                # TODO add start_turn call
-                action = self.get_user_action()
-                self.network.send_action(action)
-                if action.type == ActionType.QUIT_ACTION:
-                    break
-                # TODO add finish_turn call
 
-            # TODO fix lugs when using delay command
-            # self.view.delay(1.0 / self.FRAMES_PER_SECOND)
+        while True:
+            self.menu = Menu(self.view)
+            try:
+                network = self.menu.make_choice()
+                if network is None:
+                    break
+
+                while True:
+                    state = network.get_state()
+                    self.model.update(state)
+                    self.view.refresh_game()
+                    if state.my_turn:
+                        # TODO add start_turn call
+                        action = self.get_user_action()
+                        network.send_action(action)
+                        if action.type == ActionType.QUIT_ACTION:
+                            break
+                        # TODO add finish_turn call
+
+                    # TODO fix lugs when using delay command
+                    # self.view.delay(1.0 / self.FRAMES_PER_SECOND)
+            finally:
+                self.menu.destroy()
         self.view.destroy()
 
     def get_user_action(self) -> Union[Action, None]:
@@ -77,7 +85,7 @@ class Controller:
     def _process_inventory(self) -> Union[Action, None]:
         inventory = self.model.inventory
         inventory.open()
-        self.view.refresh()
+        self.view.refresh_game()
 
         action = None
         while True:
@@ -86,11 +94,11 @@ class Controller:
                 break
             if cmd == UserCommand.DOWN:
                 inventory.select_next_item()
-                self.view.refresh()
+                self.view.refresh_game()
                 continue
             if cmd == UserCommand.UP:
                 inventory.select_previous_item()
-                self.view.refresh()
+                self.view.refresh_game()
                 continue
             if inventory.no_item_selected():
                 continue
@@ -106,5 +114,5 @@ class Controller:
                 break
 
         inventory.close()
-        self.view.refresh()
+        self.view.refresh_game()
         return action
