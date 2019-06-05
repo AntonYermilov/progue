@@ -5,6 +5,43 @@ from game.client.controller.network import Network
 from game.client.view.user_command import UserCommand
 
 
+class GameChoiceMenu:
+
+    def __init__(self, view, network):
+        self.buttons = network.list_games()
+        self.position = 0
+        self.view = view
+        self.view.menu_pad.set_menu(self)
+
+    def _select_next(self):
+        self.position += 1
+        if self.position == len(self.buttons):
+            self.position = 0
+
+    def _select_prev(self):
+        self.position -= 1
+        if self.position < 0:
+            self.position += len(self.buttons)
+
+    def _apply_selection(self):
+        return self.buttons[self.position]
+
+    def make_choice(self) -> str:
+        self.view.refresh_main_menu()
+        while True:
+            cmd = self.view.get_user_command()
+            if cmd == UserCommand.UP:
+                self._select_prev()
+                self.view.refresh_main_menu()
+                continue
+            if cmd == UserCommand.DOWN:
+                self._select_next()
+                self.view.refresh_main_menu()
+                continue
+            if cmd == UserCommand.ENTER:
+                return self._apply_selection()
+
+
 class Menu:
     SINGLEPLAYER = 'Singleplayer'
     MULTIPLAYER_NEW = 'Create Multiplayer Game'
@@ -48,7 +85,10 @@ class Menu:
 
     def _connect_multiplayer(self):
         self.network.connect()
-        self.network.create_game('game1')  # TODO REFACTOR
+        game_id = GameChoiceMenu(self.view, self.network).make_choice()
+        self.view.menu_pad.set_menu(self)
+
+        self.network.connect_to_game(game_id)
         return self.network
 
     @staticmethod
