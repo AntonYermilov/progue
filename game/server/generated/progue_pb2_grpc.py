@@ -39,6 +39,11 @@ class ProgueServerStub(object):
         request_serializer=progue__pb2.GameId.SerializeToString,
         response_deserializer=progue__pb2.CreateGameResponse.FromString,
         )
+    self.GameSaveManage = channel.unary_unary(
+        '/progue.ProgueServer/GameSaveManage',
+        request_serializer=progue__pb2.GameSaveRequest.SerializeToString,
+        response_deserializer=progue__pb2.GameSaveResponse.FromString,
+        )
 
 
 class ProgueServerServicer(object):
@@ -80,6 +85,13 @@ class ProgueServerServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def GameSaveManage(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_ProgueServerServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -107,6 +119,11 @@ def add_ProgueServerServicer_to_server(servicer, server):
           servicer.CreateGame,
           request_deserializer=progue__pb2.GameId.FromString,
           response_serializer=progue__pb2.CreateGameResponse.SerializeToString,
+      ),
+      'GameSaveManage': grpc.unary_unary_rpc_method_handler(
+          servicer.GameSaveManage,
+          request_deserializer=progue__pb2.GameSaveRequest.FromString,
+          response_serializer=progue__pb2.GameSaveResponse.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(
