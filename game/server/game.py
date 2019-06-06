@@ -33,6 +33,15 @@ class Game:
         self.controller = Controller(model)
         self.controller.start_game(player_id)
 
+    def player_quit(self, player_id):
+        with self.lock:
+            for i, p in enumerate(self.players):
+                if p.id == player_id:
+                    del self.players[i]
+                    break
+            del self.controller.model.players[player_id]
+            return len(self.players) == 0
+
     def save_game(self):
         with self.lock:
             data = serialize_object(self.controller)
@@ -54,7 +63,7 @@ class Game:
             hero = self.controller.model.players[player_id]
             players = []
             for p in self.players:
-                 if p.id != player_id:
+                if p.id != player_id:
                     players.append(self.controller.get_player(p.id))
             state = State(my_turn=self.players[self.current_player].id == player_id,
                           hero=hero,
@@ -84,7 +93,7 @@ class Game:
     def on_turn_end_(self):
         with self.lock:
             self.current_player += 1
-            if self.current_player == len(self.players):
+            if self.current_player >= len(self.players):
                 self.current_player = 0
                 self.on_mobs_turn_()
 

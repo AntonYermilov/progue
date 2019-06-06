@@ -1,5 +1,6 @@
 import subprocess
 import time
+from typing import Union
 
 from game.client.controller.network import Network
 from game.client.view.user_command import UserCommand
@@ -26,8 +27,10 @@ class GameChoiceMenu:
     def _apply_selection(self):
         return self.buttons[self.position]
 
-    def make_choice(self) -> str:
+    def make_choice(self) -> Union[str, None]:
         self.view.refresh_main_menu()
+        if len(self.buttons) == 0:
+            return None
         while True:
             cmd = self.view.get_user_command()
             if cmd == UserCommand.UP:
@@ -75,25 +78,37 @@ class Menu:
         time.sleep(2)
 
         self.network.connect()
-        self.network.create_game('game1')  # TODO REFACTOR
+        self.network.create_game('single_player_game')
         return self.network
 
     def _start_multiplayer(self):
-        self.network.connect()
-        self.network.create_game('game1')  # TODO REFACTOR
+        try:
+            self.network.connect()
+            self.network.create_game('game1')  # TODO REFACTOR
+        except Exception as e:
+            print(f'Failed to connect: {e}')
+            return None
         return self.network
 
     def _connect_multiplayer(self):
-        self.network.connect()
-        game_id = GameChoiceMenu(self.view, self.network).make_choice()
-        self.view.menu_pad.set_menu(self)
-
-        self.network.connect_to_game(game_id)
+        try:
+            self.network.connect()
+            game_id = GameChoiceMenu(self.view, self.network).make_choice()
+            if game_id is not None:
+                self.network.connect_to_game(game_id)
+                self.view.menu_pad.set_menu(self)
+            else:
+                self.view.menu_pad.set_menu(self)
+                self.view.refresh_main_menu()
+                return None
+        except Exception as e:
+            print(f'Failed to connect: {e}')
+            return None
         return self.network
 
     @staticmethod
     def _exit():
-        return None
+        return 'exit'
 
     def _apply_selection(self):
         return {0: self._start_singleplayer,
