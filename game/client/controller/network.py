@@ -19,6 +19,20 @@ class Network:
     def connect(self, *args, **kwargs):
         pass
 
+    def game_save_manage_(self, type):
+        with grpc.insecure_channel(self.addr) as channel:
+            stub = progue_pb2_grpc.ProgueServerStub(channel)
+            stub.GameSaveManage(progue_pb2.GameSaveRequest(type=type))
+
+    def save_game(self):
+        self.game_save_manage_(0)
+
+    def load_game(self):
+        self.game_save_manage_(1)
+
+    def delete_game(self):
+        self.game_save_manage_(2)
+
     def list_games(self):
         with grpc.insecure_channel(self.addr) as channel:
             stub = progue_pb2_grpc.ProgueServerStub(channel)

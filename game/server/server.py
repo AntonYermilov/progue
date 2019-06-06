@@ -27,6 +27,8 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
         elif request.type == 2:
             game.delete_save()
 
+        return progue_pb2.GameSaveResponse()
+
     def GetState(self, request, context):
         with self.lock:
             game = self.games[request.game_id.id]
