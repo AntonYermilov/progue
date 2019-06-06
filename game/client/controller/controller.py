@@ -38,13 +38,12 @@ class Controller:
                     state = network.get_state()
                     self.model.update(state)
                     self.view.refresh_game()
+                    self.view.clear_user_command_queue()
                     if state.my_turn:
-                        # TODO add start_turn call
                         action = self.get_user_action()
                         network.send_action(action)
                         if action.type == ActionType.QUIT_ACTION:
                             break
-                        # TODO add finish_turn call
 
                     # TODO fix lugs when using delay command
                     # self.view.delay(1.0 / self.FRAMES_PER_SECOND)

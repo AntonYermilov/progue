@@ -50,8 +50,7 @@ class Controller:
 
     def add_player(self, player_id):
         self.model.place_hero(player_id, self.game_config['hero'])
-        self.get_player(player_id).set_name(player_id)
-        print('Connected: ', self.get_player(player_id))
+        print(f'Connected: {player_id}', )
 
     def place_items(self):
         items_number = np.random.randint(self.game_config['items']['min_items_count'],
@@ -106,6 +105,11 @@ class Controller:
         for _mob in self.model.mobs:
             if _mob.position == position:
                 enemy = _mob
+        for _hero_name, _hero in self.model.players.items():
+            if _hero_name == player_id:
+                continue
+            if _hero.position == position:
+                enemy = _hero
         for _item in self.model.items:
             if _item.position == position:
                 item = _item
@@ -119,9 +123,6 @@ class Controller:
         else:
             hero_command = MoveCommand(character, position)
             commands.append(hero_command)
-
-    def add_player(self, player_id):
-        self.model.place_hero(player_id, self.game_config['hero'])
 
     def get_player(self, player_id):
         return self.model.players[player_id]

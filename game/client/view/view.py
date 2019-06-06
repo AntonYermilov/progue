@@ -1,8 +1,7 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 from bearlibterminal import terminal
 
-from game.client.controller.menu import Menu
 from game.client.model.model import Model
 from game.client.view.pad.inventory import InventoryPad
 from game.client.view.pad.legend import LegendPad
@@ -145,13 +144,17 @@ class View:
 
     @staticmethod
     def get_user_command() -> UserCommand:
-        # TODO improve for online game, i.e. make async call in case it is not our turn
         cmd = terminal.read()
         try:
             cmd = UserCommand(cmd)
         except ValueError:
             cmd = UserCommand.UNKNOWN
         return cmd
+
+    @staticmethod
+    def clear_user_command_queue():
+        while terminal.has_input():
+            terminal.read()
 
     @staticmethod
     def delay(sec: float):

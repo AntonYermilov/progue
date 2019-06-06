@@ -71,6 +71,7 @@ class Model:
     def place_hero(self, player_id, hero_desc: Dict):
         cell = self._get_free_cell()
         self.players[player_id] = Hero(cell, hero_desc)
+        self.players[player_id].set_name(player_id)
 
     def place_new_mob(self, mob_name: str, mob_desc: Dict):
         cell = self._get_free_cell()
