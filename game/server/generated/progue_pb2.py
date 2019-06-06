@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='progue',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0cprogue.proto\x12\x06progue\"e\n\x0fGameSaveRequest\x12*\n\x04type\x18\x01 \x01(\x0e\x32\x1c.progue.GameSaveRequest.Type\"&\n\x04Type\x12\x08\n\x04SAVE\x10\x00\x12\x08\n\x04LOAD\x10\x01\x12\n\n\x06\x44\x45LETE\x10\x02\"\x12\n\x10GameSaveResponse\"\x12\n\x10ListGamesRequest\"W\n\x15\x43onnectToGameResponse\x12\x1e\n\x16successfully_connected\x18\x01 \x01(\x08\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\"O\n\x0cStateRequest\x12\x1f\n\x07game_id\x18\x01 \x01(\x0b\x32\x0e.progue.GameId\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\"r\n\x0fMakeTurnRequest\x12\x1f\n\x07game_id\x18\x01 \x01(\x0b\x32\x0e.progue.GameId\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\x12\x1e\n\x06\x61\x63tion\x18\x03 \x01(\x0b\x32\x0e.progue.Action\"\x12\n\x10MakeTurnResponse\"\x14\n\x06GameId\x12\n\n\x02id\x18\x01 \x01(\t\"\x14\n\x06Player\x12\n\n\x02id\x18\x01 \x01(\t\"5\n\x11ListGamesResponse\x12 \n\x08game_ids\x18\x01 \x03(\x0b\x32\x0e.progue.GameId\"R\n\x12\x43reateGameResponse\x12\x1c\n\x14successfully_created\x18\x01 \x01(\x08\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\"\x16\n\x05State\x12\r\n\x05state\x18\x01 \x01(\x0c\"\xa1\x03\n\x06\x41\x63tion\x12.\n\x0b\x61\x63tion_type\x18\x01 \x01(\x0e\x32\x19.progue.Action.ActionType\x12\x30\n\x0bmove_action\x18\x02 \x01(\x0b\x32\x19.progue.Action.MoveActionH\x00\x12:\n\x10inventory_action\x18\x03 \x01(\x0b\x32\x1e.progue.Action.InventoryActionH\x00\x1a&\n\nMoveAction\x12\x0b\n\x03row\x18\x01 \x01(\x05\x12\x0b\n\x03\x63ol\x18\x02 \x01(\x05\x1a\x9f\x01\n\x0fInventoryAction\x12\x0f\n\x07item_id\x18\x01 \x01(\x05\x12G\n\x0b\x61\x63tion_type\x18\x02 \x01(\x0e\x32\x32.progue.Action.InventoryAction.InventoryActionType\"2\n\x13InventoryActionType\x12\x07\n\x03USE\x10\x00\x12\x08\n\x04\x44ROP\x10\x01\x12\x08\n\x04PICK\x10\x02\"%\n\nActionType\x12\x08\n\x04MOVE\x10\x00\x12\r\n\tINVENTORY\x10\x01\x42\x08\n\x06\x61\x63tion2\x8b\x03\n\x0cProgueServer\x12\x31\n\x08GetState\x12\x14.progue.StateRequest\x1a\r.progue.State\"\x00\x12?\n\x08MakeTurn\x12\x17.progue.MakeTurnRequest\x1a\x18.progue.MakeTurnResponse\"\x00\x12\x42\n\tListGames\x12\x18.progue.ListGamesRequest\x1a\x19.progue.ListGamesResponse\"\x00\x12@\n\rConnectToGame\x12\x0e.progue.GameId\x1a\x1d.progue.ConnectToGameResponse\"\x00\x12:\n\nCreateGame\x12\x0e.progue.GameId\x1a\x1a.progue.CreateGameResponse\"\x00\x12\x45\n\x0eGameSaveManage\x12\x17.progue.GameSaveRequest\x1a\x18.progue.GameSaveResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x0cprogue.proto\x12\x06progue\"e\n\x0fGameSaveRequest\x12*\n\x04type\x18\x01 \x01(\x0e\x32\x1c.progue.GameSaveRequest.Type\"&\n\x04Type\x12\x08\n\x04SAVE\x10\x00\x12\x08\n\x04LOAD\x10\x01\x12\n\n\x06\x44\x45LETE\x10\x02\"\x12\n\x10GameSaveResponse\"\x12\n\x10ListGamesRequest\"W\n\x15\x43onnectToGameResponse\x12\x1e\n\x16successfully_connected\x18\x01 \x01(\x08\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\"O\n\x0cStateRequest\x12\x1f\n\x07game_id\x18\x01 \x01(\x0b\x32\x0e.progue.GameId\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\"r\n\x0fMakeTurnRequest\x12\x1f\n\x07game_id\x18\x01 \x01(\x0b\x32\x0e.progue.GameId\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\x12\x1e\n\x06\x61\x63tion\x18\x03 \x01(\x0b\x32\x0e.progue.Action\"\x12\n\x10MakeTurnResponse\"\x14\n\x06GameId\x12\n\n\x02id\x18\x01 \x01(\t\"\x14\n\x06Player\x12\n\n\x02id\x18\x01 \x01(\t\"5\n\x11ListGamesResponse\x12 \n\x08game_ids\x18\x01 \x03(\x0b\x32\x0e.progue.GameId\"R\n\x12\x43reateGameResponse\x12\x1c\n\x14successfully_created\x18\x01 \x01(\x08\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\"\x16\n\x05State\x12\r\n\x05state\x18\x01 \x01(\x0c\"\xab\x03\n\x06\x41\x63tion\x12.\n\x0b\x61\x63tion_type\x18\x01 \x01(\x0e\x32\x19.progue.Action.ActionType\x12\x30\n\x0bmove_action\x18\x02 \x01(\x0b\x32\x19.progue.Action.MoveActionH\x00\x12:\n\x10inventory_action\x18\x03 \x01(\x0b\x32\x1e.progue.Action.InventoryActionH\x00\x1a&\n\nMoveAction\x12\x0b\n\x03row\x18\x01 \x01(\x05\x12\x0b\n\x03\x63ol\x18\x02 \x01(\x05\x1a\x9f\x01\n\x0fInventoryAction\x12\x0f\n\x07item_id\x18\x01 \x01(\x05\x12G\n\x0b\x61\x63tion_type\x18\x02 \x01(\x0e\x32\x32.progue.Action.InventoryAction.InventoryActionType\"2\n\x13InventoryActionType\x12\x07\n\x03USE\x10\x00\x12\x08\n\x04\x44ROP\x10\x01\x12\x08\n\x04PICK\x10\x02\"/\n\nActionType\x12\x08\n\x04MOVE\x10\x00\x12\r\n\tINVENTORY\x10\x01\x12\x08\n\x04QUIT\x10\x02\x42\x08\n\x06\x61\x63tion2\x8b\x03\n\x0cProgueServer\x12\x31\n\x08GetState\x12\x14.progue.StateRequest\x1a\r.progue.State\"\x00\x12?\n\x08MakeTurn\x12\x17.progue.MakeTurnRequest\x1a\x18.progue.MakeTurnResponse\"\x00\x12\x42\n\tListGames\x12\x18.progue.ListGamesRequest\x1a\x19.progue.ListGamesResponse\"\x00\x12@\n\rConnectToGame\x12\x0e.progue.GameId\x1a\x1d.progue.ConnectToGameResponse\"\x00\x12:\n\nCreateGame\x12\x0e.progue.GameId\x1a\x1a.progue.CreateGameResponse\"\x00\x12\x45\n\x0eGameSaveManage\x12\x17.progue.GameSaveRequest\x1a\x18.progue.GameSaveResponse\"\x00\x62\x06proto3')
 )
 
 
@@ -91,11 +91,15 @@ _ACTION_ACTIONTYPE = _descriptor.EnumDescriptor(
       name='INVENTORY', index=1, number=1,
       serialized_options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='QUIT', index=2, number=2,
+      serialized_options=None,
+      type=None),
   ],
   containing_type=None,
   serialized_options=None,
   serialized_start=1051,
-  serialized_end=1088,
+  serialized_end=1098,
 )
 _sym_db.RegisterEnumDescriptor(_ACTION_ACTIONTYPE)
 
@@ -607,7 +611,7 @@ _ACTION = _descriptor.Descriptor(
       index=0, containing_type=None, fields=[]),
   ],
   serialized_start=681,
-  serialized_end=1098,
+  serialized_end=1108,
 )
 
 _GAMESAVEREQUEST.fields_by_name['type'].enum_type = _GAMESAVEREQUEST_TYPE
@@ -764,8 +768,8 @@ _PROGUESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=1101,
-  serialized_end=1496,
+  serialized_start=1111,
+  serialized_end=1506,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetState',

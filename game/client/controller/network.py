@@ -82,7 +82,8 @@ class Network:
             action_ = progue_pb2.Action.InventoryAction(item_id=action.desc.item_id, action_type=action.desc.action)
             action_msg = progue_pb2.Action(action_type=action_type, inventory_action=action_)
         elif action.type is ActionType.QUIT_ACTION:
-            return
+            action_type = 2
+            action_msg = progue_pb2.Action(action_type=action_type)
         else:
             return
 

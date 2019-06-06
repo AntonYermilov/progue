@@ -33,8 +33,8 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
         with self.lock:
             game = self.games[request.game_id.id]
 
-        state = game.get_state(request.player.id)
-        return progue_pb2.State(state=serialize_object(state))
+            state = game.get_state(request.player.id)
+            return progue_pb2.State(state=serialize_object(state))
 
     def MakeTurn(self, request, context):
         self.received = True
@@ -47,6 +47,9 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
             action_type = ActionType.INVENTORY_ACTION
             action_desc = InventoryAction(item_id=request.action.inventory_action.item_id,
                                           action=request.action.inventory_action.action_type)
+        elif request.action.action_type is 2:
+            self.quit(request.game_id.id, request.player.id)
+            return progue_pb2.MakeTurnResponse()
         else:
             print('Error: unknown action type')
             return None
@@ -66,6 +69,13 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
             print(e)
 
         return progue_pb2.MakeTurnResponse()
+
+    def quit(self, game_id, player_id):
+        with self.lock:
+            game = self.games[game_id]
+
+            if game.player_quit(player_id):
+                del self.games[game_id]
 
     def ListGames(self, request, context):
         response = progue_pb2.ListGamesResponse()

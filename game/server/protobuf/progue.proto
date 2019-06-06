@@ -67,6 +67,7 @@ message Action {
     enum ActionType {
         MOVE = 0;
         INVENTORY = 1;
+        QUIT = 2;
     }
 
     message MoveAction {

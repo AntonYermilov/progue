@@ -28,22 +28,29 @@ class Controller:
         self.view.initialize()
 
         while True:
+            self.view.destroy()
+            self.view.initialize()
             self.menu = Menu(self.view)
             try:
                 network = self.menu.make_choice()
-                if network is None:
+                if network is 'exit':
                     break
+                if network is None:
+                    continue
 
                 while True:
                     state = network.get_state()
                     self.model.update(state)
                     self.view.refresh_game()
                     if state.my_turn:
-                        # TODO add start_turn call
                         action = self.get_user_action()
+                        if action is None:
+                            continue
                         network.send_action(action)
                         if action.type == ActionType.QUIT_ACTION:
+
                             break
+                        # TODO add start_turn call
                         # TODO add finish_turn call
 
                     # TODO fix lugs when using delay command
@@ -55,6 +62,8 @@ class Controller:
     def get_user_action(self) -> Union[Action, None]:
         while True:
             cmd = self.view.get_user_command()
+            if cmd is UserCommand.UNKNOWN:
+                return None
             if cmd in [UserCommand.UP, UserCommand.DOWN, UserCommand.LEFT, UserCommand.RIGHT]:
                 action = self._process_move(cmd)
                 if action is not None:
@@ -71,9 +80,9 @@ class Controller:
             # TODO add processing of other available commands
 
     def _process_move(self, cmd: UserCommand) -> Union[Action, None]:
-        dr, dc = {UserCommand.UP:    (-1, 0),
-                  UserCommand.DOWN:  (+1, 0),
-                  UserCommand.LEFT:  (0, -1),
+        dr, dc = {UserCommand.UP: (-1, 0),
+                  UserCommand.DOWN: (+1, 0),
+                  UserCommand.LEFT: (0, -1),
                   UserCommand.RIGHT: (0, +1)}[cmd]
         hero_position = self.model.hero.position
         new_position = Position.as_position(hero_position.row + dr, hero_position.col + dc)
