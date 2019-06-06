@@ -1,3 +1,4 @@
+import os
 import threading
 from dataclasses import dataclass
 
@@ -6,6 +7,9 @@ from game.client.model.inventory import Inventory
 from game.client.model.state import State
 from game.model import Model
 from game.server.controller.controller import Controller
+from game.util import serialize_object, deserialize_object
+
+SAVE_FILE_NAME = 'game_save.rsf'
 
 
 @dataclass
@@ -28,6 +32,22 @@ class Game:
 
         self.controller = Controller(model)
         self.controller.start_game(player_id)
+
+    def save_game(self):
+        with self.lock:
+            data = serialize_object(self.controller)
+            with open(SAVE_FILE_NAME, 'wb') as save_file:
+                save_file.write(data)
+
+    def load_game(self):
+        with self.lock:
+            with open(SAVE_FILE_NAME, 'rb') as save_file:
+                data = save_file.read()
+                self.controller = deserialize_object(data)
+
+    def delete_save(self):
+        with self.lock:
+            os.remove(SAVE_FILE_NAME)
 
     def get_state(self, player_id):
         with self.lock:

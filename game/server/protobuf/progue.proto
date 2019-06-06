@@ -7,7 +7,20 @@ service ProgueServer {
     rpc ListGames (ListGamesRequest) returns (ListGamesResponse) {}
     rpc ConnectToGame (GameId) returns (ConnectToGameResponse) {}
     rpc CreateGame (GameId) returns (CreateGameResponse) {}
+    rpc GameSaveManage (GameSaveRequest) returns (GameSaveResponse) {}
 }
+
+message GameSaveRequest {
+    enum Type {
+        SAVE = 0;
+        LOAD = 1;
+        DELETE = 2;
+    }
+
+    Type type = 1;
+}
+
+message GameSaveResponse {}
 
 message ListGamesRequest {}
 
