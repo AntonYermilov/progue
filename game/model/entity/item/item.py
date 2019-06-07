@@ -18,11 +18,9 @@ class Item(Entity, ABC):
         assert isinstance(target, Hero)
 
         experience = target.stats.max_experience * self.description.get('experience', 0)
-        print('experience', self.description.get('experience', 0), experience)
         target.update_experience(experience)
 
         health = target.stats.max_health * self.description.get('health', 0)
-        print('health', self.description.get('health', 0), health)
         target.update_health(health)
 
 
