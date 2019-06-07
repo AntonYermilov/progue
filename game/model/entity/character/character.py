@@ -12,6 +12,7 @@ class CharacterStats:
     attack_damage: int
     max_health: int
     health: int
+    reward: float
 
 
 @dataclass

@@ -52,5 +52,11 @@ class MobFactory:
 
     def generate_mob(self, position: Position, name: str, description: Dict):
         strategy = strategies[description['strategy']]
-        stats = CharacterStats(level=1, attack_damage=5, max_health=20, health=20)
+        stats = CharacterStats(
+            level=1,
+            attack_damage=description['strength'],
+            max_health=description['health'],
+            health=description['health'],
+            reward=description['reward']
+        )
         return Mob(position, name, strategy(self.model), stats)

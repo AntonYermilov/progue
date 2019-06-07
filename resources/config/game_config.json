@@ -24,6 +24,7 @@
       "max_health_increase_value": 10,
       "max_strength_increase_value": 1,
       "max_experience_increase_ratio": 1.1
-    }
+    },
+    "reward": 35
   }
 }

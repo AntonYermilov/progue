@@ -10,36 +10,36 @@
       "view": "r",
       "foreground_color": "#808080",
       "background_color": "#131313",
-      "strength": 0.3,
-      "health": 0.3,
-      "defense": 0.1,
+      "strength": 3,
+      "health": 15,
+      "reward": 5,
       "strategy": "aggressive"
     },
     "snake": {
       "view": "s",
       "foreground_color": "#008000",
       "background_color": "#131313",
-      "strength": 0.5,
-      "health": 0.4,
-      "defense": 0.2,
+      "strength": 5,
+      "health": 20,
+      "reward": 10,
       "strategy": "aggressive"
     },
     "stone": {
       "view": "o",
       "foreground_color": "#008787",
       "background_color": "#131313",
-      "strength": 0.0,
-      "health": 0.5,
-      "defense": 0.5,
+      "strength": 25,
+      "health": 20,
+      "reward": 25,
       "strategy": "passive"
     },
     "cockroach": {
       "view": "¥",
       "foreground_color": "#ffa500",
       "background_color": "#131313",
-      "strength": 0.1,
-      "health": 0.1,
-      "defense": 0.1,
+      "strength": 1.5,
+      "health": 10,
+      "reward": 2.5,
       "strategy": "coward"
     }
   },

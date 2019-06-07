@@ -23,6 +23,11 @@ class HeroStats(CharacterStats):
         self.confuse_ratio = confuse_ratio
         self.confuse_turns = confuse_turns
 
+@dataclass
+class LevelUpStats:
+    health_inc_value: int
+    strength_inc_value: int
+    experience_inc_ratio: float
 
 class Hero(Character, InventoryKeeper):
     """
@@ -37,9 +42,13 @@ class Hero(Character, InventoryKeeper):
                           max_experience=description['initial_stats']['max_experience'],
                           experience=description['initial_stats']['experience'],
                           confuse_ratio=description['initial_stats']['confuse_ratio'],
-                          confuse_turns=description['initial_stats']['confuse_turns'])
+                          confuse_turns=description['initial_stats']['confuse_turns'],
+                          reward=description['reward'])
         Character.__init__(self, position=position, stats=stats)
         InventoryKeeper.__init__(self, limit=description['initial_stats']['inventory_size'])
+        self.level_up_stats = LevelUpStats(health_inc_value=description['on_new_level']['max_health_increase_value'],
+                                           strength_inc_value=description['on_new_level']['max_strength_increase_value'],
+                                           experience_inc_ratio=description['on_new_level']['max_experience_increase_ratio'])
         self.name = name
         self.id = id
 
@@ -67,3 +76,22 @@ class Hero(Character, InventoryKeeper):
 
     def is_alive(self) -> bool:
         return self.stats.health > 0
+
+    def update_health(self, health):
+        self.stats.health += health
+        if self.stats.health > self.stats.max_health:
+            self.stats.health = self.stats.max_health
+        if self.stats.health < 0:
+            self.stats.health = 0
+
+    def update_experience(self, experience):
+        self.stats.experience += experience
+        if self.stats.experience > self.stats.max_experience:
+            self.stats.level += 1
+            self.stats.experience -= self.stats.max_experience
+            self.stats.health += self.level_up_stats.health_inc_value
+            self.stats.max_health += self.level_up_stats.health_inc_value
+            self.stats.attack_damage += self.level_up_stats.strength_inc_value
+            self.stats.max_experience = int(self.stats.max_experience * self.level_up_stats.experience_inc_ratio)
+        if self.stats.experience < 0:
+            self.stats.experience = 0
