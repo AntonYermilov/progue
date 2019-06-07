@@ -15,6 +15,7 @@ class Network:
         self.game_id = None
         self.player_id = None
         self.addr = addr
+        self.singleplayer = None
 
     def connect(self, *args, **kwargs):
         pass
@@ -32,6 +33,7 @@ class Network:
             if response.successfully_connected:
                 self.player_id = response.player.id
                 self.game_id = game_id
+                self.singleplayer = False
                 return True
         return False
 
@@ -42,6 +44,7 @@ class Network:
             if response.successfully_created:
                 self.player_id = response.player.id
                 self.game_id = response.id
+                self.singleplayer = singleplayer
                 return True
         return False
 

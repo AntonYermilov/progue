@@ -8,12 +8,13 @@ class LegendPad(Pad):
     # BACKGROUND_COLOR = '#000000'
 
     INVENTORY_TEXT = '   Inventory   '
+    SKIP_TEXT = '   Skip turn   '
     NEXT_TEXT = '  Next (↓)  '
     PREV_TEXT = '  Prev (↑)  '
     USE_TEXT = '   Use   '
     DROP_TEXT = '  Drop  '
     QUIT_TEXT = '  Quit  '
-    ORDER = [INVENTORY_TEXT, NEXT_TEXT, PREV_TEXT, USE_TEXT, DROP_TEXT]
+    ORDER = [INVENTORY_TEXT, SKIP_TEXT, NEXT_TEXT, PREV_TEXT, USE_TEXT, DROP_TEXT]
 
     @staticmethod
     def _get_shift(text):
@@ -35,6 +36,12 @@ class LegendPad(Pad):
         xi = self.INVENTORY_TEXT.index('I')
         self.view._put_colored_text(x, y, self.INVENTORY_TEXT, self.TEXT_COLOR, self.BACKGROUND_COLOR)
         self.view._put_colored_symbol(x + xi, y, 'I', self.HIGHLIGHTED_TEXT_COLOR, self.BACKGROUND_COLOR)
+
+    def _refresh_skip(self):
+        x, y = self.x0 + self._get_shift(self.SKIP_TEXT), self.y1 - 1
+        xs = self.SKIP_TEXT.index('S')
+        self.view._put_colored_text(x, y, self.SKIP_TEXT, self.TEXT_COLOR, self.BACKGROUND_COLOR)
+        self.view._put_colored_symbol(x + xs, y, 'S', self.HIGHLIGHTED_TEXT_COLOR, self.BACKGROUND_COLOR)
 
     def _refresh_next(self):
         if not self.view.model.inventory.is_opened():
@@ -84,6 +91,7 @@ class LegendPad(Pad):
         self._refresh_background()
         if self.view.model.hero.stats.health > 0:
             self._refresh_inventory()
+            self._refresh_skip()
             self._refresh_next()
             self._refresh_prev()
             self._refresh_use()

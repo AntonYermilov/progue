@@ -20,6 +20,7 @@ class View:
         self.entities_desc = entities_desc
         self.game_pads: List[Pad] = None
         self.menu_pad = None
+        self.game_id = None
 
     @staticmethod
     def _generate_config(width: int, height: int):
@@ -28,11 +29,11 @@ class View:
 
     def _create_pads(self):
         # TODO maybe this should be added to config?
-        stats = StatsPad(self, 0, 0, 21, 41)
-        map = MapPad(self, 21, 3, 99, 42)
-        legend = LegendPad(self, 0, 42, 104, 44)
-        inventory = InventoryPad(self, 79, 0, 104, 42)
-        log = LogPad(self, 27, 1, 70, 2)
+        stats = StatsPad(self, 0, 0, 21, 43)
+        map = MapPad(self, 21, 4, 99, 43)
+        legend = LegendPad(self, 0, 43, 104, 45)
+        inventory = InventoryPad(self, 79, 0, 104, 43)
+        log = LogPad(self, 27, 1, 70, 3)
         self.game_pads = [stats, map, legend, inventory, log]
         self.menu_pad = MenuPad(self, 37, 18, 67, 24)
 
@@ -168,6 +169,9 @@ class View:
     @staticmethod
     def delay(sec: float):
         terminal.delay(int(sec * 1000))
+
+    def set_game_id(self, game_id: str):
+        self.game_id = game_id
 
     @staticmethod
     def destroy():

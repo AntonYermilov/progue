@@ -85,7 +85,7 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
                 return progue_pb2.ConnectToGameResponse(successfully_connected=False)
 
     def CreateGame(self, request, context):
-        game_id = str(np.random.randint(1 << 30))
+        game_id = 'game ' + str(np.random.randint(1 << 30))
         with self.lock:
             if game_id not in self.games:
                 game = Game(singleplayer=request.singleplayer, load=request.load)

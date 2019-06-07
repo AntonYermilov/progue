@@ -1,5 +1,4 @@
 import subprocess
-import time
 from typing import Union
 
 from game import SAVE_FILE_NAME

@@ -36,6 +36,9 @@ class Controller:
                 if network is None:
                     continue
 
+                if not network.singleplayer:
+                    self.view.set_game_id(network.game_id)
+
                 while True:
                     state = network.get_state()
                     self.model.update(state)
@@ -59,7 +62,7 @@ class Controller:
                             if action.type == ActionType.QUIT_ACTION:
                                 break
 
-                    # self.view.delay(1.0 / self.FRAMES_PER_SECOND)
+                    self.view.delay(1.0 / self.FRAMES_PER_SECOND)
             finally:
                 self.menu.destroy()
         self.view.destroy()
@@ -69,7 +72,7 @@ class Controller:
             cmd = self.view.get_user_command()
             if cmd is UserCommand.UNKNOWN:
                 return None
-            if cmd in [UserCommand.UP, UserCommand.DOWN, UserCommand.LEFT, UserCommand.RIGHT]:
+            if cmd in [UserCommand.UP, UserCommand.DOWN, UserCommand.LEFT, UserCommand.RIGHT, UserCommand.SKIP]:
                 action = self._process_move(cmd)
                 if action is not None:
                     return action
@@ -85,10 +88,11 @@ class Controller:
             # TODO add processing of other available commands
 
     def _process_move(self, cmd: UserCommand) -> Union[Action, None]:
-        dr, dc = {UserCommand.UP: (-1, 0),
-                  UserCommand.DOWN: (+1, 0),
-                  UserCommand.LEFT: (0, -1),
-                  UserCommand.RIGHT: (0, +1)}[cmd]
+        dr, dc = {UserCommand.UP:    (-1,  0),
+                  UserCommand.DOWN:  (+1,  0),
+                  UserCommand.LEFT:  ( 0, -1),
+                  UserCommand.RIGHT: ( 0, +1),
+                  UserCommand.SKIP:  ( 0,  0)}[cmd]
         hero_position = self.model.hero.position
         new_position = Position.as_position(hero_position.row + dr, hero_position.col + dc)
         if self.model.labyrinth.is_wall(new_position):
