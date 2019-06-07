@@ -86,6 +86,14 @@ class Controller:
             mob_command = mob.on_new_turn()
             mob_command.execute()
 
+        if np.random.random() < self.game_config['mobs']['gen_probability']:
+            mob_name = np.random.choice(list(self.entities_desc['mobs'].keys()))
+            self.model.place_new_mob(mob_name, self.entities_desc['mobs'][mob_name])
+
+        if np.random.random() < self.game_config['items']['gen_probability']:
+            item_name = np.random.choice(list(self.entities_desc['items'].keys()))
+            self.model.place_new_item(item_name, self.entities_desc['items'][item_name]['upd'])
+
     def _update_commands_with_inventory_action(self, player_id, commands, item_id, item_action):
         character = self.get_player(player_id)
         if item_action == ItemAction.DROP:

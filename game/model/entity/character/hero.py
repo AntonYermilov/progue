@@ -62,7 +62,7 @@ class Hero(Character, InventoryKeeper):
                       confuse_turns=confuse_turns)
 
     def accept_damage(self, damage: Damage):
-        self.stats.health -= damage.damage_amount
+        self.update_health(-damage.damage_amount)
 
     def use_item(self, item: Item):
         item.apply(self)
