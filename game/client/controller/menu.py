@@ -48,8 +48,6 @@ class GameChoiceMenu:
 class Menu:
     SINGLEPLAYER_NEW = 'New Singleplayer Game'
     SINGLEPLAYER_CONTINUE = 'Continue Singleplayer Game'
-    MULTIPLAYER_NEW = 'New Multiplayer Game'
-    MULTIPLAYER_CONNECT = 'Connect Multiplayer Game'
     EXIT = 'Exit'
 
     def __init__(self, view):
@@ -57,16 +55,12 @@ class Menu:
         self.buttons = [
             self.SINGLEPLAYER_NEW,
             self.SINGLEPLAYER_CONTINUE,
-            self.MULTIPLAYER_NEW,
-            self.MULTIPLAYER_CONNECT,
             self.EXIT
         ]
         self.active = [
             True,
             SAVE_FILE_NAME.exists(),
             True,
-            True,
-            True
         ]
         self.position = 0
         self.view = view
@@ -142,9 +136,7 @@ class Menu:
     def _apply_selection(self):
         return {0: self._start_singleplayer,
                 1: self._continue_singleplayer,
-                2: self._start_multiplayer,
-                3: self._connect_multiplayer,
-                4: self._exit}[self.position]()
+                2: self._exit}[self.position]()
 
     def make_choice(self) -> Network:
         self.view.refresh_main_menu()
