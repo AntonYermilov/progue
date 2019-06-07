@@ -17,12 +17,15 @@ class Model:
     inventory: Inventory = None
     labyrinth: Labyrinth = None
 
-    # TODO Dummy update method, need to change
     def update(self, state: State):
         self.my_turn = state.my_turn
-        self.hero = state.hero
+        if state.hero is not None:
+            self.hero = state.hero
+        else:
+            self.hero.stats.health = 0
         self.mobs = state.mobs
         self.items = state.items
-        self.inventory = state.inventory
+        if state.inventory is not None:
+            self.inventory = state.inventory
         if state.labyrinth is not None:
             self.labyrinth = state.labyrinth

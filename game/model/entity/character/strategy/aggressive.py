@@ -47,6 +47,9 @@ class AggressiveStrategy(Strategy):
         return self.total_move_weights[self.MOVES.index(move)]
 
     def _get_move_to_hero(self, character: Character) -> Union[Position, None]:
+        if len(self.model.players) == 0:
+            return None
+
         for hero in self.model.players.values():
             hero_position = hero.position
             if any(character.position + move == hero_position for move in AggressiveStrategy.MOVES):

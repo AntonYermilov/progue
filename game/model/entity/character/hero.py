@@ -29,7 +29,7 @@ class Hero(Character, InventoryKeeper):
     Hero is the character controlled by the player.
     """
 
-    def __init__(self, position: Position, description: Dict):
+    def __init__(self, name: str, id: str, position: Position, description: Dict):
         stats = HeroStats(level=1,
                           max_health=description['initial_stats']['max_health'],
                           health=description['initial_stats']['health'],
@@ -40,10 +40,8 @@ class Hero(Character, InventoryKeeper):
                           confuse_turns=description['initial_stats']['confuse_turns'])
         Character.__init__(self, position=position, stats=stats)
         InventoryKeeper.__init__(self, limit=description['initial_stats']['inventory_size'])
-        self.name = ''
-
-    def set_name(self, name):
         self.name = name
+        self.id = id
 
     def deal_damage(self, target: Damageable) -> Damage:
         confuse_turns = 0
@@ -62,22 +60,10 @@ class Hero(Character, InventoryKeeper):
         self.inventory.remove(item)
 
     def on_destroy(self, model):
-        # print('Hero destroyed')
-        pass
+        model.players.pop(self.id)
 
     def remove_item(self, item: Item):
         self.inventory.remove(item)
-
-    def get_item_if_any(self):
-        return self.inventory[0] if len(self.inventory) else None
-
-    def get_prev_item_if_any(self, item: Item):
-        idx = self.inventory.index(item)
-        return self.inventory[idx - 1] if idx - 1 >= 0 else item
-
-    def get_next_item_if_any(self, item: Item):
-        idx = self.inventory.index(item)
-        return self.inventory[idx + 1] if idx + 1 < len(self.inventory) else item
 
     def is_alive(self) -> bool:
         return self.stats.health > 0

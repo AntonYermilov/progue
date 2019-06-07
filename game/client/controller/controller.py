@@ -25,10 +25,8 @@ class Controller:
         self.view = View(self, self.model, self.entities_desc)
 
     def start_game(self):
-        self.view.initialize()
-
+        self.view.create()
         while True:
-            self.view.destroy()
             self.view.initialize()
             self.menu = Menu(self.view)
             try:
@@ -42,16 +40,25 @@ class Controller:
                     state = network.get_state()
                     self.model.update(state)
                     self.view.refresh_game()
-                    self.view.clear_user_command_queue()
-                    if state.my_turn:
-                        action = self.get_user_action()
-                        if action is None:
-                            continue
-                        network.send_action(action)
-                        if action.type == ActionType.QUIT_ACTION:
-                            break
 
-                    # TODO fix lugs when using delay command
+                    if self.model.hero.stats.health == 0:
+                        quit = False
+                        while self.view.has_user_commands():
+                            cmd = self.view.get_user_command()
+                            if cmd == UserCommand.QUIT:
+                                quit = True
+                        if quit:
+                            break
+                    else:
+                        self.view.clear_user_command_queue()
+                        if state.my_turn:
+                            action = self.get_user_action()
+                            if action is None:
+                                continue
+                            network.send_action(action)
+                            if action.type == ActionType.QUIT_ACTION:
+                                break
+
                     # self.view.delay(1.0 / self.FRAMES_PER_SECOND)
             finally:
                 self.menu.destroy()

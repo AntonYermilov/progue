@@ -19,20 +19,6 @@ class Network:
     def connect(self, *args, **kwargs):
         pass
 
-    def game_save_manage_(self, type):
-        with grpc.insecure_channel(self.addr) as channel:
-            stub = progue_pb2_grpc.ProgueServerStub(channel)
-            stub.GameSaveManage(progue_pb2.GameSaveRequest(type=type))
-
-    def save_game(self):
-        self.game_save_manage_(0)
-
-    def load_game(self):
-        self.game_save_manage_(1)
-
-    def delete_game(self):
-        self.game_save_manage_(2)
-
     def list_games(self):
         with grpc.insecure_channel(self.addr) as channel:
             stub = progue_pb2_grpc.ProgueServerStub(channel)
@@ -49,13 +35,13 @@ class Network:
                 return True
         return False
 
-    def create_game(self, game_id: str):
+    def create_game(self, singleplayer: bool, load: bool):
         with grpc.insecure_channel(self.addr) as channel:
             stub = progue_pb2_grpc.ProgueServerStub(channel)
-            response = stub.CreateGame(progue_pb2.GameId(id=game_id))
+            response = stub.CreateGame(progue_pb2.CreateGameRequest(singleplayer=singleplayer, load=load))
             if response.successfully_created:
                 self.player_id = response.player.id
-                self.game_id = game_id
+                self.game_id = response.id
                 return True
         return False
 
@@ -70,7 +56,6 @@ class Network:
         return state
 
     def send_action(self, action: Action):
-        progue_pb2.MakeTurnRequest()
         game_id = progue_pb2.GameId(id=self.game_id)
         player = progue_pb2.Player(id=self.player_id)
         if action.type is ActionType.MOVE_ACTION:

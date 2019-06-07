@@ -1,4 +1,5 @@
 from typing import List
+import numpy as np
 
 from game.client.view.pad.pad import Pad
 
@@ -35,7 +36,7 @@ class StatsPad(Pad):
             elif cur > health:
                 bkcolor = self.HEALTH_GRADATION[-1]
             else:
-                position = round(5 * (cur + step - health) / step)
+                position = int(np.floor(5 * (cur + step - health) / step))
                 bkcolor = self.HEALTH_GRADATION[position]
             x, y = x0 + i, y0
             self.view._put_colored_symbol(x=x, y=y, c=c, color=self.TEXT_COLOR, bkcolor=bkcolor)
@@ -51,7 +52,7 @@ class StatsPad(Pad):
             elif cur > experience:
                 bkcolor = self.EXPERIENCE_GRADATION[-1]
             else:
-                position = round(5 * (cur + step - experience) / step)
+                position = int(np.floor(5 * (cur + step - experience) / step))
                 bkcolor = self.EXPERIENCE_GRADATION[position]
             x, y = x0 + i, y0
             self.view._put_colored_symbol(x=x, y=y, c=c, color=self.TEXT_COLOR, bkcolor=bkcolor)

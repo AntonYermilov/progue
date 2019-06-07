@@ -82,9 +82,10 @@ class LegendPad(Pad):
 
     def refresh(self):
         self._refresh_background()
-        self._refresh_inventory()
-        self._refresh_next()
-        self._refresh_prev()
-        self._refresh_use()
-        self._refresh_drop()
+        if self.view.model.hero.stats.health > 0:
+            self._refresh_inventory()
+            self._refresh_next()
+            self._refresh_prev()
+            self._refresh_use()
+            self._refresh_drop()
         self._refresh_quit()

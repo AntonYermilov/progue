@@ -13,5 +13,5 @@ class State:
     hero: Hero
     mobs: List[Mob]
     items: List[Item]
-    inventory: Inventory # TODO change to <int (inventory_capacity, optional), List[Item]>
-    labyrinth: Labyrinth = None # TODO change to np.ndarray
+    inventory: Inventory
+    labyrinth: Labyrinth = None

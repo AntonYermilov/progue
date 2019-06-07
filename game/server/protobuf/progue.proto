@@ -6,21 +6,8 @@ service ProgueServer {
     rpc MakeTurn (MakeTurnRequest) returns (MakeTurnResponse) {}
     rpc ListGames (ListGamesRequest) returns (ListGamesResponse) {}
     rpc ConnectToGame (GameId) returns (ConnectToGameResponse) {}
-    rpc CreateGame (GameId) returns (CreateGameResponse) {}
-    rpc GameSaveManage (GameSaveRequest) returns (GameSaveResponse) {}
+    rpc CreateGame (CreateGameRequest) returns (CreateGameResponse) {}
 }
-
-message GameSaveRequest {
-    enum Type {
-        SAVE = 0;
-        LOAD = 1;
-        DELETE = 2;
-    }
-
-    Type type = 1;
-}
-
-message GameSaveResponse {}
 
 message ListGamesRequest {}
 
@@ -46,6 +33,11 @@ message GameId {
     string id = 1;
 }
 
+message CreateGameRequest {
+    bool singleplayer = 1;
+    bool load = 2;
+}
+
 message Player {
     string id = 1;
 }
@@ -57,6 +49,7 @@ message ListGamesResponse {
 message CreateGameResponse {
     bool successfully_created = 1;
     Player player = 2;
+    string id = 3;
 }
 
 message State {

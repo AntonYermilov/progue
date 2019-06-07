@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 
 
 @dataclass
@@ -40,3 +41,6 @@ class Position:
 
 
 Direction = Position
+
+
+SAVE_FILE_NAME = Path('resources', 'saves', 'game_save.rsf')

@@ -6,7 +6,6 @@ import numpy as np
 from game import Position
 from game.client.model.action import Action, ActionType, ItemAction
 from game.model import Model
-from game.server.controller import StatusManager
 from game.server.controller.command import DropItemCommand
 from game.server.controller.command import MoveCommand, AttackCommand
 from game.server.controller.command import PickCommand
@@ -26,7 +25,6 @@ class Controller:
             A model to work with
         """
         self.model = model
-        self.status_manager = StatusManager()
 
         game_config_path = Path('resources', 'config', 'game_config.json')
         entities_config_path = Path('resources', 'config', 'entities.json')
@@ -36,7 +34,7 @@ class Controller:
         with entities_config_path.open('r') as f:
             self.entities_desc = json.load(f)
 
-    def start_game(self, player_id: str):
+    def start_game(self):
         """
         Starts the game loop.
 
@@ -44,7 +42,6 @@ class Controller:
             Player id
         """
 
-        self.add_player(player_id)
         self.place_mobs()
         self.place_items()
 
@@ -125,4 +122,4 @@ class Controller:
             commands.append(hero_command)
 
     def get_player(self, player_id):
-        return self.model.players[player_id]
+        return self.model.players.get(player_id)

@@ -5,6 +5,7 @@ from bearlibterminal import terminal
 from game.client.model.model import Model
 from game.client.view.pad.inventory import InventoryPad
 from game.client.view.pad.legend import LegendPad
+from game.client.view.pad.log import LogPad
 from game.client.view.pad.map import MapPad
 from game.client.view.pad.menu import MenuPad
 from game.client.view.pad.pad import Pad
@@ -28,14 +29,18 @@ class View:
     def _create_pads(self):
         # TODO maybe this should be added to config?
         stats = StatsPad(self, 0, 0, 21, 41)
-        map = MapPad(self, 21, 2, 99, 41)
-        legend = LegendPad(self, 0, 41, 104, 43)
-        inventory = InventoryPad(self, 79, 0, 104, 41)
-        self.game_pads = [stats, map, legend, inventory]
+        map = MapPad(self, 21, 3, 99, 42)
+        legend = LegendPad(self, 0, 42, 104, 44)
+        inventory = InventoryPad(self, 79, 0, 104, 42)
+        log = LogPad(self, 27, 1, 70, 2)
+        self.game_pads = [stats, map, legend, inventory, log]
         self.menu_pad = MenuPad(self, 37, 18, 67, 24)
 
-    def initialize(self):
+    @staticmethod
+    def create():
         terminal.open()
+
+    def initialize(self):
         self._create_pads()
         width = max(pad.x1 for pad in self.game_pads)
         height = max(pad.y1 for pad in self.game_pads)
@@ -150,6 +155,10 @@ class View:
         except ValueError:
             cmd = UserCommand.UNKNOWN
         return cmd
+
+    @staticmethod
+    def has_user_commands():
+        return terminal.has_input()
 
     @staticmethod
     def clear_user_command_queue():

@@ -66,6 +66,7 @@ class MapPad(Pad):
         enemies = self.view.model.mobs
         self.visible_enemies = []
         for enemy in enemies:
+
             x, y = self.x0 + enemy.position.get_x(), self.y0 + enemy.position.get_y()
             if self.distance[enemy.position.row, enemy.position.col] > self.SHADE_DISTANCE:
                 continue
