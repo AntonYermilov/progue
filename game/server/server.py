@@ -19,13 +19,13 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
         self.lock = threading.RLock()
         self.received = False
 
-    def GetState(self, request, context):
+    def get_state(self, request, context):
         with self.lock:
             game = self.games[request.game_id.id]
             state = game.get_state(request.player.id)
             return progue_pb2.State(state=serialize_object(state))
 
-    def MakeTurn(self, request, context):
+    def make_turn(self, request, context):
         self.received = True
 
         if request.action.action_type is 0:
@@ -66,14 +66,14 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
             if game.player_quit(player_id):
                 del self.games[game_id]
 
-    def ListGames(self, request, context):
+    def list_games(self, request, context):
         response = progue_pb2.ListGamesResponse()
         with self.lock:
             for game_id in self.games:
                 response.game_ids.append(progue_pb2.GameId(id=game_id))
         return response
 
-    def ConnectToGame(self, request, context):
+    def connect_to_game(self, request, context):
         game_id = request.id
         with self.lock:
             if game_id in self.games:
@@ -84,7 +84,7 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
             else:
                 return progue_pb2.ConnectToGameResponse(successfully_connected=False)
 
-    def CreateGame(self, request, context):
+    def create_game(self, request, context):
         game_id = 'game ' + str(np.random.randint(1 << 30))
         with self.lock:
             if game_id not in self.games:

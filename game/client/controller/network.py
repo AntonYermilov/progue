@@ -23,13 +23,13 @@ class Network:
     def list_games(self):
         with grpc.insecure_channel(self.addr) as channel:
             stub = progue_pb2_grpc.ProgueServerStub(channel)
-            response = stub.ListGames(progue_pb2.ListGamesRequest())
+            response = stub.list_games(progue_pb2.ListGamesRequest())
             return list(map(lambda x: x.id, response.game_ids))
 
     def connect_to_game(self, game_id: str):
         with grpc.insecure_channel(self.addr) as channel:
             stub = progue_pb2_grpc.ProgueServerStub(channel)
-            response = stub.ConnectToGame(progue_pb2.GameId(id=game_id))
+            response = stub.connect_to_game(progue_pb2.GameId(id=game_id))
             if response.successfully_connected:
                 self.player_id = response.player.id
                 self.game_id = game_id
@@ -40,7 +40,7 @@ class Network:
     def create_game(self, singleplayer: bool, load: bool):
         with grpc.insecure_channel(self.addr) as channel:
             stub = progue_pb2_grpc.ProgueServerStub(channel)
-            response = stub.CreateGame(progue_pb2.CreateGameRequest(singleplayer=singleplayer, load=load))
+            response = stub.create_game(progue_pb2.CreateGameRequest(singleplayer=singleplayer, load=load))
             if response.successfully_created:
                 self.player_id = response.player.id
                 self.game_id = response.id
@@ -53,7 +53,7 @@ class Network:
                                           player=progue_pb2.Player(id=self.player_id))
         with grpc.insecure_channel(self.addr) as channel:
             stub = progue_pb2_grpc.ProgueServerStub(channel)
-            response = stub.GetState(request)
+            response = stub.get_state(request)
         state = deserialize_object(response.state)
 
         return state
@@ -78,4 +78,4 @@ class Network:
         make_turn_msg = progue_pb2.MakeTurnRequest(game_id=game_id, player=player, action=action_msg)
         with grpc.insecure_channel(self.addr) as channel:
             stub = progue_pb2_grpc.ProgueServerStub(channel)
-            stub.MakeTurn(make_turn_msg)
+            stub.make_turn(make_turn_msg)

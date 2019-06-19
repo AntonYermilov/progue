@@ -1,17 +1,12 @@
 import numpy as np
 
-from game import Direction
+from game import MOVES
 from game.server.controller.command import Command, MoveCommand, IdleCommand
 from game.model.entity.character.character import Character
 from .strategy import Strategy
 
 
 class CowardStrategy(Strategy):
-    MOVES = [Direction.as_position(-1, 0),
-             Direction.as_position(1, 0),
-             Direction.as_position(0, 1),
-             Direction.as_position(0, -1)]
-
     def _get_dist_to_hero(self, position) -> int:
         min_dist = float('inf')
         for hero in self.model.players.values():
@@ -27,7 +22,7 @@ class CowardStrategy(Strategy):
         empty_cells = []
 
         dist_to_hero = self._get_dist_to_hero(character.position)
-        for move in CowardStrategy.MOVES:
+        for move in MOVES:
             new_position = character.position + move
             if self.model.get_labyrinth().is_wall(new_position):
                 continue

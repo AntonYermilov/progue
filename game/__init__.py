@@ -43,4 +43,10 @@ class Position:
 Direction = Position
 
 
+MOVES = [Direction.as_position(-1, 0),
+             Direction.as_position(1, 0),
+             Direction.as_position(0, 1),
+             Direction.as_position(0, -1)]
+
+
 SAVE_FILE_NAME = Path('resources', 'saves', 'game_save.rsf')

@@ -14,28 +14,28 @@ class ProgueServerStub(object):
     Args:
       channel: A grpc.Channel.
     """
-    self.GetState = channel.unary_unary(
-        '/progue.ProgueServer/GetState',
+    self.get_state = channel.unary_unary(
+        '/progue.ProgueServer/get_state',
         request_serializer=progue__pb2.StateRequest.SerializeToString,
         response_deserializer=progue__pb2.State.FromString,
         )
-    self.MakeTurn = channel.unary_unary(
-        '/progue.ProgueServer/MakeTurn',
+    self.make_turn = channel.unary_unary(
+        '/progue.ProgueServer/make_turn',
         request_serializer=progue__pb2.MakeTurnRequest.SerializeToString,
         response_deserializer=progue__pb2.MakeTurnResponse.FromString,
         )
-    self.ListGames = channel.unary_unary(
-        '/progue.ProgueServer/ListGames',
+    self.list_games = channel.unary_unary(
+        '/progue.ProgueServer/list_games',
         request_serializer=progue__pb2.ListGamesRequest.SerializeToString,
         response_deserializer=progue__pb2.ListGamesResponse.FromString,
         )
-    self.ConnectToGame = channel.unary_unary(
-        '/progue.ProgueServer/ConnectToGame',
+    self.connect_to_game = channel.unary_unary(
+        '/progue.ProgueServer/connect_to_game',
         request_serializer=progue__pb2.GameId.SerializeToString,
         response_deserializer=progue__pb2.ConnectToGameResponse.FromString,
         )
-    self.CreateGame = channel.unary_unary(
-        '/progue.ProgueServer/CreateGame',
+    self.create_game = channel.unary_unary(
+        '/progue.ProgueServer/create_game',
         request_serializer=progue__pb2.CreateGameRequest.SerializeToString,
         response_deserializer=progue__pb2.CreateGameResponse.FromString,
         )
@@ -45,35 +45,35 @@ class ProgueServerServicer(object):
   # missing associated documentation comment in .proto file
   pass
 
-  def GetState(self, request, context):
+  def get_state(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def MakeTurn(self, request, context):
+  def make_turn(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def ListGames(self, request, context):
+  def list_games(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def ConnectToGame(self, request, context):
+  def connect_to_game(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def CreateGame(self, request, context):
+  def create_game(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -83,28 +83,28 @@ class ProgueServerServicer(object):
 
 def add_ProgueServerServicer_to_server(servicer, server):
   rpc_method_handlers = {
-      'GetState': grpc.unary_unary_rpc_method_handler(
-          servicer.GetState,
+      'get_state': grpc.unary_unary_rpc_method_handler(
+          servicer.get_state,
           request_deserializer=progue__pb2.StateRequest.FromString,
           response_serializer=progue__pb2.State.SerializeToString,
       ),
-      'MakeTurn': grpc.unary_unary_rpc_method_handler(
-          servicer.MakeTurn,
+      'make_turn': grpc.unary_unary_rpc_method_handler(
+          servicer.make_turn,
           request_deserializer=progue__pb2.MakeTurnRequest.FromString,
           response_serializer=progue__pb2.MakeTurnResponse.SerializeToString,
       ),
-      'ListGames': grpc.unary_unary_rpc_method_handler(
-          servicer.ListGames,
+      'list_games': grpc.unary_unary_rpc_method_handler(
+          servicer.list_games,
           request_deserializer=progue__pb2.ListGamesRequest.FromString,
           response_serializer=progue__pb2.ListGamesResponse.SerializeToString,
       ),
-      'ConnectToGame': grpc.unary_unary_rpc_method_handler(
-          servicer.ConnectToGame,
+      'connect_to_game': grpc.unary_unary_rpc_method_handler(
+          servicer.connect_to_game,
           request_deserializer=progue__pb2.GameId.FromString,
           response_serializer=progue__pb2.ConnectToGameResponse.SerializeToString,
       ),
-      'CreateGame': grpc.unary_unary_rpc_method_handler(
-          servicer.CreateGame,
+      'create_game': grpc.unary_unary_rpc_method_handler(
+          servicer.create_game,
           request_deserializer=progue__pb2.CreateGameRequest.FromString,
           response_serializer=progue__pb2.CreateGameResponse.SerializeToString,
       ),

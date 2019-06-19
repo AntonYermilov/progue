@@ -2,18 +2,13 @@ from typing import Union
 
 import numpy as np
 
-from game import Position, Direction
+from game import Position, Direction, MOVES
 from game.server.controller.command import Command, AttackCommand, MoveCommand, IdleCommand
 from game.model.entity.character import Character
 from .strategy import Strategy
 
 
 class AggressiveStrategy(Strategy):
-    MOVES = [Direction.as_position(-1, 0),
-             Direction.as_position(1, 0),
-             Direction.as_position(0, 1),
-             Direction.as_position(0, -1)]
-
     MOVES_TO_STORE = 10
 
     MOVE_MAX_WEIGHT = 2.5
@@ -30,12 +25,12 @@ class AggressiveStrategy(Strategy):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.last_moves = []
-        self.total_move_weights = np.ones(len(self.MOVES))
+        self.total_move_weights = np.ones(len(MOVES))
 
     def _update_move_weights(self):
-        self.total_move_weights = np.ones(len(self.MOVES))
+        self.total_move_weights = np.ones(len(MOVES))
         for i, move in enumerate(self.last_moves):
-            self.total_move_weights += self.MOVE_WEIGHTS[self.MOVES.index(move)] ** (i + 1)
+            self.total_move_weights += self.MOVE_WEIGHTS[MOVES.index(move)] ** (i + 1)
 
     def _add_move(self, move: Direction):
         self.last_moves.append(move)
@@ -44,7 +39,7 @@ class AggressiveStrategy(Strategy):
         self._update_move_weights()
 
     def _get_move_weight(self, move: Direction):
-        return self.total_move_weights[self.MOVES.index(move)]
+        return self.total_move_weights[MOVES.index(move)]
 
     def _get_move_to_hero(self, character: Character) -> Union[Position, None]:
         if len(self.model.players) == 0:
@@ -52,7 +47,7 @@ class AggressiveStrategy(Strategy):
 
         for hero in self.model.players.values():
             hero_position = hero.position
-            if any(character.position + move == hero_position for move in AggressiveStrategy.MOVES):
+            if any(character.position + move == hero_position for move in MOVES):
                 return hero_position
 
         min_dist = float('inf')
@@ -90,7 +85,7 @@ class AggressiveStrategy(Strategy):
 
     def _get_random_move(self, character: Character) -> Union[Position, None]:
         available_moves = []
-        for move in AggressiveStrategy.MOVES:
+        for move in MOVES:
             position = character.position + move
             if self.model.get_labyrinth().is_wall(position):
                 continue

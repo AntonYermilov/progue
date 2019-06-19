@@ -2,11 +2,11 @@ syntax = 'proto3';
 package progue;
 
 service ProgueServer {
-    rpc GetState (StateRequest) returns (State) {}
-    rpc MakeTurn (MakeTurnRequest) returns (MakeTurnResponse) {}
-    rpc ListGames (ListGamesRequest) returns (ListGamesResponse) {}
-    rpc ConnectToGame (GameId) returns (ConnectToGameResponse) {}
-    rpc CreateGame (CreateGameRequest) returns (CreateGameResponse) {}
+    rpc get_state (StateRequest) returns (State) {}
+    rpc make_turn (MakeTurnRequest) returns (MakeTurnResponse) {}
+    rpc list_games (ListGamesRequest) returns (ListGamesResponse) {}
+    rpc connect_to_game (GameId) returns (ConnectToGameResponse) {}
+    rpc create_game (CreateGameRequest) returns (CreateGameResponse) {}
 }
 
 message ListGamesRequest {}

@@ -1,18 +1,18 @@
 import subprocess
 from typing import Union
+from abc import ABC, abstractmethod
 
 from game import SAVE_FILE_NAME
 from game.client.controller.network import Network
 from game.client.view.user_command import UserCommand
 
 
-class GameChoiceMenu:
-    def __init__(self, view, network):
-        self.buttons = network.list_games() + ['Back']
-        self.active = [True] * len(self.buttons)
+class AbstractMenu(ABC):
+    def __init__(self, buttons, active, view):
+        self.buttons = buttons
         self.position = 0
+        self.active = active
         self.view = view
-        self.view.menu_pad.set_menu(self)
 
     def _select_next(self):
         self.position += 1
@@ -23,6 +23,19 @@ class GameChoiceMenu:
         self.position -= 1
         if self.position < 0:
             self.position += len(self.buttons)
+
+    @abstractmethod
+    def make_choice(self) -> Union[str, None]:
+        pass
+
+
+class GameChoiceMenu(AbstractMenu):
+    def __init__(self, view, network):
+        buttons = network.list_games() + ['Back']
+        active = [True] * len(self.buttons)
+
+        super().__init__(buttons, active, view)
+        self.view.menu_pad.set_menu(self)
 
     def _apply_selection(self):
         return self.buttons[self.position] if self.position + 1 < len(self.buttons) else None
@@ -45,7 +58,7 @@ class GameChoiceMenu:
                 return self._apply_selection()
 
 
-class Menu:
+class Menu(AbstractMenu):
     SINGLEPLAYER_NEW = 'New Singleplayer Game'
     SINGLEPLAYER_CONTINUE = 'Continue Singleplayer Game'
     MULTIPLAYER_NEW = 'New Multiplayer Game'
@@ -53,34 +66,24 @@ class Menu:
     EXIT = 'Exit'
 
     def __init__(self, view):
-        self.network = None
-        self.buttons = [
+        buttons = [
             self.SINGLEPLAYER_NEW,
             self.SINGLEPLAYER_CONTINUE,
             self.MULTIPLAYER_NEW,
             self.MULTIPLAYER_CONNECT,
             self.EXIT
         ]
-        self.active = [
+        active = [
             True,
             SAVE_FILE_NAME.exists(),
             True,
             True,
             True
         ]
-        self.position = 0
-        self.view = view
+
+        super().__init__(buttons, active, view)
+        self.network = None
         self.server = None
-
-    def _select_next(self):
-        self.position += 1
-        if self.position == len(self.buttons):
-            self.position = 0
-
-    def _select_prev(self):
-        self.position -= 1
-        if self.position < 0:
-            self.position += len(self.buttons)
 
     def _start_singleplayer(self):
         self.network = Network(addr='127.0.0.1:1489')
