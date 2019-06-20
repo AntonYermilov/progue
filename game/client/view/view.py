@@ -38,7 +38,7 @@ class View:
         inventory = InventoryPad(self, 79, 0, 104, 43)
         log = LogPad(self, 27, 1, 70, 3)
         self.game_pads = [stats, map, legend, inventory, log]
-        self.menu_pad = MenuPad(self, 37, 18, 67, 24)
+        self.menu_pad = MenuPad(self, 37, 14, 67, 24)
 
     @staticmethod
     def create():

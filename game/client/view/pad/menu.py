@@ -20,13 +20,18 @@ class MenuPad(Pad):
         else:
             menu = self.view.controller.menu
 
+        if menu.error is not None:
+            x, y = (self.x0 + self.x1 - len(menu.error)) // 2, self.y0
+            # x, y = self.x0 + 1, self.y0
+            self.view._put_colored_text(x=x, y=y, s=menu.error, color=self.HIGHLIGHTED_TEXT_COLOR, bkcolor=self.BACKGROUND_COLOR)
+
         for i, btn in enumerate(menu.buttons):
-            x, y = self.x0 + 3, self.y0 + 2 * i
+            x, y = self.x0 + 3, self.y0 + 2 * i + 4
             if menu.active[i]:
                 self.view._put_colored_text(x=x, y=y, s=btn, color=self.TEXT_COLOR, bkcolor=self.BACKGROUND_COLOR)
                 self.view._put_colored_symbol(x=x, y=y, c=btn[0], color=self.HIGHLIGHTED_TEXT_COLOR, bkcolor=self.BACKGROUND_COLOR)
             else:
                 self.view._put_colored_text(x=x, y=y, s=btn, color=self.GREY_TEXT_COLOR, bkcolor=self.BACKGROUND_COLOR)
 
-        x, y = self.x0 + 1, self.y0 + menu.position * 2
+        x, y = self.x0 + 1, self.y0 + menu.position * 2 + 4
         self.view._put_colored_symbol(x=x, y=y, c='*', color=self.HIGHLIGHTED_TEXT_COLOR, bkcolor=self.BACKGROUND_COLOR)

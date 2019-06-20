@@ -34,7 +34,7 @@
       "strategy": "passive"
     },
     "cockroach": {
-      "view": "¥",
+      "view": "Y",
       "foreground_color": "#ffa500",
       "background_color": "#131313",
       "strength": 1.5,

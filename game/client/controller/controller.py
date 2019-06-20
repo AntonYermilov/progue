@@ -30,15 +30,18 @@ class Controller:
     """
     def start_game(self):
         self.view.create()
+        error = None
+
         while True:
             self.view.initialize()
-            self.menu = Menu(self.view)
+
+            self.menu = Menu(self.view, error)
+            error = None
+
             try:
                 network = self.menu.make_choice()
-                if network is 'exit':
-                    break
                 if network is None:
-                    continue
+                    break
 
                 if not network.singleplayer:
                     self.view.set_game_id(network.game_id)
@@ -67,6 +70,8 @@ class Controller:
                                 break
 
                     self.view.delay(1.0 / self.FRAMES_PER_SECOND)
+            except:
+                error = 'Disconnected from server'
             finally:
                 self.menu.destroy()
         self.view.destroy()
