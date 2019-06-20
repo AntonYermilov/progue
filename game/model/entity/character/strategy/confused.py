@@ -8,6 +8,11 @@ from game.server.controller.command import Command, AttackCommand, MoveCommand, 
 from .strategy import Strategy
 
 
+"""
+Describes behaviour of mobs with confused strategy.
+This strategy is a decorator strategy for mobs that were confused.
+Those mobs move randomly within a specified number of turns.
+"""
 class ConfusedStrategy(Strategy):
     def __init__(self, turns: int, character: Character):
         super().__init__(character.strategy.model)

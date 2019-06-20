@@ -6,6 +6,9 @@ from game.model.entity import Entity
 from game.model.entity.character import Character
 
 
+"""
+This class describes usable items that can be found in the game
+"""
 class Item(Entity, ABC):
 
     def __init__(self, position: Position, name: str, description: Dict):
@@ -13,6 +16,9 @@ class Item(Entity, ABC):
         self.name = name
         self.description = description
 
+    """
+    Applies an item to the target. 
+    """
     def apply(self, target: Character):
         from game.model.entity.character import Hero
         assert isinstance(target, Hero)

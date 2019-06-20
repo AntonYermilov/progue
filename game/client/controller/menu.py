@@ -1,12 +1,14 @@
 import subprocess
+from abc import ABC
 from typing import Union
-from abc import ABC, abstractmethod
 
 from game import SAVE_FILE_NAME
 from game.client.controller.network import Network
 from game.client.view.user_command import UserCommand
 
-
+"""
+This class contains a simple description of menu
+"""
 class AbstractMenu(ABC):
     def __init__(self, buttons, active, view):
         self.buttons = buttons
@@ -24,11 +26,10 @@ class AbstractMenu(ABC):
         if self.position < 0:
             self.position += len(self.buttons)
 
-    @abstractmethod
-    def make_choice(self) -> Union[str, None]:
-        pass
 
-
+"""
+This class describes behaviour of the menu for choosing multiplayer game.
+"""
 class GameChoiceMenu(AbstractMenu):
     def __init__(self, view, network):
         buttons = network.list_games() + ['Back']
@@ -37,9 +38,9 @@ class GameChoiceMenu(AbstractMenu):
         super().__init__(buttons, active, view)
         self.view.menu_pad.set_menu(self)
 
-    def _apply_selection(self):
-        return self.buttons[self.position] if self.position + 1 < len(self.buttons) else None
-
+    """
+    When choice is made, returns either multiplayer game id, or None if no game was selected
+    """
     def make_choice(self) -> Union[str, None]:
         self.view.refresh_main_menu()
         if len(self.buttons) == 0:
@@ -55,10 +56,16 @@ class GameChoiceMenu(AbstractMenu):
                 self.view.refresh_main_menu()
                 continue
             if cmd == UserCommand.ENTER:
-                return self._apply_selection()
+                return self.buttons[self.position] if self.position + 1 < len(self.buttons) else None
 
 
+"""
+This class describes behaviour of the main menu
+"""
 class Menu(AbstractMenu):
+    """
+    Available main menu buttons
+    """
     SINGLEPLAYER_NEW = 'New Singleplayer Game'
     SINGLEPLAYER_CONTINUE = 'Continue Singleplayer Game'
     MULTIPLAYER_NEW = 'New Multiplayer Game'
@@ -149,6 +156,11 @@ class Menu(AbstractMenu):
                 3: self._connect_multiplayer,
                 4: self._exit}[self.position]()
 
+    """
+    When choice is made, returns the network we need to connect to. 
+    It may be either a local network in case of a singleplayer game, or a global network (i.e. server)
+    in case of a multiplayer game.
+    """
     def make_choice(self) -> Network:
         self.view.refresh_main_menu()
         while True:
@@ -167,6 +179,9 @@ class Menu(AbstractMenu):
                     continue
                 return result
 
+    """
+    Destroys menu and kills local server if it was created (for singleplayer only)
+    """
     def destroy(self):
         if self.server:
             self.server.kill()

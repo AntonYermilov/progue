@@ -24,6 +24,10 @@ class Controller:
         self.menu = None
         self.view = View(self, self.model, self.entities_desc)
 
+    """
+    Starts the game on the client side.
+    Processes all user actions and interacts with server. 
+    """
     def start_game(self):
         self.view.create()
         while True:
@@ -55,7 +59,7 @@ class Controller:
                     else:
                         self.view.clear_user_command_queue()
                         if state.my_turn:
-                            action = self.get_user_action()
+                            action = self._get_user_action()
                             if action is None:
                                 continue
                             network.send_action(action)
@@ -67,7 +71,7 @@ class Controller:
                 self.menu.destroy()
         self.view.destroy()
 
-    def get_user_action(self) -> Union[Action, None]:
+    def _get_user_action(self) -> Union[Action, None]:
         while True:
             cmd = self.view.get_user_command()
             if cmd is UserCommand.UNKNOWN:

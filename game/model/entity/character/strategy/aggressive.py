@@ -8,6 +8,10 @@ from game.model.entity.character import Character
 from .strategy import Strategy
 
 
+"""
+Describes behaviour of mobs with aggressive strategy.
+Aggressive mobs try to attack player as soon as player appears in the field of view.
+"""
 class AggressiveStrategy(Strategy):
     MOVES_TO_STORE = 10
 

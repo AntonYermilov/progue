@@ -13,6 +13,9 @@ from game.client.view.pad.stats import StatsPad
 from game.client.view.user_command import UserCommand
 
 
+"""
+This class describes view module. It is used to render all elements of the game.
+"""
 class View:
     def __init__(self, controller, model: Model, entities_desc: Dict, *args, **kwargs):
         self.controller = controller
@@ -132,6 +135,9 @@ class View:
         self.menu_pad.refresh()
         terminal.refresh()
 
+    """
+    Updates game screen
+    """
     def refresh_game(self):
         void = self.entities_desc['map']['void']['background_color']
         self._set_color(void, void)
@@ -148,6 +154,9 @@ class View:
 
         terminal.refresh()
 
+    """
+    Reads user command in a blocking mode
+    """
     @staticmethod
     def get_user_command() -> UserCommand:
         cmd = terminal.read()
@@ -157,22 +166,37 @@ class View:
             cmd = UserCommand.UNKNOWN
         return cmd
 
+    """
+    Checks if any unprocessed user command exists
+    """
     @staticmethod
     def has_user_commands():
         return terminal.has_input()
 
+    """
+    Clears the queue of unprocessed user commands
+    """
     @staticmethod
     def clear_user_command_queue():
         while terminal.has_input():
             terminal.read()
 
+    """
+    Delays the rendering for the specified amount of time
+    """
     @staticmethod
     def delay(sec: float):
         terminal.delay(int(sec * 1000))
 
+    """
+    Sets id of the current game
+    """
     def set_game_id(self, game_id: str):
         self.game_id = game_id
 
+    """
+    Destroys game screen
+    """
     @staticmethod
     def destroy():
         terminal.close()

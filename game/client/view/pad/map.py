@@ -1,7 +1,6 @@
 from typing import Tuple, List
 
 from game import Position
-from game.model.entity.character import Hero
 from .pad import Pad
 
 

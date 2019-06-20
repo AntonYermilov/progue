@@ -5,11 +5,10 @@ from game.server.generated import progue_pb2_grpc, progue_pb2
 from game.util import deserialize_object
 
 
+"""
+This class describes the interaction with the server
+"""
 class Network:
-    """
-    Dummy network
-    """
-
     def __init__(self, addr='127.0.0.1:1488'):
         self.stub = None
         self.game_id = None
@@ -17,15 +16,20 @@ class Network:
         self.addr = addr
         self.singleplayer = None
 
-    def connect(self, *args, **kwargs):
-        pass
-
+    """
+    Sends request to the server.
+    Receives the list of available multiplayer games.
+    """
     def list_games(self):
         with grpc.insecure_channel(self.addr) as channel:
             stub = progue_pb2_grpc.ProgueServerStub(channel)
             response = stub.list_games(progue_pb2.ListGamesRequest())
             return list(map(lambda x: x.id, response.game_ids))
 
+    """
+    Sends request to the server. 
+    Tries to connect to the specified game. Returns true if succeeded. 
+    """
     def connect_to_game(self, game_id: str):
         with grpc.insecure_channel(self.addr) as channel:
             stub = progue_pb2_grpc.ProgueServerStub(channel)
@@ -37,6 +41,10 @@ class Network:
                 return True
         return False
 
+    """
+    Sends request to the server. 
+    Creates new game. Returns true if succeeded.
+    """
     def create_game(self, singleplayer: bool, load: bool):
         with grpc.insecure_channel(self.addr) as channel:
             stub = progue_pb2_grpc.ProgueServerStub(channel)
@@ -48,6 +56,10 @@ class Network:
                 return True
         return False
 
+    """
+    Sends request to the server.
+    Receives relevant state (description) of the game model
+    """
     def get_state(self):
         request = progue_pb2.StateRequest(game_id=progue_pb2.GameId(id=self.game_id),
                                           player=progue_pb2.Player(id=self.player_id))
@@ -58,6 +70,9 @@ class Network:
 
         return state
 
+    """
+    Sends information about user action to the server.
+    """
     def send_action(self, action: Action):
         game_id = progue_pb2.GameId(id=self.game_id)
         player = progue_pb2.Player(id=self.player_id)

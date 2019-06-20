@@ -6,6 +6,10 @@ from game.model.entity.character.character import Character
 from .strategy import Strategy
 
 
+"""
+Describes behaviour of mobs with coward strategy.
+Coward mobs are afraid of player and run away from him.
+"""
 class CowardStrategy(Strategy):
     def _get_dist_to_hero(self, position) -> int:
         min_dist = float('inf')

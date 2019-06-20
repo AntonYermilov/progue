@@ -8,6 +8,10 @@ from game.model.entity.item.item import Item
 from game.model.map import Labyrinth
 
 
+"""
+This class describes game model. It contains relevant description of the environment,
+description of all existing entities, and is used to render them in view module
+"""
 @dataclass
 class Model:
     my_turn: bool = False
@@ -17,6 +21,9 @@ class Model:
     inventory: Inventory = None
     labyrinth: Labyrinth = None
 
+    """
+    Updates model with the state, received from the server
+    """
     def update(self, state: State):
         self.my_turn = state.my_turn
         if state.hero is not None:
