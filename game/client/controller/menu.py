@@ -10,12 +10,12 @@ from game.client.view.user_command import UserCommand
 This class contains a simple description of menu
 """
 class AbstractMenu(ABC):
-    def __init__(self, buttons, active, view, error):
+    def __init__(self, buttons, active, view, message):
         self.buttons = buttons
         self.position = 0
         self.active = active
         self.view = view
-        self.error = error
+        self.message = message
 
     def _select_next(self):
         self.position += 1
@@ -73,7 +73,7 @@ class Menu(AbstractMenu):
     MULTIPLAYER_CONNECT = 'Connect Multiplayer Game'
     EXIT = 'Exit'
 
-    def __init__(self, view, error):
+    def __init__(self, view, message):
         buttons = [
             self.SINGLEPLAYER_NEW,
             self.SINGLEPLAYER_CONTINUE,
@@ -89,7 +89,7 @@ class Menu(AbstractMenu):
             True
         ]
 
-        super().__init__(buttons, active, view, error)
+        super().__init__(buttons, active, view, message)
         self.network = None
         self.server = None
 
@@ -121,24 +121,39 @@ class Menu(AbstractMenu):
         return self.network
 
     def _start_multiplayer(self):
-        # TODO read server ip addr
-        addr = '127.0.0.1'
+        self.set_message('Enter server IP address:')
+        self.view.refresh_main_menu()
+
+        addr = self.view.read_server_addr()
         port = '1488'
+
+        self.set_message(None)
+        self.view.refresh_main_menu()
+
+        if addr is None:
+            return None
 
         self.network = Network(addr=addr, port=port)
         try:
             self.network.create_game(singleplayer=False, load=False)
         except:
-            # self.error = f'Failed to connect to server on {addr}'
-            self.error = f'Failed to connect to server'
+            self.message = f'Server is unavailable'
             self.view.refresh_main_menu()
             return None
         return self.network
 
     def _connect_multiplayer(self):
-        # TODO read server ip addr
-        addr = '127.0.0.1'
+        self.set_message('Enter server IP address:')
+        self.view.refresh_main_menu()
+
+        addr = self.view.read_server_addr()
         port = '1488'
+
+        self.set_message(None)
+        self.view.refresh_main_menu()
+
+        if addr is None:
+            return None
 
         self.network = Network(addr=addr, port=port)
         try:
@@ -158,8 +173,7 @@ class Menu(AbstractMenu):
                     return None
         except:
             self.view.menu_pad.set_menu(self)
-            # self.error = f'Failed to connect to server on {addr}'
-            self.error = f'Failed to connect to server'
+            self.message = f'Server is unavailable'
             self.view.refresh_main_menu()
             return None
 
@@ -197,15 +211,14 @@ class Menu(AbstractMenu):
                 result = self._apply_selection()
                 if result is None and self.position != self.buttons.index(self.EXIT):
                     continue
-                self.error = None
+                self.message = None
                 return result
 
     """
-    Sets an error that would be displayed in the main menu (i.g. if connection to server failed)
+    Sets a message that would be displayed in the main menu (i.g. if connection to server failed)
     """
-    def set_error(self, error: str):
-        self.error = error
-        self.view.refresh_main_menu()
+    def set_message(self, message: Union[str, None]):
+        self.message = message
 
     """
     Destroys menu and kills local server if it was created (for singleplayer only)

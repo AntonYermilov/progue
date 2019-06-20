@@ -20,10 +20,9 @@ class MenuPad(Pad):
         else:
             menu = self.view.controller.menu
 
-        if menu.error is not None:
-            x, y = (self.x0 + self.x1 - len(menu.error)) // 2, self.y0
-            # x, y = self.x0 + 1, self.y0
-            self.view._put_colored_text(x=x, y=y, s=menu.error, color=self.HIGHLIGHTED_TEXT_COLOR, bkcolor=self.BACKGROUND_COLOR)
+        if menu.message is not None:
+            x, y = self.x0 + 3, self.y0
+            self.view._put_colored_text(x=x, y=y, s=menu.message, color=self.HIGHLIGHTED_TEXT_COLOR, bkcolor=self.BACKGROUND_COLOR)
 
         for i, btn in enumerate(menu.buttons):
             x, y = self.x0 + 3, self.y0 + 2 * i + 4
@@ -35,3 +34,7 @@ class MenuPad(Pad):
 
         x, y = self.x0 + 1, self.y0 + menu.position * 2 + 4
         self.view._put_colored_symbol(x=x, y=y, c='*', color=self.HIGHLIGHTED_TEXT_COLOR, bkcolor=self.BACKGROUND_COLOR)
+
+    def read_server_addr(self):
+        x, y = self.x0 + 3, self.y0 + 1
+        return self.view._get_text(x, y, 15)

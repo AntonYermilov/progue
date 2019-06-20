@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from bearlibterminal import terminal
 
@@ -127,6 +127,19 @@ class View:
         View._set_color(color, bkcolor)
         View._put_text(int(x), int(y), s)
 
+    @staticmethod
+    def _get_text(x: int, y: int, max_size: int):
+        """
+        Reads text from terminal and stores it to buffer
+        :param x: x-coordinate of cursor
+        :param y: y-coordinate of cursos
+        """
+        result = terminal.read_str(x, y, '', max_size)
+        return None if result[0] == terminal.TK_INPUT_CANCELLED else result[1]
+
+    """
+    Updates game main menu screen
+    """
     def refresh_main_menu(self):
         void = self.entities_desc['map']['void']['background_color']
         self._set_color(void, void)
@@ -165,6 +178,12 @@ class View:
         except ValueError:
             cmd = UserCommand.UNKNOWN
         return cmd
+
+    """
+    Reads server address to connect to
+    """
+    def read_server_addr(self) -> Union[str, None]:
+        return self.menu_pad.read_server_addr()
 
     """
     Checks if any unprocessed user command exists
