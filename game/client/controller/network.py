@@ -33,7 +33,7 @@ class Network:
     def connect_to_game(self, game_id: str):
         with grpc.insecure_channel(self.addr) as channel:
             stub = progue_pb2_grpc.ProgueServerStub(channel)
-            response = stub.connect_to_game(progue_pb2.GameId(id=game_id))
+            response = stub.connect_to_game(progue_pb2.ConnectToGameRequest(progue_pb2.GameId(game_id=game_id)))
             if response.successfully_connected:
                 self.player_id = response.player.id
                 self.game_id = game_id
@@ -66,7 +66,7 @@ class Network:
         with grpc.insecure_channel(self.addr) as channel:
             stub = progue_pb2_grpc.ProgueServerStub(channel)
             response = stub.get_state(request)
-        state = deserialize_object(response.state)
+        state = deserialize_object(response.state.state)
 
         return state
 

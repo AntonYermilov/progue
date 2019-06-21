@@ -22,7 +22,7 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
         with self.lock:
             game = self.games[request.game_id.id]
             state = game.get_state(request.player.id)
-            return progue_pb2.State(state=serialize_object(state))
+            return progue_pb2.StateResponse(state=progue_pb2.State(state=serialize_object(state)))
 
     def make_turn(self, request, context):
         if request.action.action_type is 0:
@@ -71,7 +71,7 @@ class ProgueServer(progue_pb2_grpc.ProgueServerServicer):
         return response
 
     def connect_to_game(self, request, context):
-        game_id = request.id
+        game_id = request.game_id.id
         with self.lock:
             if game_id in self.games:
                 game = self.games[game_id]

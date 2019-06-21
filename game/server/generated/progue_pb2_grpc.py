@@ -17,7 +17,7 @@ class ProgueServerStub(object):
     self.get_state = channel.unary_unary(
         '/progue.ProgueServer/get_state',
         request_serializer=progue__pb2.StateRequest.SerializeToString,
-        response_deserializer=progue__pb2.State.FromString,
+        response_deserializer=progue__pb2.StateResponse.FromString,
         )
     self.make_turn = channel.unary_unary(
         '/progue.ProgueServer/make_turn',
@@ -31,7 +31,7 @@ class ProgueServerStub(object):
         )
     self.connect_to_game = channel.unary_unary(
         '/progue.ProgueServer/connect_to_game',
-        request_serializer=progue__pb2.GameId.SerializeToString,
+        request_serializer=progue__pb2.ConnectToGameRequest.SerializeToString,
         response_deserializer=progue__pb2.ConnectToGameResponse.FromString,
         )
     self.create_game = channel.unary_unary(
@@ -86,7 +86,7 @@ def add_ProgueServerServicer_to_server(servicer, server):
       'get_state': grpc.unary_unary_rpc_method_handler(
           servicer.get_state,
           request_deserializer=progue__pb2.StateRequest.FromString,
-          response_serializer=progue__pb2.State.SerializeToString,
+          response_serializer=progue__pb2.StateResponse.SerializeToString,
       ),
       'make_turn': grpc.unary_unary_rpc_method_handler(
           servicer.make_turn,
@@ -100,7 +100,7 @@ def add_ProgueServerServicer_to_server(servicer, server):
       ),
       'connect_to_game': grpc.unary_unary_rpc_method_handler(
           servicer.connect_to_game,
-          request_deserializer=progue__pb2.GameId.FromString,
+          request_deserializer=progue__pb2.ConnectToGameRequest.FromString,
           response_serializer=progue__pb2.ConnectToGameResponse.SerializeToString,
       ),
       'create_game': grpc.unary_unary_rpc_method_handler(

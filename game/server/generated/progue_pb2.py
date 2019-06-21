@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='progue',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x0cprogue.proto\x12\x06progue\"\x12\n\x10ListGamesRequest\"W\n\x15\x43onnectToGameResponse\x12\x1e\n\x16successfully_connected\x18\x01 \x01(\x08\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\"O\n\x0cStateRequest\x12\x1f\n\x07game_id\x18\x01 \x01(\x0b\x32\x0e.progue.GameId\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\"r\n\x0fMakeTurnRequest\x12\x1f\n\x07game_id\x18\x01 \x01(\x0b\x32\x0e.progue.GameId\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\x12\x1e\n\x06\x61\x63tion\x18\x03 \x01(\x0b\x32\x0e.progue.Action\"\x12\n\x10MakeTurnResponse\"\x14\n\x06GameId\x12\n\n\x02id\x18\x01 \x01(\t\"7\n\x11\x43reateGameRequest\x12\x14\n\x0csingleplayer\x18\x01 \x01(\x08\x12\x0c\n\x04load\x18\x02 \x01(\x08\"\x14\n\x06Player\x12\n\n\x02id\x18\x01 \x01(\t\"5\n\x11ListGamesResponse\x12 \n\x08game_ids\x18\x01 \x03(\x0b\x32\x0e.progue.GameId\"^\n\x12\x43reateGameResponse\x12\x1c\n\x14successfully_created\x18\x01 \x01(\x08\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\x12\n\n\x02id\x18\x03 \x01(\t\"\x16\n\x05State\x12\r\n\x05state\x18\x01 \x01(\x0c\"\xab\x03\n\x06\x41\x63tion\x12.\n\x0b\x61\x63tion_type\x18\x01 \x01(\x0e\x32\x19.progue.Action.ActionType\x12\x30\n\x0bmove_action\x18\x02 \x01(\x0b\x32\x19.progue.Action.MoveActionH\x00\x12:\n\x10inventory_action\x18\x03 \x01(\x0b\x32\x1e.progue.Action.InventoryActionH\x00\x1a&\n\nMoveAction\x12\x0b\n\x03row\x18\x01 \x01(\x05\x12\x0b\n\x03\x63ol\x18\x02 \x01(\x05\x1a\x9f\x01\n\x0fInventoryAction\x12\x0f\n\x07item_id\x18\x01 \x01(\x05\x12G\n\x0b\x61\x63tion_type\x18\x02 \x01(\x0e\x32\x32.progue.Action.InventoryAction.InventoryActionType\"2\n\x13InventoryActionType\x12\x07\n\x03USE\x10\x00\x12\x08\n\x04\x44ROP\x10\x01\x12\x08\n\x04PICK\x10\x02\"/\n\nActionType\x12\x08\n\x04MOVE\x10\x00\x12\r\n\tINVENTORY\x10\x01\x12\x08\n\x04QUIT\x10\x02\x42\x08\n\x06\x61\x63tion2\xd5\x02\n\x0cProgueServer\x12\x32\n\tget_state\x12\x14.progue.StateRequest\x1a\r.progue.State\"\x00\x12@\n\tmake_turn\x12\x17.progue.MakeTurnRequest\x1a\x18.progue.MakeTurnResponse\"\x00\x12\x43\n\nlist_games\x12\x18.progue.ListGamesRequest\x1a\x19.progue.ListGamesResponse\"\x00\x12\x42\n\x0f\x63onnect_to_game\x12\x0e.progue.GameId\x1a\x1d.progue.ConnectToGameResponse\"\x00\x12\x46\n\x0b\x63reate_game\x12\x19.progue.CreateGameRequest\x1a\x1a.progue.CreateGameResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\x0cprogue.proto\x12\x06progue\"\x12\n\x10ListGamesRequest\"W\n\x15\x43onnectToGameResponse\x12\x1e\n\x16successfully_connected\x18\x01 \x01(\x08\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\"O\n\x0cStateRequest\x12\x1f\n\x07game_id\x18\x01 \x01(\x0b\x32\x0e.progue.GameId\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\"-\n\rStateResponse\x12\x1c\n\x05state\x18\x01 \x01(\x0b\x32\r.progue.State\"r\n\x0fMakeTurnRequest\x12\x1f\n\x07game_id\x18\x01 \x01(\x0b\x32\x0e.progue.GameId\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\x12\x1e\n\x06\x61\x63tion\x18\x03 \x01(\x0b\x32\x0e.progue.Action\"\x12\n\x10MakeTurnResponse\"7\n\x14\x43onnectToGameRequest\x12\x1f\n\x07game_id\x18\x01 \x01(\x0b\x32\x0e.progue.GameId\"\x14\n\x06GameId\x12\n\n\x02id\x18\x01 \x01(\t\"7\n\x11\x43reateGameRequest\x12\x14\n\x0csingleplayer\x18\x01 \x01(\x08\x12\x0c\n\x04load\x18\x02 \x01(\x08\"\x14\n\x06Player\x12\n\n\x02id\x18\x01 \x01(\t\"5\n\x11ListGamesResponse\x12 \n\x08game_ids\x18\x01 \x03(\x0b\x32\x0e.progue.GameId\"^\n\x12\x43reateGameResponse\x12\x1c\n\x14successfully_created\x18\x01 \x01(\x08\x12\x1e\n\x06player\x18\x02 \x01(\x0b\x32\x0e.progue.Player\x12\n\n\x02id\x18\x03 \x01(\t\"\x16\n\x05State\x12\r\n\x05state\x18\x01 \x01(\x0c\"\xab\x03\n\x06\x41\x63tion\x12.\n\x0b\x61\x63tion_type\x18\x01 \x01(\x0e\x32\x19.progue.Action.ActionType\x12\x30\n\x0bmove_action\x18\x02 \x01(\x0b\x32\x19.progue.Action.MoveActionH\x00\x12:\n\x10inventory_action\x18\x03 \x01(\x0b\x32\x1e.progue.Action.InventoryActionH\x00\x1a&\n\nMoveAction\x12\x0b\n\x03row\x18\x01 \x01(\x05\x12\x0b\n\x03\x63ol\x18\x02 \x01(\x05\x1a\x9f\x01\n\x0fInventoryAction\x12\x0f\n\x07item_id\x18\x01 \x01(\x05\x12G\n\x0b\x61\x63tion_type\x18\x02 \x01(\x0e\x32\x32.progue.Action.InventoryAction.InventoryActionType\"2\n\x13InventoryActionType\x12\x07\n\x03USE\x10\x00\x12\x08\n\x04\x44ROP\x10\x01\x12\x08\n\x04PICK\x10\x02\"/\n\nActionType\x12\x08\n\x04MOVE\x10\x00\x12\r\n\tINVENTORY\x10\x01\x12\x08\n\x04QUIT\x10\x02\x42\x08\n\x06\x61\x63tion2\xeb\x02\n\x0cProgueServer\x12:\n\tget_state\x12\x14.progue.StateRequest\x1a\x15.progue.StateResponse\"\x00\x12@\n\tmake_turn\x12\x17.progue.MakeTurnRequest\x1a\x18.progue.MakeTurnResponse\"\x00\x12\x43\n\nlist_games\x12\x18.progue.ListGamesRequest\x1a\x19.progue.ListGamesResponse\"\x00\x12P\n\x0f\x63onnect_to_game\x12\x1c.progue.ConnectToGameRequest\x1a\x1d.progue.ConnectToGameResponse\"\x00\x12\x46\n\x0b\x63reate_game\x12\x19.progue.CreateGameRequest\x1a\x1a.progue.CreateGameResponse\"\x00\x62\x06proto3')
 )
 
 
@@ -46,8 +46,8 @@ _ACTION_INVENTORYACTION_INVENTORYACTIONTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=945,
-  serialized_end=995,
+  serialized_start=1049,
+  serialized_end=1099,
 )
 _sym_db.RegisterEnumDescriptor(_ACTION_INVENTORYACTION_INVENTORYACTIONTYPE)
 
@@ -72,8 +72,8 @@ _ACTION_ACTIONTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=997,
-  serialized_end=1044,
+  serialized_start=1101,
+  serialized_end=1148,
 )
 _sym_db.RegisterEnumDescriptor(_ACTION_ACTIONTYPE)
 
@@ -178,6 +178,37 @@ _STATEREQUEST = _descriptor.Descriptor(
 )
 
 
+_STATERESPONSE = _descriptor.Descriptor(
+  name='StateResponse',
+  full_name='progue.StateResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='state', full_name='progue.StateResponse.state', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=214,
+  serialized_end=259,
+)
+
+
 _MAKETURNREQUEST = _descriptor.Descriptor(
   name='MakeTurnRequest',
   full_name='progue.MakeTurnRequest',
@@ -218,8 +249,8 @@ _MAKETURNREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=214,
-  serialized_end=328,
+  serialized_start=261,
+  serialized_end=375,
 )
 
 
@@ -242,8 +273,39 @@ _MAKETURNRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=330,
-  serialized_end=348,
+  serialized_start=377,
+  serialized_end=395,
+)
+
+
+_CONNECTTOGAMEREQUEST = _descriptor.Descriptor(
+  name='ConnectToGameRequest',
+  full_name='progue.ConnectToGameRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='game_id', full_name='progue.ConnectToGameRequest.game_id', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=397,
+  serialized_end=452,
 )
 
 
@@ -273,8 +335,8 @@ _GAMEID = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=350,
-  serialized_end=370,
+  serialized_start=454,
+  serialized_end=474,
 )
 
 
@@ -311,8 +373,8 @@ _CREATEGAMEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=372,
-  serialized_end=427,
+  serialized_start=476,
+  serialized_end=531,
 )
 
 
@@ -342,8 +404,8 @@ _PLAYER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=429,
-  serialized_end=449,
+  serialized_start=533,
+  serialized_end=553,
 )
 
 
@@ -373,8 +435,8 @@ _LISTGAMESRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=451,
-  serialized_end=504,
+  serialized_start=555,
+  serialized_end=608,
 )
 
 
@@ -418,8 +480,8 @@ _CREATEGAMERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=506,
-  serialized_end=600,
+  serialized_start=610,
+  serialized_end=704,
 )
 
 
@@ -449,8 +511,8 @@ _STATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=602,
-  serialized_end=624,
+  serialized_start=706,
+  serialized_end=728,
 )
 
 
@@ -487,8 +549,8 @@ _ACTION_MOVEACTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=795,
-  serialized_end=833,
+  serialized_start=899,
+  serialized_end=937,
 )
 
 _ACTION_INVENTORYACTION = _descriptor.Descriptor(
@@ -525,8 +587,8 @@ _ACTION_INVENTORYACTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=836,
-  serialized_end=995,
+  serialized_start=940,
+  serialized_end=1099,
 )
 
 _ACTION = _descriptor.Descriptor(
@@ -573,16 +635,18 @@ _ACTION = _descriptor.Descriptor(
       name='action', full_name='progue.Action.action',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=627,
-  serialized_end=1054,
+  serialized_start=731,
+  serialized_end=1158,
 )
 
 _CONNECTTOGAMERESPONSE.fields_by_name['player'].message_type = _PLAYER
 _STATEREQUEST.fields_by_name['game_id'].message_type = _GAMEID
 _STATEREQUEST.fields_by_name['player'].message_type = _PLAYER
+_STATERESPONSE.fields_by_name['state'].message_type = _STATE
 _MAKETURNREQUEST.fields_by_name['game_id'].message_type = _GAMEID
 _MAKETURNREQUEST.fields_by_name['player'].message_type = _PLAYER
 _MAKETURNREQUEST.fields_by_name['action'].message_type = _ACTION
+_CONNECTTOGAMEREQUEST.fields_by_name['game_id'].message_type = _GAMEID
 _LISTGAMESRESPONSE.fields_by_name['game_ids'].message_type = _GAMEID
 _CREATEGAMERESPONSE.fields_by_name['player'].message_type = _PLAYER
 _ACTION_MOVEACTION.containing_type = _ACTION
@@ -602,8 +666,10 @@ _ACTION.fields_by_name['inventory_action'].containing_oneof = _ACTION.oneofs_by_
 DESCRIPTOR.message_types_by_name['ListGamesRequest'] = _LISTGAMESREQUEST
 DESCRIPTOR.message_types_by_name['ConnectToGameResponse'] = _CONNECTTOGAMERESPONSE
 DESCRIPTOR.message_types_by_name['StateRequest'] = _STATEREQUEST
+DESCRIPTOR.message_types_by_name['StateResponse'] = _STATERESPONSE
 DESCRIPTOR.message_types_by_name['MakeTurnRequest'] = _MAKETURNREQUEST
 DESCRIPTOR.message_types_by_name['MakeTurnResponse'] = _MAKETURNRESPONSE
+DESCRIPTOR.message_types_by_name['ConnectToGameRequest'] = _CONNECTTOGAMEREQUEST
 DESCRIPTOR.message_types_by_name['GameId'] = _GAMEID
 DESCRIPTOR.message_types_by_name['CreateGameRequest'] = _CREATEGAMEREQUEST
 DESCRIPTOR.message_types_by_name['Player'] = _PLAYER
@@ -634,6 +700,13 @@ StateRequest = _reflection.GeneratedProtocolMessageType('StateRequest', (_messag
   ))
 _sym_db.RegisterMessage(StateRequest)
 
+StateResponse = _reflection.GeneratedProtocolMessageType('StateResponse', (_message.Message,), dict(
+  DESCRIPTOR = _STATERESPONSE,
+  __module__ = 'progue_pb2'
+  # @@protoc_insertion_point(class_scope:progue.StateResponse)
+  ))
+_sym_db.RegisterMessage(StateResponse)
+
 MakeTurnRequest = _reflection.GeneratedProtocolMessageType('MakeTurnRequest', (_message.Message,), dict(
   DESCRIPTOR = _MAKETURNREQUEST,
   __module__ = 'progue_pb2'
@@ -647,6 +720,13 @@ MakeTurnResponse = _reflection.GeneratedProtocolMessageType('MakeTurnResponse', 
   # @@protoc_insertion_point(class_scope:progue.MakeTurnResponse)
   ))
 _sym_db.RegisterMessage(MakeTurnResponse)
+
+ConnectToGameRequest = _reflection.GeneratedProtocolMessageType('ConnectToGameRequest', (_message.Message,), dict(
+  DESCRIPTOR = _CONNECTTOGAMEREQUEST,
+  __module__ = 'progue_pb2'
+  # @@protoc_insertion_point(class_scope:progue.ConnectToGameRequest)
+  ))
+_sym_db.RegisterMessage(ConnectToGameRequest)
 
 GameId = _reflection.GeneratedProtocolMessageType('GameId', (_message.Message,), dict(
   DESCRIPTOR = _GAMEID,
@@ -721,8 +801,8 @@ _PROGUESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=1057,
-  serialized_end=1398,
+  serialized_start=1161,
+  serialized_end=1524,
   methods=[
   _descriptor.MethodDescriptor(
     name='get_state',
@@ -730,7 +810,7 @@ _PROGUESERVER = _descriptor.ServiceDescriptor(
     index=0,
     containing_service=None,
     input_type=_STATEREQUEST,
-    output_type=_STATE,
+    output_type=_STATERESPONSE,
     serialized_options=None,
   ),
   _descriptor.MethodDescriptor(
@@ -756,7 +836,7 @@ _PROGUESERVER = _descriptor.ServiceDescriptor(
     full_name='progue.ProgueServer.connect_to_game',
     index=3,
     containing_service=None,
-    input_type=_GAMEID,
+    input_type=_CONNECTTOGAMEREQUEST,
     output_type=_CONNECTTOGAMERESPONSE,
     serialized_options=None,
   ),

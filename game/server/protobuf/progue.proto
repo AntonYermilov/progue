@@ -2,10 +2,10 @@ syntax = 'proto3';
 package progue;
 
 service ProgueServer {
-    rpc get_state (StateRequest) returns (State) {}
+    rpc get_state (StateRequest) returns (StateResponse) {}
     rpc make_turn (MakeTurnRequest) returns (MakeTurnResponse) {}
     rpc list_games (ListGamesRequest) returns (ListGamesResponse) {}
-    rpc connect_to_game (GameId) returns (ConnectToGameResponse) {}
+    rpc connect_to_game (ConnectToGameRequest) returns (ConnectToGameResponse) {}
     rpc create_game (CreateGameRequest) returns (CreateGameResponse) {}
 }
 
@@ -21,6 +21,10 @@ message StateRequest {
     Player player = 2;
 }
 
+message StateResponse {
+    State state = 1;
+}
+
 message MakeTurnRequest {
     GameId game_id = 1;
     Player player = 2;
@@ -28,6 +32,10 @@ message MakeTurnRequest {
 }
 
 message MakeTurnResponse {}
+
+message ConnectToGameRequest {
+    GameId game_id = 1;
+}
 
 message GameId {
     string id = 1;
