@@ -14,7 +14,6 @@ class Model:
 
     def __init__(self):
         self.labyrinth = None
-        self.hero = None
         self.mobs = []
         self.items = []
         self.current_item = None
