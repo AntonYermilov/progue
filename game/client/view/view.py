@@ -210,7 +210,7 @@ class View:
     """
     Sets id of the current game
     """
-    def set_game_id(self, game_id: str):
+    def set_game_id(self, game_id: Union[str, None]):
         self.game_id = game_id
 
     """

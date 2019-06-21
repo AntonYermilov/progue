@@ -1,4 +1,5 @@
 import json
+import sys
 from pathlib import Path
 from typing import Union
 
@@ -45,6 +46,8 @@ class Controller:
 
                 if not network.singleplayer:
                     self.view.set_game_id(network.game_id)
+                else:
+                    self.view.set_game_id(None)
 
                 while True:
                     state = network.get_state()
@@ -70,8 +73,9 @@ class Controller:
                                 break
 
                     self.view.delay(1.0 / self.FRAMES_PER_SECOND)
-            except:
+            except Exception as e:
                 error = 'Disconnected from server'
+                print(e, file=sys.stderr)
             finally:
                 self.menu.destroy()
         self.view.destroy()
