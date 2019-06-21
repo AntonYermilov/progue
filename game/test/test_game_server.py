@@ -18,7 +18,9 @@ class TestServer(unittest.TestCase):
     def test_game_connect(self):
         network = Network(addr='127.0.0.1', port=1488)
         network.create_game(False, False)
-        self.assertTrue(network.connect_to_game('cool_game'))
+        games = network.list_games()
+        self.assertTrue(len(games) == 1)
+        self.assertTrue(network.connect_to_game(games[0]))
 
     def tearDown(self) -> None:
         self.server.kill()
