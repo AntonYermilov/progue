@@ -9,7 +9,7 @@ from game.util import deserialize_object
 This class describes the interaction with the server
 """
 class Network:
-    def __init__(self, addr='127.0.0.1', port='1488'):
+    def __init__(self, addr, port):
         self.stub = None
         self.game_id = None
         self.player_id = None
