@@ -71,9 +71,6 @@ class Hero(Character, InventoryKeeper):
     def on_destroy(self, model):
         model.players.pop(self.id)
 
-    def remove_item(self, item: Item):
-        self.inventory.remove(item)
-
     def is_alive(self) -> bool:
         return self.stats.health > 0
 

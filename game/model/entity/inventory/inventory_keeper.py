@@ -19,6 +19,9 @@ class InventoryKeeper(ABC):
         if len(self.inventory) + 1 <= self.limit:
             self.inventory.append(item)
 
+    def remove_item(self, item: Item):
+        self.inventory.remove(item)
+
     @abstractmethod
     def use_item(self, item: Item):
         """

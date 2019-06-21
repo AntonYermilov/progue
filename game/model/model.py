@@ -16,7 +16,6 @@ class Model:
         self.labyrinth = None
         self.mobs = []
         self.items = []
-        self.current_item = None
         self.players = dict()
 
         self.mob_factory = MobFactory(self)
