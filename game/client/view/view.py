@@ -21,7 +21,7 @@ class View:
         self.controller = controller
         self.model = model
         self.entities_desc = entities_desc
-        self.game_pads: List[Pad] = None
+        self.game_pads: List[Pad] = []
         self.menu_pad = None
         self.game_id = None
 
