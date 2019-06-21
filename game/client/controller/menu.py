@@ -1,6 +1,7 @@
 import subprocess
 from abc import ABC
 from typing import Union
+import os
 
 from game import SAVE_FILE_NAME
 from game.client.controller.network import Network
@@ -73,6 +74,8 @@ class Menu(AbstractMenu):
     MULTIPLAYER_CONNECT = 'Connect Multiplayer Game'
     EXIT = 'Exit'
 
+    EXECUTABLE = 'python' if os.name == 'nt' else python3
+
     def __init__(self, view, message):
         buttons = [
             self.SINGLEPLAYER_NEW,
@@ -95,7 +98,7 @@ class Menu(AbstractMenu):
 
     def _start_singleplayer(self):
         self.network = Network(addr='127.0.0.1', port='1489')
-        self.server = subprocess.Popen(["python3", "-m", "game", "--server", "1489"])
+        self.server = subprocess.Popen([self.EXECUTABLE, "-m", "game", "--server", "1489"])
 
         while True:
             try:
@@ -110,7 +113,7 @@ class Menu(AbstractMenu):
             return None
 
         self.network = Network(addr='127.0.0.1', port='1489')
-        self.server = subprocess.Popen(["python3", "-m", "game", "--server", "1489"])
+        self.server = subprocess.Popen([self.EXECUTABLE, "-m", "game", "--server", "1489"])
 
         while True:
             try:
