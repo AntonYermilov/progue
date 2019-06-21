@@ -74,7 +74,7 @@ class Menu(AbstractMenu):
     MULTIPLAYER_CONNECT = 'Connect Multiplayer Game'
     EXIT = 'Exit'
 
-    EXECUTABLE = 'python' if os.name == 'nt' else python3
+    EXECUTABLE = 'python' if os.name == 'nt' else 'python3'
 
     def __init__(self, view, message):
         buttons = [

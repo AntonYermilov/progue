@@ -12,12 +12,12 @@ class TestServer(unittest.TestCase):
         time.sleep(2)
 
     def test_game_creation(self):
-        network = Network()
-        self.assertTrue(network.create_game('cool_game'))
+        network = Network(addr='127.0.0.1', port=1488)
+        self.assertTrue(network.create_game(False, False))
 
     def test_game_connect(self):
-        network = Network()
-        network.create_game('cool_game')
+        network = Network(addr='127.0.0.1', port=1488)
+        network.create_game(False, False)
         self.assertTrue(network.connect_to_game('cool_game'))
 
     def tearDown(self) -> None:
