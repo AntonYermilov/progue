@@ -1,0 +1,96 @@
+syntax = 'proto3';
+package progue;
+
+service ProgueServer {
+    rpc get_state (StateRequest) returns (StateResponse) {}
+    rpc make_turn (MakeTurnRequest) returns (MakeTurnResponse) {}
+    rpc list_games (ListGamesRequest) returns (ListGamesResponse) {}
+    rpc connect_to_game (ConnectToGameRequest) returns (ConnectToGameResponse) {}
+    rpc create_game (CreateGameRequest) returns (CreateGameResponse) {}
+}
+
+message ListGamesRequest {}
+
+message ConnectToGameResponse {
+    bool successfully_connected = 1;
+    Player player = 2;
+}
+
+message StateRequest {
+    GameId game_id = 1;
+    Player player = 2;
+}
+
+message StateResponse {
+    State state = 1;
+}
+
+message MakeTurnRequest {
+    GameId game_id = 1;
+    Player player = 2;
+    Action action = 3;
+}
+
+message MakeTurnResponse {}
+
+message ConnectToGameRequest {
+    GameId game_id = 1;
+}
+
+message GameId {
+    string id = 1;
+}
+
+message CreateGameRequest {
+    bool singleplayer = 1;
+    bool load = 2;
+}
+
+message Player {
+    string id = 1;
+}
+
+message ListGamesResponse {
+    repeated GameId game_ids = 1;
+}
+
+message CreateGameResponse {
+    bool successfully_created = 1;
+    Player player = 2;
+    string id = 3;
+}
+
+message State {
+    bytes state = 1;
+}
+
+message Action {
+    enum ActionType {
+        MOVE = 0;
+        INVENTORY = 1;
+        QUIT = 2;
+    }
+
+    message MoveAction {
+        int32 row = 1;
+        int32 col = 2;
+    }
+
+    message InventoryAction {
+        enum InventoryActionType {
+            USE = 0;
+            DROP = 1;
+            PICK = 2;
+        }
+
+        int32 item_id = 1;
+        InventoryActionType action_type = 2;
+    }
+
+    ActionType action_type = 1;
+
+    oneof action {
+        MoveAction  move_action = 2;
+        InventoryAction inventory_action = 3;
+    }
+}
